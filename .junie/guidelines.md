@@ -9,8 +9,9 @@ These guidelines document the architecture, coding conventions, and backend inte
 - **Frontend Framework**: [Preact](https://preactjs.com/) with TypeScript (`@preact/preset-vite`).
 - **Build Tool**: [Vite](https://vite.dev/) with `@tailwindcss/vite` (Tailwind CSS v4).
 - **Mobile Container**: [Capacitor 8](https://capacitorjs.com/) (`@capacitor/core`, `@capacitor/android`, `@capacitor/ios`, `@capacitor/preferences`).
-- **Backend**: Django REST Framework (DRF) API (`http://localhost:8000/api`).
-- **Real-time Synchronization**: Firebase Cloud Firestore document listeners.
+- **Maps & Geolocation**: [Mapbox GL JS](https://docs.mapbox.com/mapbox-gl-js/) (`mapbox-gl`, `@types/mapbox-gl`) for interactive map rendering and beacon geocoordinates display.
+- **Backend**: Django REST Framework (DRF) API (`http://localhost:8000/api`) backed by PostgreSQL/PostGIS.
+- **Real-time Synchronization**: Firebase Cloud Firestore document listeners (used strictly to broadcast backend state updates).
 - **Routing & Navigation**: `react-router-dom`.
 - **Icons**: `lucide-preact`.
 
