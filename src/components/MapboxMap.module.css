@@ -1,0 +1,16 @@
+.defaultMap { width: 100%; height: 16rem; border-radius: 0.75rem; overflow: hidden; box-shadow: 0 4px 6px rgb(15 23 42 / 0.1); }
+.wrapper { position: relative; }
+.mapContainer { width: 100%; height: 100%; }
+.marker { display: block; }
+.emptyState, .errorState { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1.5rem; }
+.emptyState { color: #64748b; background: #f1f5f9; border: 1px dashed #cbd5e1; }
+.errorState { color: #475569; background: #f1f5f9; border: 1px solid #cbd5e1; }
+.emptyIcon, .errorIcon { width: 2rem; height: 2rem; margin-bottom: 0.5rem; }
+.emptyIcon { color: #94a3b8; animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+.errorIcon { color: #f59e0b; }
+.emptyTitle, .errorTitle { margin: 0; font-size: 0.875rem; font-weight: 600; }
+.emptyDescription, .errorDescription { margin: 0.25rem 0 0; font-size: 0.75rem; }
+.emptyDescription { color: #94a3b8; }
+.errorDescription { color: #64748b; }
+.coordinates { position: absolute; bottom: 0.5rem; left: 0.5rem; padding: 0.25rem 0.625rem; color: #334155; background: rgb(255 255 255 / 0.9); border-radius: 0.25rem; box-shadow: 0 1px 3px rgb(15 23 42 / 0.1); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.75rem; pointer-events: none; backdrop-filter: blur(4px); }
+@keyframes pulse { 50% { opacity: 0.5; } }

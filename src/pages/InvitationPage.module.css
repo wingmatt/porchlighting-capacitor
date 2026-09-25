@@ -1,0 +1,14 @@
+.page { max-width: 28rem; margin: 0 auto; padding: 1rem; }
+.loading { padding: 1rem; color: #64748b; }
+.card { padding: 1.5rem; text-align: center; background: #fff; border: 1px solid #e2e8f0; border-radius: 0.75rem; box-shadow: 0 1px 2px rgb(15 23 42 / 0.05); }
+.title { margin: 0; color: #0f172a; font-size: 1.25rem; font-weight: 700; }
+.description { margin: 0.5rem 0 0; color: #475569; font-size: 0.875rem; }
+.mapContainer { margin-top: 1rem; }
+.map { width: 100%; height: 12rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; overflow: hidden; }
+.joinForm { display: grid; gap: 1rem; margin-top: 1.5rem; text-align: left; }
+.input { width: 100%; padding: 0.625rem; border: 1px solid #cbd5e1; border-radius: 0.5rem; outline: none; }
+.input:focus { border-color: #3b82f6; box-shadow: 0 0 0 2px rgb(59 130 246 / 0.3); }
+.button { width: 100%; padding: 0.625rem; color: #fff; border: 0; border-radius: 0.5rem; font-weight: 600; transition: background-color 150ms ease; }
+.primaryButton { background: #2563eb; }
+.primaryButton:hover { background: #1d4ed8; }
+.darkButton { margin-top: 1rem; background: #0f172a; }

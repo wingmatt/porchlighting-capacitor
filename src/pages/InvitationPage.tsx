@@ -5,6 +5,7 @@ import { apiClient } from '../api/client';
 import { Preferences } from '@capacitor/preferences';
 import { Beacon, Invitation } from '../types';
 import { MapboxMap } from '../components/MapboxMap';
+import styles from './InvitationPage.module.css';
 
 export const InvitationPage: FunctionComponent = () => {
   const { sqid } = useParams<{ sqid: string }>();
@@ -39,42 +40,42 @@ export const InvitationPage: FunctionComponent = () => {
     navigate(`/porchlight/${data.beacon.id}`);
   };
 
-  if (!data) return <div className="p-4 text-slate-500">Loading invitation...</div>;
+  if (!data) return <div className={styles.loading}>Loading invitation...</div>;
 
   return (
-    <div className="p-4 max-w-md mx-auto space-y-6">
-      <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 text-center">
-        <h2 className="text-xl font-bold text-slate-900">
+    <div className={styles.page}>
+      <div className={styles.card}>
+        <h2 className={styles.title}>
           {data.accepted ? `You're part of ${data.beacon.name}` : `Welcome to ${data.beacon.name}`}
         </h2>
         {data.beacon.description && (
-          <p className="text-sm text-slate-600 mt-2">{data.beacon.description}</p>
+          <p className={styles.description}>{data.beacon.description}</p>
         )}
 
         {data.beacon.location && (
-          <div className="mt-4">
+          <div className={styles.mapContainer}>
             <MapboxMap
               location={data.beacon.location || data.beacon.coordinates}
               name={data.beacon.name}
               isOn={data.beacon.is_on}
               color={data.beacon.color}
-              className="w-full h-48 rounded-lg overflow-hidden border border-slate-200"
+              className={styles.map}
             />
           </div>
         )}
 
         {!data.accepted && (
-          <div className="mt-6 space-y-4 text-left">
+          <div className={styles.joinForm}>
             <input
               type="text"
               placeholder="Your Name (Guest)"
               value={guestName}
               onInput={(e) => setGuestName((e.target as HTMLInputElement).value)}
-              className="w-full border border-slate-300 p-2.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={styles.input}
             />
             <button
               onClick={() => handleJoin(true)}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-lg font-semibold transition-colors"
+              className={`${styles.button} ${styles.primaryButton}`}
             >
               Join Beacon
             </button>
@@ -84,7 +85,7 @@ export const InvitationPage: FunctionComponent = () => {
         {data.accepted && (
           <button
             onClick={() => navigate(`/porchlight/${data.beacon.id}`)}
-            className="mt-4 w-full bg-slate-900 text-white py-2.5 rounded-lg font-semibold"
+            className={`${styles.button} ${styles.darkButton}`}
           >
             View Porchlight
           </button>

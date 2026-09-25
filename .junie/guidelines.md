@@ -7,7 +7,7 @@ These guidelines document the architecture, coding conventions, and backend inte
 ## 1. Tech Stack Overview
 
 - **Frontend Framework**: [Preact](https://preactjs.com/) with TypeScript (`@preact/preset-vite`).
-- **Build Tool**: [Vite](https://vite.dev/) with `@tailwindcss/vite` (Tailwind CSS v4).
+- **Build Tool**: [Vite](https://vite.dev/) with CSS Modules for component-scoped styling.
 - **Mobile Container**: [Capacitor 8](https://capacitorjs.com/) (`@capacitor/core`, `@capacitor/android`, `@capacitor/ios`, `@capacitor/preferences`).
 - **Maps & Geolocation**: [Mapbox GL JS](https://docs.mapbox.com/mapbox-gl-js/) (`mapbox-gl`, `@types/mapbox-gl`) for interactive map rendering and beacon geocoordinates display.
 - **Backend**: Django REST Framework (DRF) API (`http://localhost:8000/api`) backed by PostgreSQL/PostGIS.
@@ -34,8 +34,8 @@ These guidelines document the architecture, coding conventions, and backend inte
 - Maintain strict typing: avoid `any` where possible, and properly type API responses and event handlers (`JSX.TargetedMouseEvent`, `JSX.TargetedEvent`).
 
 ### Styling & UI
-- Use Tailwind CSS v4 utility classes.
-- Use `clsx` or template literals for conditional styling.
+- Use `.module.css` files for component-scoped styling.
+- Use CSS module class combinations for conditional styling.
 - Maintain responsive, mobile-first layouts suitable for iOS and Android web views and safe-area insets.
 
 ---

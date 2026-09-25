@@ -7,6 +7,7 @@ import { useFirebaseBeacon } from '../hooks/useFirebaseBeacon';
 import { BeaconIcon } from '../components/BeaconIcon';
 import { BeaconRsvpForm } from '../components/BeaconRsvpForm';
 import { MapboxMap } from '../components/MapboxMap';
+import styles from './PorchlightPage.module.css';
 
 export const PorchlightPage: FunctionComponent = () => {
   const { id } = useParams<{ id: string }>();
@@ -33,12 +34,12 @@ export const PorchlightPage: FunctionComponent = () => {
   }, [id]);
 
   if (loading) {
-    return <div className="p-4 text-slate-500">Loading porchlight details...</div>;
+    return <div className={styles.loading}>Loading porchlight details...</div>;
   }
 
   if (error || !initialBeacon) {
     return (
-      <div className="p-4 text-red-600 bg-red-50 rounded-lg">
+      <div className={styles.error}>
         {error || 'Porchlight not found'}
       </div>
     );
@@ -52,15 +53,15 @@ const PorchlightLiveView: FunctionComponent<{ initialBeacon: Beacon }> = ({ init
   const [beacon, setBeacon] = useFirebaseBeacon(initialBeacon);
 
   return (
-    <div className="max-w-xl mx-auto space-y-6">
-      <div className="flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+    <div className={styles.page}>
+      <div className={styles.headerCard}>
         <div>
-          <h2 className="text-xl font-bold text-slate-900">{beacon.name || 'Porchlight'}</h2>
+          <h2 className={styles.title}>{beacon.name || 'Porchlight'}</h2>
           {beacon.status_message && (
-            <p className="text-sm text-slate-600 mt-1">{beacon.status_message}</p>
+            <p className={styles.statusMessage}>{beacon.status_message}</p>
           )}
           {beacon.description && (
-            <p className="text-xs text-slate-400 mt-0.5">{beacon.description}</p>
+            <p className={styles.description}>{beacon.description}</p>
           )}
         </div>
         <BeaconIcon
@@ -70,20 +71,20 @@ const PorchlightLiveView: FunctionComponent<{ initialBeacon: Beacon }> = ({ init
         />
       </div>
 
-      <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
-        <h3 className="font-semibold text-slate-800 text-sm">Location Map</h3>
+      <div className={styles.sectionCard}>
+        <h3 className={styles.sectionTitle}>Location Map</h3>
         <MapboxMap
           location={beacon.location || beacon.coordinates}
           name={beacon.name}
           statusMessage={beacon.status_message}
           isOn={beacon.is_on}
           color={beacon.color || '#F59E0B'}
-          className="w-full h-72 rounded-lg overflow-hidden shadow-inner border border-slate-200"
+          className={styles.map}
         />
       </div>
 
-      <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
-        <h3 className="font-semibold text-slate-800 text-sm mb-2">RSVP Status</h3>
+      <div className={styles.rsvpCard}>
+        <h3 className={styles.sectionTitle}>RSVP Status</h3>
         <BeaconRsvpForm beacon={beacon} />
       </div>
     </div>

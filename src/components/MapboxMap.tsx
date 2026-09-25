@@ -4,6 +4,7 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { LocationCoordinates } from '../types';
 import { MapPin } from 'lucide-preact';
+import styles from './MapboxMap.module.css';
 
 interface MapboxMapProps {
   location?: string | LocationCoordinates | [number, number] | null;
@@ -76,7 +77,7 @@ export const MapboxMap: FunctionComponent<MapboxMapProps> = ({
   color = '#F59E0B',
   zoom = 14,
   interactive = true,
-  className = 'w-full h-64 rounded-xl overflow-hidden shadow-md',
+  className = styles.defaultMap,
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
@@ -112,7 +113,7 @@ export const MapboxMap: FunctionComponent<MapboxMapProps> = ({
 
         // Custom marker element
         const el = document.createElement('div');
-        el.className = 'porchlight-marker';
+        el.className = styles.marker;
         el.style.width = '24px';
         el.style.height = '24px';
         el.style.borderRadius = '50%';
@@ -165,11 +166,11 @@ export const MapboxMap: FunctionComponent<MapboxMapProps> = ({
   if (!coords) {
     return (
       <div
-        className={`${className} bg-slate-100 border border-dashed border-slate-300 flex flex-col items-center justify-center p-6 text-slate-500`}
+        className={`${className} ${styles.emptyState}`}
       >
-        <MapPin className="w-8 h-8 text-slate-400 mb-2 animate-pulse" />
-        <p className="text-sm font-medium">No geocoordinates set for {name}</p>
-        <p className="text-xs text-slate-400 mt-1">Location will appear here once configured</p>
+        <MapPin className={styles.emptyIcon} />
+        <p className={styles.emptyTitle}>No geocoordinates set for {name}</p>
+        <p className={styles.emptyDescription}>Location will appear here once configured</p>
       </div>
     );
   }
@@ -177,11 +178,11 @@ export const MapboxMap: FunctionComponent<MapboxMapProps> = ({
   if (mapError) {
     return (
       <div
-        className={`${className} bg-slate-100 border border-slate-300 flex flex-col items-center justify-center p-6 text-slate-600`}
+        className={`${className} ${styles.errorState}`}
       >
-        <MapPin className="w-8 h-8 text-amber-500 mb-2" />
-        <p className="text-sm font-semibold">{name}</p>
-        <p className="text-xs text-slate-500 mt-1">
+        <MapPin className={styles.errorIcon} />
+        <p className={styles.errorTitle}>{name}</p>
+        <p className={styles.errorDescription}>
           Coordinates: {coords[1].toFixed(5)}, {coords[0].toFixed(5)}
         </p>
       </div>
@@ -189,9 +190,9 @@ export const MapboxMap: FunctionComponent<MapboxMapProps> = ({
   }
 
   return (
-    <div className={`relative ${className}`}>
-      <div ref={mapContainerRef} className="w-full h-full" />
-      <div className="absolute bottom-2 left-2 bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded shadow text-xs font-mono text-slate-700 pointer-events-none">
+    <div className={`${styles.wrapper} ${className}`}>
+      <div ref={mapContainerRef} className={styles.mapContainer} />
+      <div className={styles.coordinates}>
         📍 {coords[1].toFixed(4)}, {coords[0].toFixed(4)}
       </div>
     </div>

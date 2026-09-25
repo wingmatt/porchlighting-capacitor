@@ -3,6 +3,7 @@ import { useState } from 'preact/hooks';
 import { Beacon } from '../types';
 import { apiClient } from '../api/client';
 import { Check, HelpCircle } from 'lucide-preact';
+import styles from './BeaconRsvpForm.module.css';
 
 interface Props {
   beacon: Beacon;
@@ -26,22 +27,18 @@ export const BeaconRsvpForm: FunctionComponent<Props> = ({ beacon }) => {
   };
 
   return (
-    <div className="flex items-center gap-2 mt-2">
+    <div className={styles.form}>
       <button
         onClick={() => submitRsvp('yes')}
-        className={`px-3 py-1 rounded-md flex items-center gap-1 ${
-          hasRsvp === 'yes' ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-700'
-        }`}
+        className={`${styles.button} ${hasRsvp === 'yes' ? styles.yesSelected : styles.unselected}`}
       >
-        <Check className="w-4 h-4" /> I'm In ({rsvpCount})
+        <Check className={styles.icon} /> I'm In ({rsvpCount})
       </button>
       <button
         onClick={() => submitRsvp('maybe')}
-        className={`px-3 py-1 rounded-md flex items-center gap-1 ${
-          hasRsvp === 'maybe' ? 'bg-amber-500 text-white' : 'bg-gray-100 text-gray-700'
-        }`}
+        className={`${styles.button} ${hasRsvp === 'maybe' ? styles.maybeSelected : styles.unselected}`}
       >
-        <HelpCircle className="w-4 h-4" /> Maybe
+        <HelpCircle className={styles.icon} /> Maybe
       </button>
     </div>
   );
