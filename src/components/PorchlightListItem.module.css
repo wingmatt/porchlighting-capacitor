@@ -1,0 +1,3 @@
+.item { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .75rem 0; color: #2563eb; border-top: 1px solid #e2e8f0; text-decoration: none; }
+.on, .off { color: #64748b; font-size: .8rem; }
+.on { color: #15803d; }
