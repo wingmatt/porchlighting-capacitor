@@ -1,0 +1,6 @@
+.page { max-width: 36rem; margin: 0 auto; display: grid; gap: 1rem; }
+.card { padding: 1.25rem; background: #fff; border: 1px solid #e2e8f0; border-radius: .75rem; }
+h1, h2 { margin: 0 0 .5rem; }
+p { color: #64748b; }
+button { padding: .6rem .9rem; color: #fff; background: #dc2626; border: 0; border-radius: .4rem; }
+.item { display: block; padding: .75rem 0; color: #2563eb; border-top: 1px solid #e2e8f0; text-decoration: none; }

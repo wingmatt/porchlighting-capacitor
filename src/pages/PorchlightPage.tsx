@@ -19,7 +19,7 @@ export const PorchlightPage: FunctionComponent = () => {
     if (id) {
       setLoading(true);
       apiClient
-        .get(`/porchlight/${id}/`)
+        .get(`/porchlights/${id}/`)
         .then((res) => {
           setInitialBeacon(res.data);
           setError(null);

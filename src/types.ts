@@ -34,3 +34,11 @@ export interface Invitation {
   porchlight_name?: string;
   [key: string]: any;
 }
+
+export interface User {
+  id: number;
+  email: string;
+  first_name?: string;
+  last_name?: string;
+  is_active?: boolean;
+}

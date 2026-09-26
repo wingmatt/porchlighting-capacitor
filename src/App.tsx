@@ -1,23 +1,37 @@
 import { FunctionComponent } from 'preact';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { InvitationPage } from './pages/InvitationPage';
 import { PorchlightPage } from './pages/PorchlightPage';
 import { BeaconIcon } from './components/BeaconIcon';
 import { BeaconRsvpForm } from './components/BeaconRsvpForm';
 import { MapboxMap } from './components/MapboxMap';
 import styles from './App.module.css';
+import { AuthProvider, useAuth } from './auth';
+import { AuthPage } from './pages/AuthPage';
+import { ProfilePage } from './pages/ProfilePage';
 
 export const App: FunctionComponent = () => {
   return (
     <BrowserRouter>
-      <div className={styles.app}>
-        <header className={styles.header}>
-          <Link to="/" className={styles.logo}>
-            Porchlighting
-          </Link>
-        </header>
-        <main className={styles.main}>
+      <AuthProvider><AppShell /></AuthProvider>
+    </BrowserRouter>
+  );
+};
+
+const AppShell: FunctionComponent = () => {
+  const { user } = useAuth();
+  const location = useLocation();
+  return <div className={styles.app}>
+    <header className={styles.header}><Link to="/" className={styles.logo}>Porchlighting</Link><nav className={styles.nav}>{user ? <Link to="/profile">Profile & porchlights</Link> : location.pathname !== '/login' && <Link to="/login">Log in</Link>}</nav></header>
+    <main className={styles.main}>
           <Routes>
+            <Route path="/login" element={<AuthPage mode="login" />} />
+            <Route path="/register" element={<AuthPage mode="register" />} />
+            <Route path="/forgot-password" element={<AuthPage mode="forgot-password" />} />
+            <Route path="/forgot-password/:uid/:token/" element={<AuthPage mode="forgot-password" />} />
+            <Route path="/magic-login" element={<AuthPage mode="magic-login" />} />
+            <Route path="/magic-login/:uid/:token/" element={<AuthPage mode="magic-login" />} />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route path="/join/:sqid" element={<InvitationPage />} />
             <Route path="/porchlight/:id" element={<PorchlightPage />} />
             <Route
@@ -58,8 +72,6 @@ export const App: FunctionComponent = () => {
               }
             />
           </Routes>
-        </main>
-      </div>
-    </BrowserRouter>
-  );
+    </main>
+  </div>;
 };
