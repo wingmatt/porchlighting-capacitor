@@ -30,6 +30,9 @@ export interface Beacon {
 export interface Invitation {
   id: string | number;
   role_granted?: string;
+  is_guest?: boolean;
+  is_valid?: boolean;
+  has_permission?: boolean;
   beacon_id: string | number;
   porchlight_name?: string;
   [key: string]: any;

@@ -5,39 +5,48 @@ import { apiClient } from '../api/client';
 import { Preferences } from '@capacitor/preferences';
 import { Beacon, Invitation } from '../types';
 import { MapboxMap } from '../components/MapboxMap';
+import { useAuth } from '../auth';
 import styles from './InvitationPage.module.css';
 
 export const InvitationPage: FunctionComponent = () => {
   const { sqid } = useParams<{ sqid: string }>();
   const navigate = useNavigate();
-  const [data, setData] = useState<{ invitation: Invitation; beacon: Beacon; accepted: boolean } | null>(null);
+  const { user, loading: authLoading } = useAuth();
+  const [data, setData] = useState<{ invitation: Invitation; beacon: Beacon; has_permission: boolean } | null>(null);
   const [guestName, setGuestName] = useState('');
+  const [error, setError] = useState('');
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    if (sqid) {
-      apiClient.get(`/join/${sqid}/`).then((res) => setData(res.data));
+    if (sqid && !authLoading) {
+      apiClient.get(`/invitations/validate/${sqid}/`)
+        .then((res) => setData({ ...res.data, invitation: res.data, beacon: res.data.porchlight }))
+        .catch(() => setError('This invitation could not be found.'));
     }
-  }, [sqid]);
+  }, [sqid, authLoading]);
 
   const handleJoin = async (guestSignup = false) => {
     if (!data) return;
+    setError('');
+    setSaving(true);
 
-    const payload: Record<string, any> = {
-      role: data.invitation.role_granted,
-      from_invitation: data.invitation.id,
-      beacon_id: data.invitation.beacon_id,
-    };
-
-    if (guestSignup) {
-      const guestId = crypto.randomUUID();
-      await Preferences.set({ key: 'guestToken', value: guestId });
-      await Preferences.set({ key: 'guestName', value: guestName });
-      payload.guest_id = guestId;
-      payload.guest_name = guestName;
+    try {
+      if (guestSignup) {
+        const response = await apiClient.post('/guest/access/', {
+          invitation_code: sqid,
+          guest_name: guestName,
+        });
+        await Preferences.set({ key: 'guestToken', value: response.data.guest_token });
+        await Preferences.set({ key: 'guestName', value: response.data.guest_name });
+      } else {
+        await apiClient.post('/invitations/accept/', { code: sqid });
+      }
+      navigate(`/porchlight/${data.beacon.id}`);
+    } catch (requestError: any) {
+      setError(requestError?.response?.data?.detail || requestError?.response?.data?.error || 'Unable to accept this invitation.');
+    } finally {
+      setSaving(false);
     }
-
-    await apiClient.post(`/add/${sqid}/`, payload);
-    navigate(`/porchlight/${data.beacon.id}`);
   };
 
   if (!data) return <div className={styles.loading}>Loading invitation...</div>;
@@ -46,8 +55,9 @@ export const InvitationPage: FunctionComponent = () => {
     <div className={styles.page}>
       <div className={styles.card}>
         <h2 className={styles.title}>
-          {data.accepted ? `You're part of ${data.beacon.name}` : `Welcome to ${data.beacon.name}`}
+          {data.has_permission ? `You're part of ${data.beacon.name}` : `Invitation to ${data.beacon.name}`}
         </h2>
+        {error && <p className={styles.error}>{error}</p>}
         {data.beacon.description && (
           <p className={styles.description}>{data.beacon.description}</p>
         )}
@@ -64,25 +74,38 @@ export const InvitationPage: FunctionComponent = () => {
           </div>
         )}
 
-        {!data.accepted && (
+        {!authLoading && !data.has_permission && data.invitation.is_valid && !data.invitation.is_guest && user && (
           <div className={styles.joinForm}>
-            <input
-              type="text"
-              placeholder="Your Name (Guest)"
-              value={guestName}
-              onInput={(e) => setGuestName((e.target as HTMLInputElement).value)}
-              className={styles.input}
-            />
             <button
-              onClick={() => handleJoin(true)}
+              onClick={() => handleJoin()}
               className={`${styles.button} ${styles.primaryButton}`}
+              disabled={saving}
             >
-              Join Beacon
+              {saving ? 'Accepting...' : `Accept invitation as ${user.email}`}
             </button>
           </div>
         )}
 
-        {data.accepted && (
+        {!authLoading && !data.has_permission && data.invitation.is_valid && !data.invitation.is_guest && !user && (
+          <div className={styles.joinForm}>
+            <p className={styles.description}>Log in or register to accept this invitation.</p>
+            <button onClick={() => navigate(`/login?next=/join/${sqid}`)} className={`${styles.button} ${styles.primaryButton}`}>
+              Log in to accept
+            </button>
+          </div>
+        )}
+
+        {!authLoading && !data.has_permission && data.invitation.is_valid && data.invitation.is_guest && (
+          <div className={styles.joinForm}>
+            <input type="text" placeholder="Your Name (Guest)" value={guestName}
+              onInput={(e) => setGuestName((e.target as HTMLInputElement).value)} className={styles.input} />
+            <button onClick={() => handleJoin(true)} className={`${styles.button} ${styles.primaryButton}`} disabled={saving}>
+              {saving ? 'Joining...' : 'Join Beacon'}
+            </button>
+          </div>
+        )}
+
+        {data.has_permission && (
           <button
             onClick={() => navigate(`/porchlight/${data.beacon.id}`)}
             className={`${styles.button} ${styles.darkButton}`}

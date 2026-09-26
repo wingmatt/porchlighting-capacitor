@@ -12,3 +12,4 @@
 .primaryButton { background: #2563eb; }
 .primaryButton:hover { background: #1d4ed8; }
 .darkButton { margin-top: 1rem; background: #0f172a; }
+.error { margin-top: 1rem; padding: .75rem; color: #b91c1c; background: #fef2f2; border-radius: .5rem; }
