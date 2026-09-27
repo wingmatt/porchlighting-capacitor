@@ -8,12 +8,15 @@ import styles from './MapboxMap.module.css';
 
 interface MapboxMapProps {
   location?: string | LocationCoordinates | [number, number] | null;
+  defaultLocation?: [number, number];
   name?: string;
   statusMessage?: string;
   isOn?: boolean;
   color?: string;
   zoom?: number;
   interactive?: boolean;
+  draggable?: boolean;
+  onCoordinatesChange?: (coordinates: { latitude: number; longitude: number }) => void;
   className?: string;
 }
 
@@ -71,20 +74,25 @@ export function extractLngLat(
 
 export const MapboxMap: FunctionComponent<MapboxMapProps> = ({
   location,
+  defaultLocation,
   name = 'Porchlight',
   statusMessage,
   isOn = true,
   color = '#F59E0B',
   zoom = 14,
   interactive = true,
+  draggable = false,
+  onCoordinatesChange,
   className = styles.defaultMap,
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const markerRef = useRef<mapboxgl.Marker | null>(null);
   const [mapError, setMapError] = useState<string | null>(null);
+  const coordinatesChangeRef = useRef(onCoordinatesChange);
+  coordinatesChangeRef.current = onCoordinatesChange;
 
-  const coords = extractLngLat(location);
+  const coords = extractLngLat(location) ?? defaultLocation ?? null;
 
   useEffect(() => {
     if (!mapContainerRef.current || !coords) return;
@@ -132,10 +140,17 @@ export const MapboxMap: FunctionComponent<MapboxMapProps> = ({
           </div>
         `);
 
-        const marker = new mapboxgl.Marker({ element: el })
+        const marker = new mapboxgl.Marker({ element: el, draggable })
           .setLngLat(coords)
           .setPopup(popup)
           .addTo(map);
+
+        if (draggable) {
+          marker.on('dragend', () => {
+            const position = marker.getLngLat();
+            coordinatesChangeRef.current?.({ latitude: position.lat, longitude: position.lng });
+          });
+        }
 
         mapRef.current = map;
         markerRef.current = marker;
@@ -161,7 +176,7 @@ export const MapboxMap: FunctionComponent<MapboxMapProps> = ({
         mapRef.current = null;
       }
     };
-  }, [coords ? `${coords[0]},${coords[1]}` : null, isOn, color]);
+  }, [coords ? `${coords[0]},${coords[1]}` : null, isOn, color, draggable]);
 
   if (!coords) {
     return (
