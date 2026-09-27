@@ -10,6 +10,7 @@ export interface LocationCoordinates {
 
 export interface Beacon {
   id: string | number;
+  sqid?: string;
   name?: string;
   type?: string;
   active_duration?: number;

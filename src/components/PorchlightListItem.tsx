@@ -8,7 +8,7 @@ interface PorchlightListItemProps {
 }
 
 export const PorchlightListItem: FunctionComponent<PorchlightListItemProps> = ({ porchlight }) => (
-  <Link className={styles.item} to={`/porchlight/${porchlight.id}`}>
+  <Link className={styles.item} to={`/porchlight/${porchlight.sqid}`}>
     <span>{porchlight.name || 'Unnamed porchlight'}</span>
     <span className={porchlight.is_on ? styles.on : styles.off}>{porchlight.is_on ? 'On' : 'Off'}</span>
   </Link>
