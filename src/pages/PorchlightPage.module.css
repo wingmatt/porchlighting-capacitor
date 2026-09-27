@@ -2,6 +2,8 @@
 .error { padding: 1rem; color: #dc2626; background: #fef2f2; border-radius: 0.5rem; }
 .page { max-width: 36rem; margin: 0 auto; display: grid; gap: 1.5rem; }
 .headerCard { display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: #fff; border: 1px solid #e2e8f0; border-radius: 0.75rem; box-shadow: 0 1px 2px rgb(15 23 42 / 0.05); }
+.headerActions { display: flex; align-items: center; gap: 0.75rem; }
+.editButton { padding: 0.45rem 0.7rem; color: #fff; background: #2563eb; border-radius: 0.4rem; font-size: 0.8rem; text-decoration: none; }
 .title { margin: 0; color: #0f172a; font-size: 1.25rem; font-weight: 700; }
 .statusMessage { margin: 0.25rem 0 0; color: #475569; font-size: 0.875rem; }
 .description { margin: 0.125rem 0 0; color: #94a3b8; font-size: 0.75rem; }

@@ -10,6 +10,7 @@ import { AuthProvider, useAuth } from './auth';
 import { AuthPage } from './pages/AuthPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { PorchlightCreatePage } from './pages/PorchlightCreatePage';
+import { PorchlightEditPage } from './pages/PorchlightEditPage';
 
 export const App: FunctionComponent = () => {
   return (
@@ -34,6 +35,7 @@ const AppShell: FunctionComponent = () => {
             <Route path="/magic-login/:uid/:token/" element={<AuthPage mode="magic-login" />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/porchlight/new" element={<PorchlightCreatePage />} />
+            <Route path="/porchlight/:id/edit" element={<PorchlightEditPage />} />
             <Route path="/join/:sqid" element={<InvitationPage />} />
             <Route path="/porchlight/:id" element={<PorchlightPage />} />
             <Route

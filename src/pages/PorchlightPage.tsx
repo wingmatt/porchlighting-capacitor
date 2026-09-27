@@ -1,6 +1,6 @@
 import { FunctionComponent, JSX } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { apiClient } from '../api/client';
 import { Beacon, Invitation } from '../types';
 import { useFirebaseBeacon } from '../hooks/useFirebaseBeacon';
@@ -58,6 +58,7 @@ const PorchlightLiveView: FunctionComponent<{ initialBeacon: Beacon }> = ({ init
   const [invitationError, setInvitationError] = useState('');
   const [creatingInvitation, setCreatingInvitation] = useState(false);
   const canManageInvitations = beacon.is_owner || ['OWNER', 'EDIT', 'SHARE', 'ADMIN'].includes(beacon.user_role || '');
+  const canEdit = beacon.is_owner || ['OWNER', 'EDIT'].includes(beacon.user_role || '');
 
   useEffect(() => {
     if (!canManageInvitations || !beacon.id) return;
@@ -102,11 +103,14 @@ const PorchlightLiveView: FunctionComponent<{ initialBeacon: Beacon }> = ({ init
             <p className={styles.description}>{beacon.description}</p>
           )}
         </div>
-        <BeaconIcon
-          beacon={beacon}
-          editable={beacon.is_owner || beacon.user_role === 'OWNER' || beacon.user_role === 'ADMIN'}
-          onUpdate={(updated) => setBeacon((prev) => ({ ...prev, ...updated }))}
-        />
+        <div className={styles.headerActions}>
+          {canEdit && <Link to={`/porchlight/${beacon.sqid}/edit`} className={styles.editButton}>Edit</Link>}
+          <BeaconIcon
+            beacon={beacon}
+            editable={beacon.is_owner || beacon.user_role === 'OWNER' || beacon.user_role === 'ADMIN'}
+            onUpdate={(updated) => setBeacon((prev) => ({ ...prev, ...updated }))}
+          />
+        </div>
       </div>
 
       <div className={styles.sectionCard}>
