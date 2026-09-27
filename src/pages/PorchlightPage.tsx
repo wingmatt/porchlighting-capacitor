@@ -1,8 +1,8 @@
-import { FunctionComponent } from 'preact';
+import { FunctionComponent, JSX } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { useParams } from 'react-router-dom';
 import { apiClient } from '../api/client';
-import { Beacon } from '../types';
+import { Beacon, Invitation } from '../types';
 import { useFirebaseBeacon } from '../hooks/useFirebaseBeacon';
 import { BeaconIcon } from '../components/BeaconIcon';
 import { BeaconRsvpForm } from '../components/BeaconRsvpForm';
@@ -51,6 +51,44 @@ export const PorchlightPage: FunctionComponent = () => {
 const PorchlightLiveView: FunctionComponent<{ initialBeacon: Beacon }> = ({ initialBeacon }) => {
   // Synchronized via Firebase Firestore broadcast from Postgres database
   const [beacon, setBeacon] = useFirebaseBeacon(initialBeacon);
+  const [invitations, setInvitations] = useState<Invitation[]>([]);
+  const [invitationRole, setInvitationRole] = useState('view');
+  const [invitedEmail, setInvitedEmail] = useState('');
+  const [isGuestInvitation, setIsGuestInvitation] = useState(true);
+  const [invitationError, setInvitationError] = useState('');
+  const [creatingInvitation, setCreatingInvitation] = useState(false);
+  const canManageInvitations = beacon.is_owner || ['OWNER', 'EDIT', 'SHARE', 'ADMIN'].includes(beacon.user_role || '');
+
+  useEffect(() => {
+    if (!canManageInvitations || !beacon.id) return;
+    apiClient.get('/invitations/', { params: { porchlight: beacon.id } })
+      .then((response) => setInvitations(response.data))
+      .catch(() => setInvitationError('Unable to load invitations.'));
+  }, [beacon.id, canManageInvitations]);
+
+  const createInvitation = async (event: JSX.TargetedSubmitEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setInvitationError('');
+    setCreatingInvitation(true);
+    const role = ({ view: 'GUEST', edit: 'MEMBER', share: 'ADMIN' } as Record<string, string>)[invitationRole] || 'GUEST';
+    try {
+      const response = await apiClient.post('/invitations/', {
+        porchlight: beacon.id,
+        role,
+        role_granted: invitationRole,
+        is_guest: isGuestInvitation,
+        invited_email: invitedEmail || null,
+        max_uses: 0,
+      });
+      setInvitations((current) => [response.data, ...current]);
+      setInvitedEmail('');
+    } catch (requestError: any) {
+      const data = requestError?.response?.data;
+      setInvitationError(data?.porchlight?.[0] || data?.detail || 'Unable to create invitation.');
+    } finally {
+      setCreatingInvitation(false);
+    }
+  };
 
   return (
     <div className={styles.page}>
@@ -87,6 +125,33 @@ const PorchlightLiveView: FunctionComponent<{ initialBeacon: Beacon }> = ({ init
         <h3 className={styles.sectionTitle}>RSVP Status</h3>
         <BeaconRsvpForm beacon={beacon} />
       </div>
+
+      {canManageInvitations && (
+        <div className={styles.invitationCard}>
+          <h3 className={styles.sectionTitle}>Active Invitations</h3>
+          {invitationError && <p className={styles.invitationError}>{invitationError}</p>}
+          {invitations.length > 0 ? (
+            <ul className={styles.invitationList}>
+              {invitations.map((invitation) => (
+                <li key={invitation.id} className={styles.invitationItem}>
+                  <span>{invitation.role_granted || invitation.role || 'view'}{invitation.invited_email ? ` · ${invitation.invited_email}` : ''}</span>
+                  <a href={`/join/${invitation.sqid || invitation.code}`}>/join/{invitation.sqid || invitation.code}</a>
+                </li>
+              ))}
+            </ul>
+          ) : <p className={styles.emptyInvitations}>No active invitations.</p>}
+          <form className={styles.invitationForm} onSubmit={createInvitation}>
+            <label>Permission<select value={invitationRole} onChange={(event) => setInvitationRole(event.currentTarget.value)}>
+              <option value="view">View</option>
+              <option value="edit">Edit</option>
+              <option value="share">Share</option>
+            </select></label>
+            <label>Email (optional)<input type="email" value={invitedEmail} onInput={(event) => setInvitedEmail(event.currentTarget.value)} /></label>
+            <label className={styles.guestToggle}><input type="checkbox" checked={isGuestInvitation} onChange={(event) => setIsGuestInvitation(event.currentTarget.checked)} /> Guest invitation</label>
+            <button type="submit" disabled={creatingInvitation}>{creatingInvitation ? 'Creating...' : 'Create invitation'}</button>
+          </form>
+        </div>
+      )}
     </div>
   );
 };

@@ -30,11 +30,18 @@ export interface Beacon {
 
 export interface Invitation {
   id: string | number;
+  code?: string;
+  sqid?: string;
+  role?: string;
   role_granted?: string;
   is_guest?: boolean;
+  invited_email?: string | null;
+  expires_at?: string | null;
+  max_uses?: number;
+  uses_count?: number;
   is_valid?: boolean;
   has_permission?: boolean;
-  beacon_id: string | number;
+  beacon_id?: string | number;
   porchlight_name?: string;
   [key: string]: any;
 }

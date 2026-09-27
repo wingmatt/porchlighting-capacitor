@@ -5,9 +5,21 @@
 .title { margin: 0; color: #0f172a; font-size: 1.25rem; font-weight: 700; }
 .statusMessage { margin: 0.25rem 0 0; color: #475569; font-size: 0.875rem; }
 .description { margin: 0.125rem 0 0; color: #94a3b8; font-size: 0.75rem; }
-.sectionCard, .rsvpCard { padding: 1rem; background: #fff; border: 1px solid #e2e8f0; border-radius: 0.75rem; box-shadow: 0 1px 2px rgb(15 23 42 / 0.05); }
+.sectionCard, .rsvpCard, .invitationCard { padding: 1rem; background: #fff; border: 1px solid #e2e8f0; border-radius: 0.75rem; box-shadow: 0 1px 2px rgb(15 23 42 / 0.05); }
 .sectionCard { display: grid; gap: 0.75rem; }
 .rsvpCard { padding-bottom: 1rem; }
 .sectionTitle { margin: 0; color: #1e293b; font-size: 0.875rem; font-weight: 600; }
 .rsvpCard .sectionTitle { margin-bottom: 0.5rem; }
 .map { width: 100%; height: 18rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; overflow: hidden; box-shadow: inset 0 1px 3px rgb(15 23 42 / 0.1); }
+.invitationCard { display: grid; gap: 0.75rem; }
+.invitationList { display: grid; gap: 0.5rem; margin: 0; padding: 0; list-style: none; }
+.invitationItem { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem; padding: 0.6rem; background: #f8fafc; border-radius: 0.5rem; font-size: 0.8rem; }
+.invitationItem a { color: #2563eb; overflow-wrap: anywhere; }
+.emptyInvitations, .invitationError { margin: 0; font-size: 0.8rem; color: #64748b; }
+.invitationError { color: #dc2626; }
+.invitationForm { display: grid; gap: 0.6rem; }
+.invitationForm label { display: grid; gap: 0.25rem; color: #475569; font-size: 0.8rem; }
+.invitationForm input, .invitationForm select { min-height: 2.25rem; padding: 0.4rem 0.5rem; border: 1px solid #cbd5e1; border-radius: 0.4rem; background: #fff; }
+.invitationForm button { min-height: 2.25rem; border: 0; border-radius: 0.4rem; color: #fff; background: #2563eb; cursor: pointer; }
+.invitationForm button:disabled { opacity: 0.6; cursor: wait; }
+.invitationForm .guestToggle { display: flex; grid-template-columns: auto 1fr; align-items: center; }

@@ -41,7 +41,7 @@ export const InvitationPage: FunctionComponent = () => {
       } else {
         await apiClient.post('/invitations/accept/', { code: sqid });
       }
-      navigate(`/porchlight/${data.beacon.id}`);
+      navigate(`/porchlight/${data.beacon.sqid}`);
     } catch (requestError: any) {
       setError(requestError?.response?.data?.detail || requestError?.response?.data?.error || 'Unable to accept this invitation.');
     } finally {
@@ -107,7 +107,7 @@ export const InvitationPage: FunctionComponent = () => {
 
         {data.has_permission && (
           <button
-            onClick={() => navigate(`/porchlight/${data.beacon.id}`)}
+            onClick={() => navigate(`/porchlight/${data.beacon.sqid}`)}
             className={`${styles.button} ${styles.darkButton}`}
           >
             View Porchlight
