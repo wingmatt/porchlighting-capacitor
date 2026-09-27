@@ -11,16 +11,18 @@ interface Props {
 }
 
 export const BeaconIcon: FunctionComponent<Props> = ({ beacon, editable, onUpdate }) => {
-  const isActive = beacon.active_until && new Date(beacon.active_until) > new Date();
+  const isActive = beacon.is_on ?? Boolean(
+    beacon.active_until && new Date(beacon.active_until) > new Date(),
+  );
 
   const handleToggle = async (e: JSX.TargetedMouseEvent<HTMLButtonElement>) => {
     if (!editable) return;
     e.preventDefault();
-    const response = await apiClient.patch(`/porchlight/${beacon.id}/update/`, {
-      active: !isActive,
+    const response = await apiClient.post(`/porchlights/${beacon.sqid}/control/`, {
+      action: 'toggle',
     });
-    if (onUpdate && response.data) {
-      onUpdate(response.data);
+    if (onUpdate && response.data?.porchlight) {
+      onUpdate(response.data.porchlight);
     }
   };
 

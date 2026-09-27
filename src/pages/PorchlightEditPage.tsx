@@ -2,7 +2,7 @@ import { FunctionComponent, JSX } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { apiClient } from '../api/client';
-import { MapboxMap } from '../components/MapboxMap';
+import { LocationEditor } from '../components/LocationEditor';
 import { Beacon, LocationCoordinates } from '../types';
 import styles from './PorchlightCreatePage.module.css';
 
@@ -56,11 +56,7 @@ export const PorchlightEditPage: FunctionComponent = () => {
       <label>Name<input required value={name} onInput={(event) => setName(event.currentTarget.value)} /></label>
       <label>Type<input value={type} onInput={(event) => setType(event.currentTarget.value)} /></label>
       <label>Description<textarea value={description} onInput={(event) => setDescription(event.currentTarget.value)} /></label>
-      <div className={styles.locationFields}>
-        <label>Location</label>
-        <MapboxMap location={location} defaultLocation={[-98.5795, 39.8283]} name={name || 'Porchlight'} draggable onCoordinatesChange={setLocation} />
-        {location && <p className={styles.coordinates}>Coordinates: {location.latitude?.toFixed(5)}, {location.longitude?.toFixed(5)}</p>}
-      </div>
+      <LocationEditor location={location} name={name} onChange={setLocation} />
       <div className={styles.actions}><Link to={`/porchlight/${porchlight.sqid || id}`}>Cancel</Link><button type="submit" disabled={saving}>{saving ? 'Saving...' : 'Save changes'}</button></div>
     </form>}
   </div></div>;
