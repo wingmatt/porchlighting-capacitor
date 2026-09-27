@@ -38,7 +38,7 @@ export const PorchlightCreatePage: FunctionComponent = () => {
         description,
         location: addLocation ? location : null,
       });
-      navigate(`/porchlight/${response.data.id}`);
+      navigate(`/porchlight/${response.data.sqid}`);
     } catch (requestError: any) {
       const data = requestError?.response?.data;
       setError(data?.name?.[0] || data?.detail || 'Unable to create porchlight.');
