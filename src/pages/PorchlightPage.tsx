@@ -57,8 +57,22 @@ const PorchlightLiveView: FunctionComponent<{ initialBeacon: Beacon }> = ({ init
   const [isGuestInvitation, setIsGuestInvitation] = useState(true);
   const [invitationError, setInvitationError] = useState('');
   const [creatingInvitation, setCreatingInvitation] = useState(false);
-  const canManageInvitations = beacon.is_owner || ['OWNER', 'EDIT', 'SHARE', 'ADMIN'].includes(beacon.user_role || '');
+  const canManageInvitations = beacon.is_owner || ['OWNER', 'EDIT'].includes(beacon.user_role || '');
   const canEdit = beacon.is_owner || ['OWNER', 'EDIT'].includes(beacon.user_role || '');
+  const activeInvitations = invitations.filter((invitation) => invitation.is_valid);
+  const expiredInvitations = invitations.filter((invitation) => invitation.is_expired);
+
+  const renderInvitation = (invitation: Invitation) => (
+    <li key={invitation.id} className={styles.invitationItem}>
+      <div>
+        <span>{invitation.role_granted || invitation.role || 'view'}{invitation.invited_email ? ` · ${invitation.invited_email}` : ''}</span>
+        <span className={styles.acceptedCount}>
+          {invitation.accepted_count ?? 0} accepted ({invitation.accepted_users_count ?? 0} users, {invitation.accepted_guests_count ?? 0} guests)
+        </span>
+      </div>
+      <a href={`/join/${invitation.sqid || invitation.code}`}>/join/{invitation.sqid || invitation.code}</a>
+    </li>
+  );
 
   useEffect(() => {
     if (!canManageInvitations || !beacon.id) return;
@@ -132,18 +146,19 @@ const PorchlightLiveView: FunctionComponent<{ initialBeacon: Beacon }> = ({ init
 
       {canManageInvitations && (
         <div className={styles.invitationCard}>
-          <h3 className={styles.sectionTitle}>Active Invitations</h3>
+          <h3 className={styles.sectionTitle}>Invitations</h3>
           {invitationError && <p className={styles.invitationError}>{invitationError}</p>}
-          {invitations.length > 0 ? (
+          {activeInvitations.length > 0 ? (
             <ul className={styles.invitationList}>
-              {invitations.map((invitation) => (
-                <li key={invitation.id} className={styles.invitationItem}>
-                  <span>{invitation.role_granted || invitation.role || 'view'}{invitation.invited_email ? ` · ${invitation.invited_email}` : ''}</span>
-                  <a href={`/join/${invitation.sqid || invitation.code}`}>/join/{invitation.sqid || invitation.code}</a>
-                </li>
-              ))}
+              {activeInvitations.map(renderInvitation)}
             </ul>
           ) : <p className={styles.emptyInvitations}>No active invitations.</p>}
+          {expiredInvitations.length > 0 && (
+            <>
+              <h4 className={styles.expiredTitle}>Expired Invitations</h4>
+              <ul className={styles.invitationList}>{expiredInvitations.map(renderInvitation)}</ul>
+            </>
+          )}
           <form className={styles.invitationForm} onSubmit={createInvitation}>
             <label>Permission<select value={invitationRole} onChange={(event) => setInvitationRole(event.currentTarget.value)}>
               <option value="view">View</option>

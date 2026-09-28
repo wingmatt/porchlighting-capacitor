@@ -40,6 +40,10 @@ export interface Invitation {
   max_uses?: number;
   uses_count?: number;
   is_valid?: boolean;
+  is_expired?: boolean;
+  accepted_users_count?: number;
+  accepted_guests_count?: number;
+  accepted_count?: number;
   has_permission?: boolean;
   beacon_id?: string | number;
   porchlight_name?: string;
