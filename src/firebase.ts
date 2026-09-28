@@ -2,12 +2,12 @@ import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCJQ5w4S16yMf0LE4XPfgOE1kCfZyfR2uc",
-  authDomain: "porchlight-django.firebaseapp.com",
-  projectId: "porchlight-django",
-  storageBucket: "porchlight-django.firebasestorage.app",
-  messagingSenderId: "627104697329",
-  appId: "1:627104697329:web:b3c9ef08f721566e4f9250"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
 const app = initializeApp(firebaseConfig);
