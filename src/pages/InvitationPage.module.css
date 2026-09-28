@@ -13,6 +13,7 @@
 .primaryButton:hover { background: #1d4ed8; }
 .darkButton { margin-top: 1rem; background: #0f172a; }
 .error { margin-top: 1rem; padding: .75rem; color: #b91c1c; background: #fef2f2; border-radius: .5rem; }
+.copyStatus { margin: .5rem 0 0; color: #166534; font-size: .8rem; }
 .managementSection { display: grid; gap: .75rem; margin-top: 1.5rem; text-align: left; }
 .secondaryButton { background: #475569; }
 .participantList { display: grid; gap: .5rem; }

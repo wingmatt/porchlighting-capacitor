@@ -17,6 +17,7 @@ export const InvitationPage: FunctionComponent = () => {
     beacon: Beacon;
     has_permission: boolean;
     can_manage: boolean;
+    can_share: boolean;
   } | null>(null);
   const [guestName, setGuestName] = useState('');
   const [error, setError] = useState('');
@@ -25,6 +26,7 @@ export const InvitationPage: FunctionComponent = () => {
   const [participants, setParticipants] = useState<InvitationParticipant[]>([]);
   const [participantError, setParticipantError] = useState('');
   const [participantAction, setParticipantAction] = useState(false);
+  const [copyStatus, setCopyStatus] = useState('');
 
   useEffect(() => {
     if (sqid && !authLoading) {
@@ -77,6 +79,16 @@ export const InvitationPage: FunctionComponent = () => {
       setParticipantError(requestError?.response?.data?.detail || 'Unable to revoke all permissions.');
     } finally {
       setParticipantAction(false);
+    }
+  };
+
+  const copyInvitationLink = async () => {
+    if (!sqid) return;
+    try {
+      await navigator.clipboard.writeText(`${window.location.origin}/join/${sqid}`);
+      setCopyStatus('Invitation link copied.');
+    } catch {
+      setCopyStatus('Unable to copy the invitation link.');
     }
   };
 
@@ -168,6 +180,13 @@ export const InvitationPage: FunctionComponent = () => {
             View Porchlight
           </button>
         )}
+
+        {data.can_share && (
+          <button onClick={copyInvitationLink} className={`${styles.button} ${styles.secondaryButton}`}>
+            Copy invitation link
+          </button>
+        )}
+        {copyStatus && <p className={styles.copyStatus}>{copyStatus}</p>}
 
         {data.can_manage && (
           <div className={styles.managementSection}>
