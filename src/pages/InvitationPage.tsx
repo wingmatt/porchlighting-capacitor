@@ -20,6 +20,7 @@ export const InvitationPage: FunctionComponent = () => {
     can_share: boolean;
   } | null>(null);
   const [guestName, setGuestName] = useState('');
+  const [guestToken, setGuestToken] = useState('');
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
   const [showParticipants, setShowParticipants] = useState(false);
@@ -29,6 +30,13 @@ export const InvitationPage: FunctionComponent = () => {
   const [copyStatus, setCopyStatus] = useState('');
 
   useEffect(() => {
+    Promise.all([
+      Preferences.get({ key: 'guestToken' }),
+      Preferences.get({ key: 'guestName' }),
+    ]).then(([token, name]) => {
+      setGuestToken(token.value || '');
+      setGuestName(name.value || '');
+    });
     if (sqid && !authLoading) {
       apiClient.get(`/invitations/validate/${sqid}/`)
         .then((res) => setData({ ...res.data, invitation: res.data, beacon: res.data.porchlight }))
@@ -124,6 +132,7 @@ export const InvitationPage: FunctionComponent = () => {
         <h2 className={styles.title}>
           {data.has_permission ? `You're part of ${data.beacon.name}` : `Invitation to ${data.beacon.name}`}
         </h2>
+        {!user && guestToken && guestName && <p className={styles.greeting}>Welcome back, {guestName}!</p>}
         {error && <p className={styles.error}>{error}</p>}
         {data.beacon.description && (
           <p className={styles.description}>{data.beacon.description}</p>
@@ -153,16 +162,17 @@ export const InvitationPage: FunctionComponent = () => {
           </div>
         )}
 
-        {!authLoading && !data.has_permission && data.invitation.is_valid && !data.invitation.is_guest && !user && (
+        {!authLoading && !data.has_permission && data.invitation.is_valid && !user && (
           <div className={styles.joinForm}>
-            <p className={styles.description}>Log in or register to accept this invitation.</p>
-            <button onClick={() => navigate(`/login?next=/join/${sqid}`)} className={`${styles.button} ${styles.primaryButton}`}>
-              Log in to accept
+            {!guestToken && <input type="text" placeholder="Your Name (Guest)" value={guestName}
+              onInput={(e) => setGuestName((e.target as HTMLInputElement).value)} className={styles.input} />}
+            <button onClick={() => handleJoin(true)} className={`${styles.button} ${styles.primaryButton}`} disabled={saving}>
+              {saving ? 'Joining...' : guestToken ? `Join as ${guestName}` : 'Join as a Guest'}
             </button>
           </div>
         )}
 
-        {!authLoading && !data.has_permission && data.invitation.is_valid && data.invitation.is_guest && (
+        {!authLoading && !data.has_permission && data.invitation.is_valid && data.invitation.is_guest && user && (
           <div className={styles.joinForm}>
             <input type="text" placeholder="Your Name (Guest)" value={guestName}
               onInput={(e) => setGuestName((e.target as HTMLInputElement).value)} className={styles.input} />
