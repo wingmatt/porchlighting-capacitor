@@ -1,18 +1,18 @@
 import { FunctionComponent } from 'preact';
+import { lazy, Suspense } from 'preact/compat';
 import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { InvitationPage } from './pages/InvitationPage';
-import { PorchlightPage } from './pages/PorchlightPage';
-import { BeaconIcon } from './components/BeaconIcon';
-import { Rsvp } from './components/Rsvp';
-import { MapboxMap } from './components/MapboxMap';
 import styles from './App.module.css';
 import { AuthProvider, useAuth } from './auth';
-import { AuthPage } from './pages/AuthPage';
-import { ProfilePage } from './pages/ProfilePage';
-import { PorchlightCreatePage } from './pages/PorchlightCreatePage';
-import { PorchlightEditPage } from './pages/PorchlightEditPage';
-import { NeighborhoodPage } from './pages/NeighborhoodPage';
-import { NotificationSettings } from './components/NotificationSettings';
+
+const AuthPage = lazy(() => import('./pages/AuthPage').then(({ AuthPage }) => ({ default: AuthPage })));
+const InvitationPage = lazy(() => import('./pages/InvitationPage').then(({ InvitationPage }) => ({ default: InvitationPage })));
+const NeighborhoodPage = lazy(() => import('./pages/NeighborhoodPage').then(({ NeighborhoodPage }) => ({ default: NeighborhoodPage })));
+const PorchlightCreatePage = lazy(() => import('./pages/PorchlightCreatePage').then(({ PorchlightCreatePage }) => ({ default: PorchlightCreatePage })));
+const PorchlightEditPage = lazy(() => import('./pages/PorchlightEditPage').then(({ PorchlightEditPage }) => ({ default: PorchlightEditPage })));
+const PorchlightPage = lazy(() => import('./pages/PorchlightPage').then(({ PorchlightPage }) => ({ default: PorchlightPage })));
+const ProfilePage = lazy(() => import('./pages/ProfilePage').then(({ ProfilePage }) => ({ default: ProfilePage })));
+const HomePage = lazy(() => import('./pages/HomePage').then(({ HomePage }) => ({ default: HomePage })));
+const NotificationSettings = lazy(() => import('./components/NotificationSettings').then(({ NotificationSettings }) => ({ default: NotificationSettings })));
 
 export const App: FunctionComponent = () => {
   return (
@@ -28,8 +28,9 @@ const AppShell: FunctionComponent = () => {
   return <div className={styles.app}>
     <header className={styles.header}><Link to="/" className={styles.logo}>Porchlighting</Link><nav className={styles.nav}><Link to="/neighborhood">Neighborhood</Link>{user ? <Link to="/profile">Profile & porchlights</Link> : location.pathname !== '/login' && <Link to="/login">Log in</Link>}</nav></header>
     <main className={styles.main}>
-          <NotificationSettings />
-          <Routes>
+          <Suspense fallback={<div>Loading...</div>}>
+            <NotificationSettings />
+            <Routes>
             <Route path="/login" element={<AuthPage mode="login" />} />
             <Route path="/register" element={<AuthPage mode="register" />} />
             <Route path="/forgot-password" element={<AuthPage mode="forgot-password" />} />
@@ -42,44 +43,9 @@ const AppShell: FunctionComponent = () => {
             <Route path="/porchlight/:id/edit" element={<PorchlightEditPage />} />
             <Route path="/join/:sqid" element={<InvitationPage />} />
             <Route path="/porchlight/:id" element={<PorchlightPage />} />
-            <Route
-              path="/"
-              element={
-                <div className={styles.homeStack}>
-                  <div className={styles.cardWide}>
-                    <h2 className={styles.cardTitle}>Welcome to Porchlighting Mobile</h2>
-                    <p className={styles.cardDescription}>
-                      View and interact with real-time active porchlights and beacons in your neighborhood.
-                    </p>
-                    <div className={styles.beaconActions}>
-                      <BeaconIcon
-                        beacon={{
-                          id: 1,
-                          name: 'Front Porch',
-                          is_on: true,
-                          active_until: new Date(Date.now() + 3600000 * 4).toISOString(),
-                        }}
-                        editable
-                      />
-                      <Rsvp beacon={{ id: 1, name: 'Front Porch' }} />
-                    </div>
-                  </div>
-
-                  <div className={styles.cardWideCompact}>
-                    <h3 className={styles.sectionTitle}>Nearby Porchlight Location</h3>
-                    <MapboxMap
-                      location={{ latitude: 37.7749, longitude: -122.4194 }}
-                      name="Sample Porchlight"
-                      statusMessage="Open for neighborhood drinks"
-                      isOn={true}
-                      color="#F59E0B"
-                      className={styles.homeMap}
-                    />
-                  </div>
-                </div>
-              }
-            />
-          </Routes>
+            <Route path="/" element={<HomePage />} />
+            </Routes>
+          </Suspense>
     </main>
   </div>;
 };
