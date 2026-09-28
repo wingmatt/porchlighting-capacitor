@@ -50,6 +50,14 @@ export interface Invitation {
   [key: string]: any;
 }
 
+export interface InvitationParticipant {
+  id: string;
+  type: 'user' | 'guest';
+  email?: string;
+  name?: string;
+  role?: string;
+}
+
 export interface User {
   id: number;
   email: string;

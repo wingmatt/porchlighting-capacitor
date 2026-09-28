@@ -3,7 +3,7 @@ import { useEffect, useState } from 'preact/hooks';
 import { useParams, useNavigate } from 'react-router-dom';
 import { apiClient } from '../api/client';
 import { Preferences } from '@capacitor/preferences';
-import { Beacon, Invitation } from '../types';
+import { Beacon, Invitation, InvitationParticipant } from '../types';
 import { MapboxMap } from '../components/MapboxMap';
 import { useAuth } from '../auth';
 import styles from './InvitationPage.module.css';
@@ -12,10 +12,19 @@ export const InvitationPage: FunctionComponent = () => {
   const { sqid } = useParams<{ sqid: string }>();
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
-  const [data, setData] = useState<{ invitation: Invitation; beacon: Beacon; has_permission: boolean } | null>(null);
+  const [data, setData] = useState<{
+    invitation: Invitation;
+    beacon: Beacon;
+    has_permission: boolean;
+    can_manage: boolean;
+  } | null>(null);
   const [guestName, setGuestName] = useState('');
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
+  const [showParticipants, setShowParticipants] = useState(false);
+  const [participants, setParticipants] = useState<InvitationParticipant[]>([]);
+  const [participantError, setParticipantError] = useState('');
+  const [participantAction, setParticipantAction] = useState(false);
 
   useEffect(() => {
     if (sqid && !authLoading) {
@@ -24,6 +33,52 @@ export const InvitationPage: FunctionComponent = () => {
         .catch(() => setError('This invitation could not be found.'));
     }
   }, [sqid, authLoading]);
+
+  const loadParticipants = async () => {
+    if (!sqid || !data?.can_manage) return;
+    setParticipantError('');
+    try {
+      const response = await apiClient.get(`/invitations/manage/${sqid}/`);
+      setParticipants(response.data.participants || []);
+    } catch (requestError: any) {
+      setParticipantError(requestError?.response?.data?.detail || 'Unable to load accepted participants.');
+    }
+  };
+
+  const toggleParticipants = async () => {
+    const nextValue = !showParticipants;
+    setShowParticipants(nextValue);
+    if (nextValue) await loadParticipants();
+  };
+
+  const revokeParticipant = async (participant: InvitationParticipant) => {
+    if (!sqid || !window.confirm(`Revoke ${participant.name || participant.email || 'this participant'}'s permission?`)) return;
+    setParticipantAction(true);
+    setParticipantError('');
+    try {
+      await apiClient.delete(`/invitations/manage/${sqid}/`, { data: { permission_id: participant.id } });
+      setParticipants((current) => current.filter((item) => item.id !== participant.id));
+    } catch (requestError: any) {
+      setParticipantError(requestError?.response?.data?.detail || 'Unable to revoke this permission.');
+    } finally {
+      setParticipantAction(false);
+    }
+  };
+
+  const revokeAllParticipants = async () => {
+    if (!sqid || !window.confirm('Revoke everyone\'s permission and refresh this invitation code?')) return;
+    setParticipantAction(true);
+    setParticipantError('');
+    try {
+      const response = await apiClient.post(`/invitations/manage/${sqid}/revoke-all/`);
+      setParticipants([]);
+      setData((current) => current ? { ...current, invitation: { ...current.invitation, code: response.data.code } } : current);
+    } catch (requestError: any) {
+      setParticipantError(requestError?.response?.data?.detail || 'Unable to revoke all permissions.');
+    } finally {
+      setParticipantAction(false);
+    }
+  };
 
   const handleJoin = async (guestSignup = false) => {
     if (!data) return;
@@ -112,6 +167,33 @@ export const InvitationPage: FunctionComponent = () => {
           >
             View Porchlight
           </button>
+        )}
+
+        {data.can_manage && (
+          <div className={styles.managementSection}>
+            <button onClick={toggleParticipants} className={`${styles.button} ${styles.secondaryButton}`} disabled={participantAction}>
+              {showParticipants ? 'Hide accepted participants' : 'Show accepted participants'}
+            </button>
+            {showParticipants && (
+              <div className={styles.participantList}>
+                <p className={styles.code}>Current invitation code: {data.invitation.code}</p>
+                {participantError && <p className={styles.error}>{participantError}</p>}
+                {participants.length === 0 ? (
+                  <p className={styles.description}>No users or guests have accepted this invitation.</p>
+                ) : participants.map((participant) => (
+                  <div key={participant.id} className={styles.participantItem}>
+                    <span>{participant.name || participant.email || 'Guest'}{participant.email ? ` · ${participant.email}` : ''}</span>
+                    <button onClick={() => revokeParticipant(participant)} className={`${styles.button} ${styles.revokeButton}`} disabled={participantAction}>
+                      Revoke
+                    </button>
+                  </div>
+                ))}
+                <button onClick={revokeAllParticipants} className={`${styles.button} ${styles.dangerButton}`} disabled={participantAction || participants.length === 0}>
+                  Revoke everyone and refresh code
+                </button>
+              </div>
+            )}
+          </div>
         )}
       </div>
     </div>
