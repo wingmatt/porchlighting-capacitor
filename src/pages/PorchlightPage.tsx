@@ -5,7 +5,7 @@ import { apiClient } from '../api/client';
 import { Beacon, Invitation } from '../types';
 import { useFirebaseBeacon } from '../hooks/useFirebaseBeacon';
 import { BeaconIcon } from '../components/BeaconIcon';
-import { BeaconRsvpForm } from '../components/BeaconRsvpForm';
+import { Rsvp } from '../components/Rsvp';
 import { MapboxMap } from '../components/MapboxMap';
 import styles from './PorchlightPage.module.css';
 
@@ -141,7 +141,7 @@ const PorchlightLiveView: FunctionComponent<{ initialBeacon: Beacon }> = ({ init
 
       <div className={styles.rsvpCard}>
         <h3 className={styles.sectionTitle}>RSVP Status</h3>
-        <BeaconRsvpForm beacon={beacon} />
+        <Rsvp beacon={beacon} />
       </div>
 
       {canManageInvitations && (

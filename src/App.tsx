@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-do
 import { InvitationPage } from './pages/InvitationPage';
 import { PorchlightPage } from './pages/PorchlightPage';
 import { BeaconIcon } from './components/BeaconIcon';
-import { BeaconRsvpForm } from './components/BeaconRsvpForm';
+import { Rsvp } from './components/Rsvp';
 import { MapboxMap } from './components/MapboxMap';
 import styles from './App.module.css';
 import { AuthProvider, useAuth } from './auth';
@@ -57,7 +57,7 @@ const AppShell: FunctionComponent = () => {
                         }}
                         editable
                       />
-                      <BeaconRsvpForm beacon={{ id: 1, name: 'Front Porch' }} />
+                      <Rsvp beacon={{ id: 1, name: 'Front Porch' }} />
                     </div>
                   </div>
 
