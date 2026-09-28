@@ -54,6 +54,7 @@ By default, the API client connects to `http://localhost:8000/api`. To customize
 
 ```env
 VITE_API_BASE_URL=http://localhost:8000/api
+VITE_WEB_PUSH_VAPID_PUBLIC_KEY=your-vapid-public-key
 ```
 
 > **Note for Mobile Emulators & Devices**:
@@ -88,6 +89,14 @@ VITE_FIREBASE_APP_ID=your-web-app-id
 ---
 
 ## 📱 Capacitor & Native Platforms
+
+### Notifications
+
+Use the **Enable** control in the app to opt into notifications for accessible
+Porchlights. Browser builds use the service worker and VAPID key above; Safari
+requires HTTPS and, on iOS/iPadOS, the site must be added to the Home Screen.
+Native Android and iOS builds use `@capacitor/push-notifications` and FCM after
+`npx cap sync`; configure Firebase and APNs credentials in the native shells.
 
 ### Syncing Web Assets to Native Platforms
 Whenever you modify frontend code or dependencies and want to test on native platforms, build and sync:

@@ -12,6 +12,7 @@ import { ProfilePage } from './pages/ProfilePage';
 import { PorchlightCreatePage } from './pages/PorchlightCreatePage';
 import { PorchlightEditPage } from './pages/PorchlightEditPage';
 import { NeighborhoodPage } from './pages/NeighborhoodPage';
+import { NotificationSettings } from './components/NotificationSettings';
 
 export const App: FunctionComponent = () => {
   return (
@@ -27,6 +28,7 @@ const AppShell: FunctionComponent = () => {
   return <div className={styles.app}>
     <header className={styles.header}><Link to="/" className={styles.logo}>Porchlighting</Link><nav className={styles.nav}><Link to="/neighborhood">Neighborhood</Link>{user ? <Link to="/profile">Profile & porchlights</Link> : location.pathname !== '/login' && <Link to="/login">Log in</Link>}</nav></header>
     <main className={styles.main}>
+          <NotificationSettings />
           <Routes>
             <Route path="/login" element={<AuthPage mode="login" />} />
             <Route path="/register" element={<AuthPage mode="register" />} />
