@@ -2,7 +2,7 @@ import { FunctionComponent } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { apiClient } from '../api/client';
 import { Beacon } from '../types';
-import { PorchlightListItem } from '../components/PorchlightListItem';
+import { PorchlightList } from '../components/PorchlightList';
 import styles from './NeighborhoodPage.module.css';
 
 export const NeighborhoodPage: FunctionComponent = () => {
@@ -24,10 +24,7 @@ export const NeighborhoodPage: FunctionComponent = () => {
         <p>Porchlights you own or can access.</p>
         {loading && <p>Loading Porchlights...</p>}
         {error && <p className={styles.error}>{error}</p>}
-        {!loading && !error && porchlights.length === 0 && <p>No accessible Porchlights yet.</p>}
-        {!loading && !error && porchlights.map((porchlight) => (
-          <PorchlightListItem porchlight={porchlight} key={porchlight.id} />
-        ))}
+        {!loading && !error && <PorchlightList porchlights={porchlights} emptyMessage="No accessible Porchlights yet." />}
       </div>
     </div>
   );
