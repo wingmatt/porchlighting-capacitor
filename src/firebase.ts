@@ -1,4 +1,5 @@
 import { initializeApp } from 'firebase/app';
+import { getAuth, signInWithCustomToken, signOut } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
@@ -11,4 +12,15 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+export const firebaseAuth = getAuth(app);
 export const firestore = getFirestore(app);
+
+export async function signInToFirebase(customToken?: string | null): Promise<boolean> {
+  if (!customToken) return false;
+  await signInWithCustomToken(firebaseAuth, customToken);
+  return true;
+}
+
+export async function signOutOfFirebase(): Promise<void> {
+  await signOut(firebaseAuth);
+}

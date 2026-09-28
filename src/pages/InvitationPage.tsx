@@ -6,6 +6,7 @@ import { Preferences } from '@capacitor/preferences';
 import { Beacon, Invitation, InvitationParticipant } from '../types';
 import { MapboxMap } from '../components/MapboxMap';
 import { useAuth } from '../auth';
+import { signInToFirebase } from '../firebase';
 import styles from './InvitationPage.module.css';
 
 export const InvitationPage: FunctionComponent = () => {
@@ -113,6 +114,7 @@ export const InvitationPage: FunctionComponent = () => {
         });
         await Preferences.set({ key: 'guestToken', value: response.data.guest_token });
         await Preferences.set({ key: 'guestName', value: response.data.guest_name });
+        await signInToFirebase(response.data.firebase_token);
       } else {
         await apiClient.post('/invitations/accept/', { code: sqid });
       }
