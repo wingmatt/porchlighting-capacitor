@@ -11,6 +11,7 @@ import { AuthPage } from './pages/AuthPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { PorchlightCreatePage } from './pages/PorchlightCreatePage';
 import { PorchlightEditPage } from './pages/PorchlightEditPage';
+import { NeighborhoodPage } from './pages/NeighborhoodPage';
 
 export const App: FunctionComponent = () => {
   return (
@@ -24,7 +25,7 @@ const AppShell: FunctionComponent = () => {
   const { user } = useAuth();
   const location = useLocation();
   return <div className={styles.app}>
-    <header className={styles.header}><Link to="/" className={styles.logo}>Porchlighting</Link><nav className={styles.nav}>{user ? <Link to="/profile">Profile & porchlights</Link> : location.pathname !== '/login' && <Link to="/login">Log in</Link>}</nav></header>
+    <header className={styles.header}><Link to="/" className={styles.logo}>Porchlighting</Link><nav className={styles.nav}><Link to="/neighborhood">Neighborhood</Link>{user ? <Link to="/profile">Profile & porchlights</Link> : location.pathname !== '/login' && <Link to="/login">Log in</Link>}</nav></header>
     <main className={styles.main}>
           <Routes>
             <Route path="/login" element={<AuthPage mode="login" />} />
@@ -34,6 +35,7 @@ const AppShell: FunctionComponent = () => {
             <Route path="/magic-login" element={<AuthPage mode="magic-login" />} />
             <Route path="/magic-login/:uid/:token/" element={<AuthPage mode="magic-login" />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/neighborhood" element={<NeighborhoodPage />} />
             <Route path="/porchlight/new" element={<PorchlightCreatePage />} />
             <Route path="/porchlight/:id/edit" element={<PorchlightEditPage />} />
             <Route path="/join/:sqid" element={<InvitationPage />} />
