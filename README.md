@@ -76,6 +76,14 @@ VITE_FIREBASE_MESSAGING_SENDER_ID=your-messaging-sender-id
 VITE_FIREBASE_APP_ID=your-web-app-id
 ```
 
+The current `src/firebase.ts` uses the Firebase Web SDK inside the Capacitor
+WebView for custom-token Authentication and Firestore. Register a **Web app**
+in the Firebase project and use its values above; `google-services.json` and
+`GoogleService-Info.plist` are not required for these Auth/Firestore calls.
+Do not replace this flow with a native Firebase Auth plugin unless the app is
+also migrated to a native Firestore plugin, because native and WebView Firebase
+sessions are separate.
+
 ---
 
 ## 💻 Development Commands
@@ -108,6 +116,37 @@ npm run build
 # 2. Sync web assets and plugins with native shells
 npx cap sync
 ```
+
+The repository includes the Android and iOS shells plus `capacitor.config.json`.
+If a fresh checkout does not contain a platform shell, create it once with
+`npx cap add android` or `npx cap add ios`, then run the build-and-sync commands
+above. Firebase custom-token sign-in does not use an OAuth redirect, so no
+Firebase URL scheme or native `FirebaseApp.configure()` call is needed.
+
+### Firebase native configuration and local API access
+
+- Native Firestore and Firebase Auth configuration files are **not** needed for
+  the Web SDK integration described above.
+- Native push notifications are separate. Android requires a Firebase Android
+  app registered with package ID `com.porchlighting.app` and its
+  `google-services.json` at `android/app/google-services.json`. iOS requires
+  an App ID with Push Notifications enabled, APNs credentials, and the Push
+  Notifications capability in Xcode. Keep these credentials out of source
+  control; the repository ignores the Firebase config files.
+- Use an HTTPS API URL for physical devices and production. For local Android
+  emulator testing, set `VITE_API_BASE_URL=http://10.0.2.2:8000/api`, change
+  `server.cleartext` to `true` in `capacitor.config.json`, and sync:
+
+  ```powershell
+  npm run build
+  npx cap sync android
+  ```
+
+  Restore `server.cleartext` to `false` before release builds. Cleartext is
+  disabled by default and must not be enabled in production.
+  iOS blocks plain HTTP through App Transport Security, so use HTTPS (for
+  example, a trusted development tunnel) instead of adding a production ATS
+  exception.
 
 ### Android Development
 
