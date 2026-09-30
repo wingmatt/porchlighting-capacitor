@@ -39,6 +39,8 @@ android/.cxx/
 android/app/release/
 android/*.keystore
 android/*.jks
+android/*.p12
+android/*.pfx
 android/app/google-services.json
 # Capacitor synced web assets
 android/app/src/main/assets/public/
@@ -51,6 +53,10 @@ ios/App/*.xcworkspace/xcuserdata/
 ios/App/*.xcodeproj/xcuserdata/
 ios/App/*.xcodeproj/project.xcworkspace/xcuserdata/
 ios/App/App/GoogleService-Info.plist
+ios/**/*.p12
+ios/**/*.pfx
+ios/**/*.mobileprovision
+ios/**/*.provisionprofile
 ios/App/*.mode1v3
 ios/App/*.mode2v3
 ios/App/*.perspectivev3
