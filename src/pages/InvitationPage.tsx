@@ -1,6 +1,7 @@
 import { FunctionComponent } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { useParams, useNavigate } from 'react-router-dom';
+import QRCode from 'qrcode';
 import { apiClient } from '../api/client';
 import { Preferences } from '@capacitor/preferences';
 import { Beacon, Invitation, InvitationParticipant } from '../types';
@@ -29,6 +30,7 @@ export const InvitationPage: FunctionComponent = () => {
   const [participantError, setParticipantError] = useState('');
   const [participantAction, setParticipantAction] = useState(false);
   const [copyStatus, setCopyStatus] = useState('');
+  const [qrCode, setQrCode] = useState('');
 
   useEffect(() => {
     Promise.all([
@@ -44,6 +46,25 @@ export const InvitationPage: FunctionComponent = () => {
         .catch(() => setError('This invitation could not be found.'));
     }
   }, [sqid, authLoading]);
+
+  const invitationSqid = data?.invitation.sqid || sqid;
+  const invitationLink = invitationSqid ? `${window.location.origin}/join/${invitationSqid}` : '';
+
+  useEffect(() => {
+    let cancelled = false;
+    if (!invitationLink) {
+      setQrCode('');
+      return () => { cancelled = true; };
+    }
+    QRCode.toDataURL(invitationLink, { width: 220, margin: 1 })
+      .then((url) => {
+        if (!cancelled) setQrCode(url);
+      })
+      .catch(() => {
+        if (!cancelled) setQrCode('');
+      });
+    return () => { cancelled = true; };
+  }, [invitationLink]);
 
   const loadParticipants = async () => {
     if (!sqid || !data?.can_manage) return;
@@ -83,7 +104,7 @@ export const InvitationPage: FunctionComponent = () => {
     try {
       const response = await apiClient.post(`/invitations/manage/${sqid}/revoke-all/`);
       setParticipants([]);
-      setData((current) => current ? { ...current, invitation: { ...current.invitation, code: response.data.code } } : current);
+      navigate(`/join/${response.data.sqid}`);
     } catch (requestError: any) {
       setParticipantError(requestError?.response?.data?.detail || 'Unable to revoke all permissions.');
     } finally {
@@ -92,9 +113,9 @@ export const InvitationPage: FunctionComponent = () => {
   };
 
   const copyInvitationLink = async () => {
-    if (!sqid) return;
+    if (!invitationLink) return;
     try {
-      await navigator.clipboard.writeText(`${window.location.origin}/join/${sqid}`);
+      await navigator.clipboard.writeText(invitationLink);
       setCopyStatus('Invitation link copied.');
     } catch {
       setCopyStatus('Unable to copy the invitation link.');
@@ -207,7 +228,13 @@ export const InvitationPage: FunctionComponent = () => {
             </button>
             {showParticipants && (
               <div className={styles.participantList}>
-                <p className={styles.code}>Current invitation code: {data.invitation.code}</p>
+                <p className={styles.code}>Current Invitation Code: {invitationSqid}</p>
+                {qrCode && (
+                  <div className={styles.qrCode}>
+                    <img src={qrCode} alt="QR code for the invitation link" />
+                    <span>Scan to open the invitation</span>
+                  </div>
+                )}
                 {participantError && <p className={styles.error}>{participantError}</p>}
                 {participants.length === 0 ? (
                   <p className={styles.description}>No users or guests have accepted this invitation.</p>

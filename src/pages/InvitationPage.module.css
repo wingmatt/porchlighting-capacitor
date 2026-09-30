@@ -19,6 +19,8 @@
 .secondaryButton { background: #475569; }
 .participantList { display: grid; gap: .5rem; }
 .code { margin: 0; color: #475569; font-size: .8rem; overflow-wrap: anywhere; }
+.qrCode { display: grid; justify-items: center; gap: .35rem; margin: .5rem 0; color: #475569; font-size: .75rem; }
+.qrCode img { width: 220px; height: 220px; border: 1px solid #e2e8f0; border-radius: .5rem; }
 .participantItem { display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding: .6rem; background: #f8fafc; border-radius: .5rem; font-size: .8rem; }
 .revokeButton, .dangerButton { width: auto; padding: .45rem .65rem; font-size: .75rem; background: #b91c1c; }
 .dangerButton { width: 100%; margin-top: .25rem; }
