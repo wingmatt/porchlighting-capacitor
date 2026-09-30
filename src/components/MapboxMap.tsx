@@ -1,7 +1,6 @@
 import { FunctionComponent } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
-import mapboxgl from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
+import type { Map as MapboxMapInstance, Marker as MapboxMarker } from 'mapbox-gl';
 import { LocationCoordinates } from '../types';
 import { MapPin } from 'lucide-preact';
 import styles from './MapboxMap.module.css';
@@ -86,8 +85,8 @@ export const MapboxMap: FunctionComponent<MapboxMapProps> = ({
   className = styles.defaultMap,
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<mapboxgl.Map | null>(null);
-  const markerRef = useRef<mapboxgl.Marker | null>(null);
+  const mapRef = useRef<MapboxMapInstance | null>(null);
+  const markerRef = useRef<MapboxMarker | null>(null);
   const [mapError, setMapError] = useState<string | null>(null);
   const coordinatesChangeRef = useRef(onCoordinatesChange);
   coordinatesChangeRef.current = onCoordinatesChange;
@@ -97,76 +96,90 @@ export const MapboxMap: FunctionComponent<MapboxMapProps> = ({
   useEffect(() => {
     if (!mapContainerRef.current || !coords) return;
 
-    // Set Mapbox token from environment or fallback
-    const token =
-      (import.meta as any).env?.VITE_MAPBOX_TOKEN ||
-      (import.meta as any).env?.VITE_MAPBOX_ACCESS_TOKEN ||
-      'pk.eyJ1IjoicG9yY2hsaWdodCIsImEiOiJjbHN0ZXN0dG9rZW4wMDAwMDExIn0.example';
-    mapboxgl.accessToken = token;
+    let cancelled = false;
 
-    try {
-      if (!mapRef.current) {
-        const map = new mapboxgl.Map({
-          container: mapContainerRef.current,
-          style: 'mapbox://styles/mapbox/streets-v12',
-          center: coords,
-          zoom: zoom,
-          interactive: interactive,
-        });
+    const initializeMap = async () => {
+      const [{ default: mapboxgl }] = await Promise.all([
+        import('mapbox-gl'),
+        import('mapbox-gl/dist/mapbox-gl.css'),
+      ]);
 
-        // Add standard navigation controls if interactive
-        if (interactive) {
-          map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
-        }
+      if (cancelled || !mapContainerRef.current) return;
 
-        // Custom marker element
-        const el = document.createElement('div');
-        el.className = styles.marker;
-        el.style.width = '24px';
-        el.style.height = '24px';
-        el.style.borderRadius = '50%';
-        el.style.backgroundColor = isOn ? color : '#94A3B8';
-        el.style.border = '3px solid #FFFFFF';
-        el.style.boxShadow = isOn
-          ? `0 0 12px ${color}, 0 2px 4px rgba(0,0,0,0.3)`
-          : '0 2px 4px rgba(0,0,0,0.2)';
-        el.style.cursor = 'pointer';
+      // Set Mapbox token from environment or fallback
+      const token =
+        (import.meta as any).env?.VITE_MAPBOX_TOKEN ||
+        (import.meta as any).env?.VITE_MAPBOX_ACCESS_TOKEN ||
+        'pk.eyJ1IjoicG9yY2hsaWdodCIsImEiOiJjbHN0ZXN0dG9rZW4wMDAwMDExIn0.example';
+      mapboxgl.accessToken = token;
 
-        const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
-          <div style="font-family: sans-serif; padding: 4px;">
-            <strong style="font-size: 14px; color: #0F172A;">${name}</strong>
-            ${statusMessage ? `<p style="margin: 4px 0 0; font-size: 12px; color: #64748B;">${statusMessage}</p>` : ''}
-            <p style="margin: 4px 0 0; font-size: 11px; color: #94A3B8;">${coords[1].toFixed(5)}, ${coords[0].toFixed(5)}</p>
-          </div>
-        `);
-
-        const marker = new mapboxgl.Marker({ element: el, draggable })
-          .setLngLat(coords)
-          .setPopup(popup)
-          .addTo(map);
-
-        if (draggable) {
-          marker.on('dragend', () => {
-            const position = marker.getLngLat();
-            coordinatesChangeRef.current?.({ latitude: position.lat, longitude: position.lng });
+      try {
+        if (!mapRef.current) {
+          const map = new mapboxgl.Map({
+            container: mapContainerRef.current,
+            style: 'mapbox://styles/mapbox/streets-v12',
+            center: coords,
+            zoom: zoom,
+            interactive: interactive,
           });
-        }
 
-        mapRef.current = map;
-        markerRef.current = marker;
-      } else {
-        // Update existing map and marker
-        mapRef.current.panTo(coords);
-        if (markerRef.current) {
-          markerRef.current.setLngLat(coords);
+          // Add standard navigation controls if interactive
+          if (interactive) {
+            map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
+          }
+
+          // Custom marker element
+          const el = document.createElement('div');
+          el.className = styles.marker;
+          el.style.width = '24px';
+          el.style.height = '24px';
+          el.style.borderRadius = '50%';
+          el.style.backgroundColor = isOn ? color : '#94A3B8';
+          el.style.border = '3px solid #FFFFFF';
+          el.style.boxShadow = isOn
+            ? `0 0 12px ${color}, 0 2px 4px rgba(0,0,0,0.3)`
+            : '0 2px 4px rgba(0,0,0,0.2)';
+          el.style.cursor = 'pointer';
+
+          const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
+            <div style="font-family: sans-serif; padding: 4px;">
+              <strong style="font-size: 14px; color: #0F172A;">${name}</strong>
+              ${statusMessage ? `<p style="margin: 4px 0 0; font-size: 12px; color: #64748B;">${statusMessage}</p>` : ''}
+              <p style="margin: 4px 0 0; font-size: 11px; color: #94A3B8;">${coords[1].toFixed(5)}, ${coords[0].toFixed(5)}</p>
+            </div>
+          `);
+
+          const marker = new mapboxgl.Marker({ element: el, draggable })
+            .setLngLat(coords)
+            .setPopup(popup)
+            .addTo(map);
+
+          if (draggable) {
+            marker.on('dragend', () => {
+              const position = marker.getLngLat();
+              coordinatesChangeRef.current?.({ latitude: position.lat, longitude: position.lng });
+            });
+          }
+
+          mapRef.current = map;
+          markerRef.current = marker;
+        } else {
+          // Update existing map and marker
+          mapRef.current.panTo(coords);
+          if (markerRef.current) {
+            markerRef.current.setLngLat(coords);
+          }
         }
+      } catch (err: any) {
+        console.warn('Mapbox initialization error:', err);
+        setMapError(err?.message || 'Failed to initialize Mapbox map');
       }
-    } catch (err: any) {
-      console.warn('Mapbox initialization error:', err);
-      setMapError(err?.message || 'Failed to initialize Mapbox map');
-    }
+    };
+
+    void initializeMap();
 
     return () => {
+      cancelled = true;
       if (markerRef.current) {
         markerRef.current.remove();
         markerRef.current = null;
