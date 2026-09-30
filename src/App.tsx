@@ -3,6 +3,7 @@ import { lazy, Suspense } from 'preact/compat';
 import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
 import styles from './App.module.css';
 import { AuthProvider, useAuth } from './auth';
+import { NotificationSettings } from './components/NotificationSettings';
 
 const AuthPage = lazy(() => import('./pages/AuthPage').then(({ AuthPage }) => ({ default: AuthPage })));
 const InvitationPage = lazy(() => import('./pages/InvitationPage').then(({ InvitationPage }) => ({ default: InvitationPage })));
@@ -12,7 +13,6 @@ const PorchlightEditPage = lazy(() => import('./pages/PorchlightEditPage').then(
 const PorchlightPage = lazy(() => import('./pages/PorchlightPage').then(({ PorchlightPage }) => ({ default: PorchlightPage })));
 const ProfilePage = lazy(() => import('./pages/ProfilePage').then(({ ProfilePage }) => ({ default: ProfilePage })));
 const HomePage = lazy(() => import('./pages/HomePage').then(({ HomePage }) => ({ default: HomePage })));
-const NotificationSettings = lazy(() => import('./components/NotificationSettings').then(({ NotificationSettings }) => ({ default: NotificationSettings })));
 
 export const App: FunctionComponent = () => {
   return (
@@ -26,10 +26,9 @@ const AppShell: FunctionComponent = () => {
   const { user } = useAuth();
   const location = useLocation();
   return <div className={styles.app}>
-    <header className={styles.header}><Link to="/" className={styles.logo}>Porchlighting</Link><nav className={styles.nav}><Link to="/neighborhood">Neighborhood</Link>{user ? <Link to="/profile">Profile & porchlights</Link> : location.pathname !== '/login' && <Link to="/login">Log in</Link>}</nav></header>
+    <header className={styles.header}><Link to="/" className={styles.logo}>Porchlighting</Link><nav className={styles.nav}><Link to="/neighborhood">Neighborhood</Link>{user ? <Link to="/profile">Profile & porchlights</Link> : location.pathname !== '/login' && <Link to="/login">Log in</Link>}</nav><NotificationSettings /></header>
     <main className={styles.main}>
           <Suspense fallback={<div>Loading...</div>}>
-            <NotificationSettings />
             <Routes>
             <Route path="/login" element={<AuthPage mode="login" />} />
             <Route path="/register" element={<AuthPage mode="register" />} />

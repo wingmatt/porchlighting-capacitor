@@ -5,6 +5,10 @@
 }
 
 .header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
   padding: 1rem;
   background: #fff;
   border-bottom: 1px solid #e2e8f0;
@@ -19,7 +23,7 @@
 }
 
 .logo:hover { color: #2563eb; }
-.nav { float: right; display: flex; gap: 1rem; font-size: .875rem; }
+.nav { display: flex; gap: 1rem; margin-left: auto; font-size: .875rem; }
 
 .main {
   max-width: 42rem;

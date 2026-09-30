@@ -1,6 +1,8 @@
-.container { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; padding: 1rem; border: 1px solid #e5e7eb; border-radius: .75rem; background: #fff; }
-.container div { flex: 1; min-width: 14rem; }
-.container p { margin: .25rem 0 0; color: #6b7280; font-size: .9rem; }
-.container button { padding: .5rem .9rem; border: 0; border-radius: .5rem; background: #111827; color: #fff; cursor: pointer; }
-.container button:disabled { opacity: .6; cursor: default; }
-.container small { flex-basis: 100%; color: #6b7280; }
+.container { display: flex; align-items: center; gap: .4rem; padding: .5rem 0; }
+.modeButton { padding: .35rem .65rem; border: 0; border-radius: .5rem; background: #111827; color: #fff; cursor: pointer; font-size: .8rem; }
+.modeButton:disabled { opacity: .6; cursor: default; }
+.infoWrapper { position: relative; display: flex; align-items: center; }
+.infoButton { display: inline-flex; align-items: center; justify-content: center; padding: .25rem; border: 0; border-radius: 50%; background: transparent; color: #6b7280; cursor: pointer; }
+.infoButton:hover, .infoButton:focus-visible { background: #f3f4f6; color: #111827; outline: none; }
+.explainer { position: absolute; z-index: 1; top: calc(100% + .4rem); left: 50%; width: max-content; max-width: min(18rem, calc(100vw - 2rem)); padding: .5rem .65rem; border-radius: .4rem; background: #111827; color: #fff; font-size: .8rem; line-height: 1.35; transform: translateX(-50%); }
+.message { color: #6b7280; font-size: .8rem; }
