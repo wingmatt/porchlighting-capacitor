@@ -13,9 +13,12 @@ export const Rsvp: FunctionComponent<Props> = ({ beacon }) => {
   const [hasRsvp, setHasRsvp] = useState(Boolean(beacon.has_rsvp));
   const [rsvpCount, setRsvpCount] = useState<number>(beacon.rsvp_count || 0);
   const [rsvpId, setRsvpId] = useState<string | null>(beacon.rsvp_id || null);
+  const [saving, setSaving] = useState(false);
 
   const toggleRsvp = async () => {
+    if (saving) return;
     const nextHasRsvp = !hasRsvp;
+    setSaving(true);
     setHasRsvp(nextHasRsvp);
     setRsvpCount((prev) => prev + (nextHasRsvp ? 1 : -1));
     try {
@@ -29,13 +32,19 @@ export const Rsvp: FunctionComponent<Props> = ({ beacon }) => {
     } catch (error) {
       setHasRsvp(!nextHasRsvp);
       setRsvpCount((prev) => prev - (nextHasRsvp ? 1 : -1));
+    } finally {
+      setSaving(false);
     }
   };
 
   return (
     <div className={styles.form}>
       <button
+        type="button"
         onClick={toggleRsvp}
+        disabled={saving}
+        aria-pressed={hasRsvp}
+        aria-busy={saving}
         className={`${styles.button} ${hasRsvp ? styles.yesSelected : styles.unselected}`}
       >
         <Check className={styles.icon} /> I'm In ({rsvpCount})

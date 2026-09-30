@@ -8,6 +8,9 @@ export function useFirebaseBeacon(initialBeacon: Beacon) {
 
   useEffect(() => {
     if (!initialBeacon?.id) return;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
     
     // Listen to porchlights collection broadcast from PostgreSQL
     const docRef = doc(firestore, 'porchlights', String(initialBeacon.id));

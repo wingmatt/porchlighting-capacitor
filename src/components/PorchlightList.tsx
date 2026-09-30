@@ -27,6 +27,15 @@ export const PorchlightList: FunctionComponent<PorchlightListProps> = ({ porchli
   const anyPorchlightOn = porchlights.some((porchlight) => porchlight.is_on);
   const anyLocatedPorchlightOn = locatedPorchlights.some((porchlight) => porchlight.is_on);
 
+  const selectTab = (tab: 'all' | 'map') => setActiveTab(tab);
+  const handleTabKeyDown = (event: KeyboardEvent) => {
+    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+    event.preventDefault();
+    const nextTab = event.key === 'ArrowLeft' || event.key === 'Home' ? 'all' : 'map';
+    selectTab(nextTab);
+    document.getElementById(`porchlight-tab-${nextTab}`)?.focus();
+  };
+
   if (porchlights.length === 0) return <p>{emptyMessage}</p>;
 
   if (locatedPorchlights.length === 0) {
@@ -37,29 +46,39 @@ export const PorchlightList: FunctionComponent<PorchlightListProps> = ({ porchli
     <div className={styles.container}>
       <div className={styles.tabs} role="tablist" aria-label="Porchlight display">
         <button
+          id="porchlight-tab-all"
+          type="button"
           className={`${styles.tab} ${activeTab === 'all' ? styles.activeTab : ''}`}
-          onClick={() => setActiveTab('all')}
+          onClick={() => selectTab('all')}
+          onKeyDown={handleTabKeyDown}
           role="tab"
           aria-selected={activeTab === 'all'}
+          aria-controls="porchlight-panel-all"
+          tabIndex={activeTab === 'all' ? 0 : -1}
         >
           <TabLabel label="All" isOn={anyPorchlightOn} />
         </button>
         <button
+          id="porchlight-tab-map"
+          type="button"
           className={`${styles.tab} ${activeTab === 'map' ? styles.activeTab : ''}`}
-          onClick={() => setActiveTab('map')}
+          onClick={() => selectTab('map')}
+          onKeyDown={handleTabKeyDown}
           role="tab"
           aria-selected={activeTab === 'map'}
+          aria-controls="porchlight-panel-map"
+          tabIndex={activeTab === 'map' ? 0 : -1}
         >
           <TabLabel label="Map" isOn={anyLocatedPorchlightOn} />
         </button>
       </div>
 
       {activeTab === 'all' ? (
-        <div role="tabpanel">
+        <div id="porchlight-panel-all" role="tabpanel" aria-labelledby="porchlight-tab-all" tabIndex={0}>
           {porchlights.map((porchlight) => <PorchlightListItem porchlight={porchlight} key={porchlight.id} />)}
         </div>
       ) : (
-        <div className={styles.mapList} role="tabpanel">
+        <div id="porchlight-panel-map" className={styles.mapList} role="tabpanel" aria-labelledby="porchlight-tab-map" tabIndex={0}>
           {locatedPorchlights.map((porchlight) => (
             <div className={styles.mapItem} key={porchlight.id}>
               <Link className={styles.mapTitle} to={`/porchlight/${porchlight.sqid}`}>

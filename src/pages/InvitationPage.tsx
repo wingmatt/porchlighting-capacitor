@@ -156,7 +156,7 @@ export const InvitationPage: FunctionComponent = () => {
           {data.has_permission ? `You're part of ${data.beacon.name}` : `Invitation to ${data.beacon.name}`}
         </h2>
         {!user && guestToken && guestName && <p className={styles.greeting}>Welcome back, {guestName}!</p>}
-        {error && <p className={styles.error}>{error}</p>}
+        {error && <p className={styles.error} role="alert">{error}</p>}
         {data.beacon.description && (
           <p className={styles.description}>{data.beacon.description}</p>
         )}
@@ -174,35 +174,35 @@ export const InvitationPage: FunctionComponent = () => {
         )}
 
         {!authLoading && !data.has_permission && data.invitation.is_valid && !data.invitation.is_guest && user && (
-          <div className={styles.joinForm}>
+          <form className={styles.joinForm} onSubmit={(event) => { event.preventDefault(); void handleJoin(); }}>
             <button
-              onClick={() => handleJoin()}
+              type="submit"
               className={`${styles.button} ${styles.primaryButton}`}
               disabled={saving}
             >
               {saving ? 'Accepting...' : `Accept invitation as ${user.email}`}
             </button>
-          </div>
+          </form>
         )}
 
         {!authLoading && !data.has_permission && data.invitation.is_valid && !user && (
-          <div className={styles.joinForm}>
-            {!guestToken && <input type="text" placeholder="Your Name (Guest)" value={guestName}
-              onInput={(e) => setGuestName((e.target as HTMLInputElement).value)} className={styles.input} />}
-            <button onClick={() => handleJoin(true)} className={`${styles.button} ${styles.primaryButton}`} disabled={saving}>
+          <form className={styles.joinForm} onSubmit={(event) => { event.preventDefault(); void handleJoin(true); }}>
+            {!guestToken && <label>Name (required)<input type="text" placeholder="Your Name (Guest)" required value={guestName}
+              onInput={(e) => setGuestName((e.target as HTMLInputElement).value)} className={styles.input} /></label>}
+            <button type="submit" className={`${styles.button} ${styles.primaryButton}`} disabled={saving}>
               {saving ? 'Joining...' : guestToken ? `Join as ${guestName}` : 'Join as a Guest'}
             </button>
-          </div>
+          </form>
         )}
 
         {!authLoading && !data.has_permission && data.invitation.is_valid && data.invitation.is_guest && user && (
-          <div className={styles.joinForm}>
-            <input type="text" placeholder="Your Name (Guest)" value={guestName}
-              onInput={(e) => setGuestName((e.target as HTMLInputElement).value)} className={styles.input} />
-            <button onClick={() => handleJoin(true)} className={`${styles.button} ${styles.primaryButton}`} disabled={saving}>
+          <form className={styles.joinForm} onSubmit={(event) => { event.preventDefault(); void handleJoin(true); }}>
+            <label>Name (required)<input type="text" placeholder="Your Name (Guest)" required value={guestName}
+              onInput={(e) => setGuestName((e.target as HTMLInputElement).value)} className={styles.input} /></label>
+            <button type="submit" className={`${styles.button} ${styles.primaryButton}`} disabled={saving}>
               {saving ? 'Joining...' : 'Join Beacon'}
             </button>
-          </div>
+          </form>
         )}
 
         {data.has_permission && (
