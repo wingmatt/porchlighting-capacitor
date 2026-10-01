@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-do
 import styles from './App.module.css';
 import { AuthProvider, useAuth } from './auth';
 import { NotificationSettings } from './components/NotificationSettings';
+import { AccessibilityPreferencesProvider } from './contexts/AccessibilityPreferences';
 
 const AuthPage = lazy(() => import('./pages/AuthPage').then(({ AuthPage }) => ({ default: AuthPage })));
 const InvitationPage = lazy(() => import('./pages/InvitationPage').then(({ InvitationPage }) => ({ default: InvitationPage })));
@@ -17,7 +18,9 @@ const HomePage = lazy(() => import('./pages/HomePage').then(({ HomePage }) => ({
 export const App: FunctionComponent = () => {
   return (
     <BrowserRouter>
-      <AuthProvider><AppShell /></AuthProvider>
+      <AccessibilityPreferencesProvider>
+        <AuthProvider><AppShell /></AuthProvider>
+      </AccessibilityPreferencesProvider>
     </BrowserRouter>
   );
 };

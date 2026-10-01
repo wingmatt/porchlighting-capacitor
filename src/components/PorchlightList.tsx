@@ -5,6 +5,7 @@ import { Lightbulb } from 'lucide-preact';
 import { Beacon } from '../types';
 import { MapboxMap } from './MapboxMap';
 import { PorchlightListItem } from './PorchlightListItem';
+import { useAccessibilityPreferences } from '../contexts/AccessibilityPreferences';
 import styles from './PorchlightList.module.css';
 
 interface PorchlightListProps {
@@ -23,9 +24,11 @@ const TabLabel: FunctionComponent<{ label: string; isOn: boolean }> = ({ label, 
 
 export const PorchlightList: FunctionComponent<PorchlightListProps> = ({ porchlights, emptyMessage = 'No porchlights yet.' }) => {
   const [activeTab, setActiveTab] = useState<'all' | 'map'>('all');
+  const { reducedMotion } = useAccessibilityPreferences();
   const locatedPorchlights = porchlights.filter(hasLocation);
   const anyPorchlightOn = porchlights.some((porchlight) => porchlight.is_on);
   const anyLocatedPorchlightOn = locatedPorchlights.some((porchlight) => porchlight.is_on);
+  const refreshNote = reducedMotion && <p className={styles.refreshNote} role="status">Reduced-motion mode is active. Refresh this page manually to see updates.</p>;
 
   const selectTab = (tab: 'all' | 'map') => setActiveTab(tab);
   const handleTabKeyDown = (event: KeyboardEvent) => {
@@ -36,14 +39,15 @@ export const PorchlightList: FunctionComponent<PorchlightListProps> = ({ porchli
     document.getElementById(`porchlight-tab-${nextTab}`)?.focus();
   };
 
-  if (porchlights.length === 0) return <p>{emptyMessage}</p>;
+  if (porchlights.length === 0) return <>{refreshNote}<p>{emptyMessage}</p></>;
 
   if (locatedPorchlights.length === 0) {
-    return <>{porchlights.map((porchlight) => <PorchlightListItem porchlight={porchlight} key={porchlight.id} />)}</>;
+    return <>{refreshNote}{porchlights.map((porchlight) => <PorchlightListItem porchlight={porchlight} key={porchlight.id} />)}</>;
   }
 
   return (
     <div className={styles.container}>
+      {refreshNote}
       <div className={styles.tabs} role="tablist" aria-label="Porchlight display">
         <button
           id="porchlight-tab-all"

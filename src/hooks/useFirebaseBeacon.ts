@@ -2,15 +2,16 @@ import { useState, useEffect } from 'preact/hooks';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { firestore } from '../firebase';
 import { Beacon } from '../types';
+import { useAccessibilityPreferences } from '../contexts/AccessibilityPreferences';
 
 export function useFirebaseBeacon(initialBeacon: Beacon) {
   const [beacon, setBeacon] = useState<Beacon>(initialBeacon);
+  const { reducedMotion, liveUpdates } = useAccessibilityPreferences();
 
   useEffect(() => {
     if (!initialBeacon?.id) return;
 
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) return;
+    if (reducedMotion || !liveUpdates) return;
     
     // Listen to porchlights collection broadcast from PostgreSQL
     const docRef = doc(firestore, 'porchlights', String(initialBeacon.id));
@@ -37,7 +38,7 @@ export function useFirebaseBeacon(initialBeacon: Beacon) {
     });
 
     return () => unsub();
-  }, [initialBeacon.id]);
+  }, [initialBeacon.id, reducedMotion, liveUpdates]);
 
   return [beacon, setBeacon] as const;
 }

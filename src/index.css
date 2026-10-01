@@ -11,3 +11,9 @@ button, input { font: inherit; }
     scroll-behavior: auto !important;
   }
 }
+
+html[data-reduced-motion] *, html[data-reduced-motion] *::before, html[data-reduced-motion] *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
