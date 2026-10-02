@@ -4,9 +4,7 @@
 .tab { padding: .6rem .8rem; color: var(--muted-text-color); background: transparent; border: 0; border-bottom: 2px solid transparent; border-radius: var(--radius-sm) var(--radius-sm) 0 0; cursor: pointer; }
 .activeTab { color: var(--accent-hover-color); border-bottom-color: var(--accent-color); }
 .tabLabel { display: inline-flex; align-items: center; gap: .35rem; }
-.statusIcon { width: .9rem; height: .9rem; }
-.statusOn { color: var(--success-color); fill: var(--success-color); }
-.statusOff { color: var(--inactive-color); }
+.statusIcon { display: inline-block; width: .9rem; height: .9rem; background-color: var(--inactive-color); mask-repeat: no-repeat; mask-position: center; mask-size: contain; -webkit-mask-repeat: no-repeat; -webkit-mask-position: center; -webkit-mask-size: contain; transition: background-color 250ms ease; }
 .mapList { display: grid; gap: 1rem; padding-top: 1rem; }
 .mapItems { display: grid; gap: .5rem; }
 .mapTitle { color: var(--accent-color); font-weight: 600; text-decoration: none; }

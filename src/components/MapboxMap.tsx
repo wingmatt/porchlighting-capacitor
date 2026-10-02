@@ -2,6 +2,7 @@ import { FunctionComponent, render } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import type { Map as MapboxMapInstance, Marker as MapboxMarker } from 'mapbox-gl';
 import { Beacon, LocationCoordinates } from '../types';
+import { BEACON_LIT_ICON_URL, BEACON_UNLIT_ICON_URL } from '../constants';
 import { MapPin } from 'lucide-preact';
 import { Rsvp } from './Rsvp';
 import styles from './MapboxMap.module.css';
@@ -148,19 +149,18 @@ export const MapboxMap: FunctionComponent<MapboxMapProps> = ({
 
           mapRef.current = map;
           markerRefs.current = markerData.map((markerDataItem) => {
-            const markerColor = markerDataItem.color || '#F59E0B';
             const markerIsOn = markerDataItem.isOn ?? true;
             const markerCoordinates = markerDataItem.coordinates;
             const el = document.createElement('div');
             el.className = styles.marker;
-            el.style.width = '24px';
-            el.style.height = '24px';
-            el.style.borderRadius = '50%';
-            el.style.backgroundColor = markerIsOn ? markerColor : '#94A3B8';
-            el.style.border = '3px solid #FFFFFF';
-            el.style.boxShadow = markerIsOn
-              ? `0 0 12px ${markerColor}, 0 2px 4px rgba(0,0,0,0.3)`
-              : '0 2px 4px rgba(0,0,0,0.2)';
+            const icon = document.createElement('div');
+            icon.className = `${styles.markerIcon} ${markerIsOn ? styles.markerIconLit : styles.markerIconUnlit}`;
+            icon.setAttribute('role', 'img');
+            icon.setAttribute('aria-label', markerIsOn ? 'Lit porchlight' : 'Unlit porchlight');
+            const iconUrl = markerIsOn ? BEACON_LIT_ICON_URL : BEACON_UNLIT_ICON_URL;
+            icon.style.setProperty('mask-image', `url(${iconUrl})`);
+            icon.style.setProperty('-webkit-mask-image', `url(${iconUrl})`);
+            el.appendChild(icon);
             el.style.cursor = 'pointer';
 
             const popupContent = document.createElement('div');

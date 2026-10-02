@@ -2,7 +2,7 @@ import { FunctionComponent, JSX } from 'preact';
 import { useState } from 'preact/hooks';
 import { Beacon } from '../types';
 import { apiClient } from '../api/client';
-import { Lightbulb } from 'lucide-preact';
+import { BEACON_LIT_ICON_URL, BEACON_UNLIT_ICON_URL } from '../constants';
 import styles from './BeaconIcon.module.css';
 
 interface Props {
@@ -41,7 +41,15 @@ export const BeaconIcon: FunctionComponent<Props> = ({ beacon, editable, onUpdat
       className={`${styles.button} ${isActive ? styles.active : styles.inactive}`}
       aria-label={isActive ? 'Turn off beacon' : 'Turn on beacon'}
     >
-      <Lightbulb className={styles.icon} />
+      <span
+        className={styles.icon}
+        role="img"
+        aria-label={isActive ? 'Lit porchlight' : 'Unlit porchlight'}
+        style={{
+          maskImage: `url(${isActive ? BEACON_LIT_ICON_URL : BEACON_UNLIT_ICON_URL})`,
+          WebkitMaskImage: `url(${isActive ? BEACON_LIT_ICON_URL : BEACON_UNLIT_ICON_URL})`,
+        }}
+      />
     </button>
   );
 };

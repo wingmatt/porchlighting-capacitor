@@ -1,8 +1,8 @@
 import { FunctionComponent } from 'preact';
 import { useState } from 'preact/hooks';
 import { Link } from 'react-router-dom';
-import { Lightbulb } from 'lucide-preact';
 import { Beacon } from '../types';
+import { BEACON_LIT_ICON_URL, BEACON_UNLIT_ICON_URL } from '../constants';
 import { MapboxMap } from './MapboxMap';
 import { PorchlightListItem } from './PorchlightListItem';
 import { useAccessibilityPreferences } from '../contexts/AccessibilityPreferences';
@@ -18,7 +18,16 @@ const hasLocation = (porchlight: Beacon) => porchlight.type === 'physical' && Bo
 const TabLabel: FunctionComponent<{ label: string; isOn: boolean }> = ({ label, isOn }) => (
   <span className={styles.tabLabel}>
     {label}
-    <Lightbulb className={`${styles.statusIcon} ${isOn ? styles.statusOn : styles.statusOff}`} aria-label={isOn ? 'A porchlight is on' : 'No porchlights are on'} />
+    <span
+      className={styles.statusIcon}
+      role="img"
+      aria-label={isOn ? 'A porchlight is on' : 'No porchlights are on'}
+      style={{
+        maskImage: `url(${isOn ? BEACON_LIT_ICON_URL : BEACON_UNLIT_ICON_URL})`,
+        WebkitMaskImage: `url(${isOn ? BEACON_LIT_ICON_URL : BEACON_UNLIT_ICON_URL})`,
+        backgroundColor: isOn ? 'var(--active-color)' : 'var(--inactive-color)',
+      }}
+    />
   </span>
 );
 
