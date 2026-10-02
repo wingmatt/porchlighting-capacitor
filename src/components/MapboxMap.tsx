@@ -1,8 +1,9 @@
-import { FunctionComponent } from 'preact';
+import { FunctionComponent, render } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import type { Map as MapboxMapInstance, Marker as MapboxMarker } from 'mapbox-gl';
-import { LocationCoordinates } from '../types';
+import { Beacon, LocationCoordinates } from '../types';
 import { MapPin } from 'lucide-preact';
+import { Rsvp } from './Rsvp';
 import styles from './MapboxMap.module.css';
 
 interface MapboxMapProps {
@@ -24,8 +25,10 @@ export interface MapboxMapMarker {
   location: string | LocationCoordinates | [number, number];
   name?: string;
   statusMessage?: string;
+  description?: string;
   isOn?: boolean;
   color?: string;
+  rsvpBeacon?: Beacon;
 }
 
 /**
@@ -105,7 +108,7 @@ export const MapboxMap: FunctionComponent<MapboxMapProps> = ({
   const markerData = (markers?.length ? markers : location || defaultLocation ? [{ location: location || defaultLocation!, name, statusMessage, isOn, color }] : [])
     .map((marker) => ({ ...marker, coordinates: extractLngLat(marker.location) }))
     .filter((marker): marker is typeof marker & { coordinates: [number, number] } => Boolean(marker.coordinates));
-  const markerKey = markerData.map((marker) => `${marker.coordinates.join(',')}:${marker.name}:${marker.statusMessage}:${marker.isOn}:${marker.color}`).join('|');
+  const markerKey = markerData.map((marker) => `${marker.coordinates.join(',')}:${marker.name}:${marker.statusMessage}:${marker.description}:${marker.isOn}:${marker.color}:${marker.rsvpBeacon?.has_rsvp}:${marker.rsvpBeacon?.rsvp_count}:${marker.rsvpBeacon?.rsvp_id}`).join('|');
   const displayCoords = coords ?? markerData[0]?.coordinates ?? null;
 
   useEffect(() => {
@@ -160,13 +163,41 @@ export const MapboxMap: FunctionComponent<MapboxMapProps> = ({
               : '0 2px 4px rgba(0,0,0,0.2)';
             el.style.cursor = 'pointer';
 
-            const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
-              <div style="font-family: sans-serif; padding: 4px;">
-                <strong style="font-size: 14px; color: #0F172A;">${markerDataItem.name || 'Porchlight'}</strong>
-                ${markerDataItem.statusMessage ? `<p style="margin: 4px 0 0; font-size: 12px; color: #64748B;">${markerDataItem.statusMessage}</p>` : ''}
-                <p style="margin: 4px 0 0; font-size: 11px; color: #94A3B8;">${markerCoordinates[1].toFixed(5)}, ${markerCoordinates[0].toFixed(5)}</p>
-              </div>
-            `);
+            const popupContent = document.createElement('div');
+            popupContent.style.fontFamily = 'sans-serif';
+            popupContent.style.padding = '4px';
+
+            const title = document.createElement('strong');
+            title.textContent = markerDataItem.name || 'Porchlight';
+            title.style.fontSize = '14px';
+            title.style.color = '#0F172A';
+            popupContent.appendChild(title);
+
+            if (markerDataItem.statusMessage) {
+              const status = document.createElement('p');
+              status.textContent = markerDataItem.statusMessage;
+              status.style.margin = '4px 0 0';
+              status.style.fontSize = '12px';
+              status.style.color = '#64748B';
+              popupContent.appendChild(status);
+            }
+
+            if (markerDataItem.description) {
+              const description = document.createElement('p');
+              description.textContent = markerDataItem.description;
+              description.style.margin = '4px 0 0';
+              description.style.fontSize = '12px';
+              description.style.color = '#64748B';
+              popupContent.appendChild(description);
+            }
+
+            if (markerDataItem.rsvpBeacon) {
+              const rsvpContainer = document.createElement('div');
+              popupContent.appendChild(rsvpContainer);
+              render(<Rsvp beacon={markerDataItem.rsvpBeacon} />, rsvpContainer);
+            }
+
+            const popup = new mapboxgl.Popup({ offset: 25 }).setDOMContent(popupContent);
 
             return new mapboxgl.Marker({ element: el, draggable: markers?.length ? false : draggable })
               .setLngLat(markerCoordinates)

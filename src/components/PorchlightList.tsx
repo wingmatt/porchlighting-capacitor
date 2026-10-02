@@ -88,8 +88,10 @@ export const PorchlightList: FunctionComponent<PorchlightListProps> = ({ porchli
               location: porchlight.location || porchlight.coordinates!,
               name: porchlight.name,
               statusMessage: porchlight.status_message,
+              description: porchlight.description,
               isOn: porchlight.is_on,
               color: porchlight.color,
+              rsvpBeacon: porchlight,
             }))}
             className={styles.map}
           />
