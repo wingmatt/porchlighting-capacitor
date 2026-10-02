@@ -1,3 +1,10 @@
+@font-face {
+  font-family: "ThornAndThistleRustic";
+  src: url("https://assets.porchlighting.net/thornandthistle-rustic.woff2") format("woff2"),
+    url("https://assets.porchlighting.net/thornandthistle-rustic.woff") format("woff");
+  font-display: swap;
+}
+
 * { box-sizing: border-box; }
 
 :root {
@@ -60,7 +67,7 @@
   --shadow-subtle-color: rgb(0 0 0 / 0.2);
 }
 
-html, body { margin: 0; min-width: 320px; color: var(--text-color); background: var(--page-color); font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+html, body { margin: 0; min-width: 320px; color: var(--text-color); background: var(--page-color); font-family: "ThornAndThistleRustic", sans-serif; }
 
 button, input { font: inherit; }
 
