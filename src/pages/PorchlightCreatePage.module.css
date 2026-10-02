@@ -1,17 +1,17 @@
 .page { max-width: 36rem; margin: 0 auto; }
-.card { padding: 1.25rem; background: #fff; border: 1px solid #e2e8f0; border-radius: .75rem; }
+.card { padding: 1.25rem; background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--radius-lg); }
 h1 { margin: 0 0 1.25rem; }
 form { display: grid; gap: 1rem; }
-label { display: grid; gap: .35rem; color: #334155; font-size: .875rem; font-weight: 600; }
-input, textarea { width: 100%; box-sizing: border-box; padding: .65rem .75rem; border: 1px solid #cbd5e1; border-radius: .4rem; font: inherit; }
+label { display: grid; gap: .35rem; color: var(--muted-text-color); font-size: .875rem; font-weight: 600; }
+input, textarea { width: 100%; box-sizing: border-box; padding: .65rem .75rem; border: 1px solid var(--input-border-color); border-radius: var(--radius-sm); font: inherit; color: var(--text-color); background: var(--surface-color); }
 textarea { min-height: 6rem; resize: vertical; }
 .actions { display: flex; align-items: center; justify-content: flex-end; gap: 1rem; }
-.actions a { color: #64748b; }
+.actions a { color: var(--muted-text-color); }
 .toggle { display: flex; grid-template-columns: auto 1fr; align-items: center; gap: .5rem; }
 .toggle input { width: auto; }
-.locationFields { display: grid; gap: .75rem; padding: 1rem; background: #f8fafc; border-radius: .5rem; }
+.locationFields { display: grid; gap: .75rem; padding: 1rem; background: var(--surface-muted-color); border-radius: var(--radius-md); }
 .addressRow { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: .5rem; }
-.coordinates { margin: 0; color: #64748b; font-size: .8rem; }
-button { padding: .7rem 1rem; color: #fff; background: #2563eb; border: 0; border-radius: .4rem; cursor: pointer; }
+.coordinates { margin: 0; color: var(--muted-text-color); font-size: .8rem; }
+button { padding: .7rem 1rem; color: var(--on-accent-color); background: var(--accent-color); border: 0; border-radius: var(--radius-sm); cursor: pointer; }
 button:disabled { opacity: .65; cursor: wait; }
-.error { padding: .75rem; color: #b91c1c; background: #fef2f2; border-radius: .4rem; }
+.error { padding: .75rem; color: var(--danger-color); background: var(--danger-surface-color); border-radius: var(--radius-sm); }

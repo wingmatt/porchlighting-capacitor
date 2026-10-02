@@ -1,30 +1,30 @@
-.loading { padding: 1rem; color: #64748b; }
-.error { padding: 1rem; color: #dc2626; background: #fef2f2; border-radius: 0.5rem; }
+.loading { padding: 1rem; color: var(--muted-text-color); }
+.error { padding: 1rem; color: var(--danger-strong-color); background: var(--danger-surface-color); border-radius: var(--radius-md); }
 .page { max-width: 36rem; margin: 0 auto; display: grid; gap: 1.5rem; }
-.headerCard { display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: #fff; border: 1px solid #e2e8f0; border-radius: 0.75rem; box-shadow: 0 1px 2px rgb(15 23 42 / 0.05); }
+.headerCard { display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--radius-lg); box-shadow: 0 1px 2px var(--shadow-subtle-color); }
 .headerActions { display: flex; align-items: center; gap: 0.75rem; }
-.editButton { padding: 0.45rem 0.7rem; color: #fff; background: #2563eb; border-radius: 0.4rem; font-size: 0.8rem; text-decoration: none; }
-.title { margin: 0; color: #0f172a; font-size: 1.25rem; font-weight: 700; }
-.statusMessage { margin: 0.25rem 0 0; color: #475569; font-size: 0.875rem; }
-.description { margin: 0.125rem 0 0; color: #94a3b8; font-size: 0.75rem; }
-.sectionCard, .rsvpCard, .invitationCard { padding: 1rem; background: #fff; border: 1px solid #e2e8f0; border-radius: 0.75rem; box-shadow: 0 1px 2px rgb(15 23 42 / 0.05); }
+.editButton { padding: 0.45rem 0.7rem; color: var(--on-accent-color); background: var(--accent-color); border-radius: var(--radius-sm); font-size: 0.8rem; text-decoration: none; }
+.title { margin: 0; color: var(--text-color); font-size: 1.25rem; font-weight: 700; }
+.statusMessage { margin: 0.25rem 0 0; color: var(--muted-text-color); font-size: 0.875rem; }
+.description { margin: 0.125rem 0 0; color: var(--inactive-color); font-size: 0.75rem; }
+.sectionCard, .rsvpCard, .invitationCard { padding: 1rem; background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--radius-lg); box-shadow: 0 1px 2px var(--shadow-subtle-color); }
 .sectionCard { display: grid; gap: 0.75rem; }
 .rsvpCard { padding-bottom: 1rem; }
-.sectionTitle { margin: 0; color: #1e293b; font-size: 0.875rem; font-weight: 600; }
+.sectionTitle { margin: 0; color: var(--text-color); font-size: 0.875rem; font-weight: 600; }
 .rsvpCard .sectionTitle { margin-bottom: 0.5rem; }
-.map { width: 100%; height: 18rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; overflow: hidden; box-shadow: inset 0 1px 3px rgb(15 23 42 / 0.1); }
+.map { width: 100%; height: 18rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow: hidden; box-shadow: inset 0 1px 3px var(--shadow-color); }
 .invitationCard { display: grid; gap: 0.75rem; }
 .invitationList { display: grid; gap: 0.5rem; margin: 0; padding: 0; list-style: none; }
-.invitationItem { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem; padding: 0.6rem; background: #f8fafc; border-radius: 0.5rem; font-size: 0.8rem; }
+.invitationItem { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem; padding: 0.6rem; background: var(--surface-muted-color); border-radius: var(--radius-md); font-size: 0.8rem; }
 .invitationItem > div { display: grid; gap: 0.25rem; }
-.acceptedCount { color: #64748b; font-size: 0.75rem; }
-.expiredTitle { margin: 0.5rem 0 0; color: #64748b; font-size: 0.8rem; font-weight: 600; }
-.invitationItem a { color: #2563eb; overflow-wrap: anywhere; }
-.emptyInvitations, .invitationError { margin: 0; font-size: 0.8rem; color: #64748b; }
-.invitationError { color: #dc2626; }
+.acceptedCount { color: var(--muted-text-color); font-size: 0.75rem; }
+.expiredTitle { margin: 0.5rem 0 0; color: var(--muted-text-color); font-size: 0.8rem; font-weight: 600; }
+.invitationItem a { color: var(--accent-color); overflow-wrap: anywhere; }
+.emptyInvitations, .invitationError { margin: 0; font-size: 0.8rem; color: var(--muted-text-color); }
+.invitationError { color: var(--danger-strong-color); }
 .invitationForm { display: grid; gap: 0.6rem; }
-.invitationForm label { display: grid; gap: 0.25rem; color: #475569; font-size: 0.8rem; }
-.invitationForm input, .invitationForm select { min-height: 2.25rem; padding: 0.4rem 0.5rem; border: 1px solid #cbd5e1; border-radius: 0.4rem; background: #fff; }
-.invitationForm button { min-height: 2.25rem; border: 0; border-radius: 0.4rem; color: #fff; background: #2563eb; cursor: pointer; }
+.invitationForm label { display: grid; gap: 0.25rem; color: var(--muted-text-color); font-size: 0.8rem; }
+.invitationForm input, .invitationForm select { min-height: 2.25rem; padding: 0.4rem 0.5rem; border: 1px solid var(--input-border-color); border-radius: var(--radius-sm); color: var(--text-color); background: var(--surface-color); }
+.invitationForm button { min-height: 2.25rem; border: 0; border-radius: var(--radius-sm); color: var(--on-accent-color); background: var(--accent-color); cursor: pointer; }
 .invitationForm button:disabled { opacity: 0.6; cursor: wait; }
 .invitationForm .guestToggle { display: flex; grid-template-columns: auto 1fr; align-items: center; }

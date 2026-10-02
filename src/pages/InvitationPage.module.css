@@ -1,26 +1,26 @@
 .page { max-width: 28rem; margin: 0 auto; padding: 1rem; }
-.loading { padding: 1rem; color: #64748b; }
-.card { padding: 1.5rem; text-align: center; background: #fff; border: 1px solid #e2e8f0; border-radius: 0.75rem; box-shadow: 0 1px 2px rgb(15 23 42 / 0.05); }
-.title { margin: 0; color: #0f172a; font-size: 1.25rem; font-weight: 700; }
-.description { margin: 0.5rem 0 0; color: #475569; font-size: 0.875rem; }
-.greeting { margin: 0; color: #166534; font-weight: 600; }
+.loading { padding: 1rem; color: var(--muted-text-color); }
+.card { padding: 1.5rem; text-align: center; background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--radius-lg); box-shadow: 0 1px 2px var(--shadow-subtle-color); }
+.title { margin: 0; color: var(--text-color); font-size: 1.25rem; font-weight: 700; }
+.description { margin: 0.5rem 0 0; color: var(--muted-text-color); font-size: 0.875rem; }
+.greeting { margin: 0; color: var(--success-color); font-weight: 600; }
 .mapContainer { margin-top: 1rem; }
-.map { width: 100%; height: 12rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; overflow: hidden; }
+.map { width: 100%; height: 12rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow: hidden; }
 .joinForm { display: grid; gap: 1rem; margin-top: 1.5rem; text-align: left; }
-.input { width: 100%; padding: 0.625rem; border: 1px solid #cbd5e1; border-radius: 0.5rem; outline: none; }
-.input:focus { border-color: #3b82f6; box-shadow: 0 0 0 2px rgb(59 130 246 / 0.3); }
-.button { width: 100%; padding: 0.625rem; color: #fff; border: 0; border-radius: 0.5rem; font-weight: 600; transition: background-color 150ms ease; }
-.primaryButton { background: #2563eb; }
-.primaryButton:hover { background: #1d4ed8; }
-.darkButton { margin-top: 1rem; background: #0f172a; }
-.error { margin-top: 1rem; padding: .75rem; color: #b91c1c; background: #fef2f2; border-radius: .5rem; }
-.copyStatus { margin: .5rem 0 0; color: #166534; font-size: .8rem; }
+.input { width: 100%; padding: 0.625rem; border: 1px solid var(--input-border-color); border-radius: var(--radius-md); outline: none; color: var(--text-color); background: var(--surface-color); }
+.input:focus { border-color: var(--accent-color); box-shadow: 0 0 0 2px var(--accent-focus-color); }
+.button { width: 100%; padding: 0.625rem; color: var(--on-accent-color); border: 0; border-radius: var(--radius-md); font-weight: 600; transition: background-color 150ms ease; }
+.primaryButton { background: var(--accent-color); }
+.primaryButton:hover { background: var(--accent-hover-color); }
+.darkButton { margin-top: 1rem; background: var(--text-color); }
+.error { margin-top: 1rem; padding: .75rem; color: var(--danger-color); background: var(--danger-surface-color); border-radius: var(--radius-md); }
+.copyStatus { margin: .5rem 0 0; color: var(--success-color); font-size: .8rem; }
 .managementSection { display: grid; gap: .75rem; margin-top: 1.5rem; text-align: left; }
-.secondaryButton { background: #475569; }
+.secondaryButton { background: var(--muted-text-color); }
 .participantList { display: grid; gap: .5rem; }
-.code { margin: 0; color: #475569; font-size: .8rem; overflow-wrap: anywhere; }
-.qrCode { display: grid; justify-items: center; gap: .35rem; margin: .5rem 0; color: #475569; font-size: .75rem; }
-.qrCode img { width: 220px; height: 220px; border: 1px solid #e2e8f0; border-radius: .5rem; }
-.participantItem { display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding: .6rem; background: #f8fafc; border-radius: .5rem; font-size: .8rem; }
-.revokeButton, .dangerButton { width: auto; padding: .45rem .65rem; font-size: .75rem; background: #b91c1c; }
+.code { margin: 0; color: var(--muted-text-color); font-size: .8rem; overflow-wrap: anywhere; }
+.qrCode { display: grid; justify-items: center; gap: .35rem; margin: .5rem 0; color: var(--muted-text-color); font-size: .75rem; }
+.qrCode img { width: 220px; height: 220px; border: 1px solid var(--border-color); border-radius: var(--radius-md); }
+.participantItem { display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding: .6rem; background: var(--surface-muted-color); border-radius: var(--radius-md); font-size: .8rem; }
+.revokeButton, .dangerButton { width: auto; padding: .45rem .65rem; font-size: .75rem; background: var(--danger-color); }
 .dangerButton { width: 100%; margin-top: .25rem; }

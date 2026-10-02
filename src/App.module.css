@@ -37,8 +37,8 @@
 .cardWideCompact {
   background: var(--surface-color);
   border: 1px solid var(--border-color);
-  border-radius: 0.75rem;
-  box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 1px 2px var(--shadow-subtle-color);
 }
 
 .cardWide { padding: 1.5rem; }
@@ -47,4 +47,4 @@
 .cardDescription { margin: 0; color: var(--muted-text-color); font-size: 0.875rem; }
 .sectionTitle { margin: 0; color: var(--text-color); font-size: 0.875rem; font-weight: 600; }
 .beaconActions { display: flex; align-items: center; gap: 1rem; padding-top: 0.5rem; }
-.homeMap { width: 100%; height: 16rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; overflow: hidden; box-shadow: inset 0 1px 3px rgb(15 23 42 / 0.1); }
+.homeMap { width: 100%; height: 16rem; border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow: hidden; box-shadow: inset 0 1px 3px var(--shadow-color); }

@@ -1,9 +1,9 @@
-.locationFields { display: grid; gap: .75rem; padding: 1rem; background: #f8fafc; border-radius: .5rem; }
-.toggle { display: flex; align-items: center; gap: .5rem; color: #334155; font-size: .875rem; font-weight: 600; }
+.locationFields { display: grid; gap: .75rem; padding: 1rem; background: var(--surface-muted-color); border-radius: var(--radius-md); }
+.toggle { display: flex; align-items: center; gap: .5rem; color: var(--muted-text-color); font-size: .875rem; font-weight: 600; }
 .toggle input { width: auto; }
 .addressRow { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: .5rem; }
-.locationFields label { display: grid; gap: .35rem; color: #334155; font-size: .875rem; font-weight: 600; }
-.locationFields input { width: 100%; box-sizing: border-box; padding: .65rem .75rem; border: 1px solid #cbd5e1; border-radius: .4rem; font: inherit; }
-.locationFields button { padding: .7rem 1rem; color: #fff; background: #2563eb; border: 0; border-radius: .4rem; cursor: pointer; }
+.locationFields label { display: grid; gap: .35rem; color: var(--muted-text-color); font-size: .875rem; font-weight: 600; }
+.locationFields input { width: 100%; box-sizing: border-box; padding: .65rem .75rem; border: 1px solid var(--input-border-color); border-radius: var(--radius-sm); font: inherit; color: var(--text-color); background: var(--surface-color); }
+.locationFields button { padding: .7rem 1rem; color: var(--on-accent-color); background: var(--accent-color); border: 0; border-radius: var(--radius-sm); cursor: pointer; }
 .locationFields button:disabled { opacity: .65; cursor: wait; }
-.coordinates { margin: 0; color: #64748b; font-size: .8rem; }
+.coordinates { margin: 0; color: var(--muted-text-color); font-size: .8rem; }

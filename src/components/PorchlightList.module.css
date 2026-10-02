@@ -1,13 +1,13 @@
 .container { margin-top: 1rem; }
-.refreshNote { margin: 0 0 .75rem; color: #475569; font-size: .875rem; }
-.tabs { display: flex; gap: .35rem; border-bottom: 1px solid #e2e8f0; }
-.tab { padding: .6rem .8rem; color: #64748b; background: transparent; border: 0; border-bottom: 2px solid transparent; border-radius: .35rem .35rem 0 0; cursor: pointer; }
-.activeTab { color: #1d4ed8; border-bottom-color: #2563eb; }
+.refreshNote { margin: 0 0 .75rem; color: var(--muted-text-color); font-size: .875rem; }
+.tabs { display: flex; gap: .35rem; border-bottom: 1px solid var(--border-color); }
+.tab { padding: .6rem .8rem; color: var(--muted-text-color); background: transparent; border: 0; border-bottom: 2px solid transparent; border-radius: var(--radius-sm) var(--radius-sm) 0 0; cursor: pointer; }
+.activeTab { color: var(--accent-hover-color); border-bottom-color: var(--accent-color); }
 .tabLabel { display: inline-flex; align-items: center; gap: .35rem; }
 .statusIcon { width: .9rem; height: .9rem; }
-.statusOn { color: #15803d; fill: #86efac; }
-.statusOff { color: #94a3b8; }
+.statusOn { color: var(--success-color); fill: var(--success-color); }
+.statusOff { color: var(--inactive-color); }
 .mapList { display: grid; gap: 1rem; padding-top: 1rem; }
 .mapItem { display: grid; gap: .5rem; }
-.mapTitle { color: #2563eb; font-weight: 600; text-decoration: none; }
+.mapTitle { color: var(--accent-color); font-weight: 600; text-decoration: none; }
 .map { height: 16rem; }
