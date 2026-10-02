@@ -8,6 +8,6 @@
 .statusOn { color: var(--success-color); fill: var(--success-color); }
 .statusOff { color: var(--inactive-color); }
 .mapList { display: grid; gap: 1rem; padding-top: 1rem; }
-.mapItem { display: grid; gap: .5rem; }
+.mapItems { display: grid; gap: .5rem; }
 .mapTitle { color: var(--accent-color); font-weight: 600; text-decoration: none; }
-.map { height: 16rem; }
+.map { height: 24rem; }

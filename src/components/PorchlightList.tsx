@@ -83,20 +83,23 @@ export const PorchlightList: FunctionComponent<PorchlightListProps> = ({ porchli
         </div>
       ) : (
         <div id="porchlight-panel-map" className={styles.mapList} role="tabpanel" aria-labelledby="porchlight-tab-map" tabIndex={0}>
-          {locatedPorchlights.map((porchlight) => (
-            <div className={styles.mapItem} key={porchlight.id}>
-              <Link className={styles.mapTitle} to={`/porchlight/${porchlight.sqid}`}>
+          <MapboxMap
+            markers={locatedPorchlights.map((porchlight) => ({
+              location: porchlight.location || porchlight.coordinates!,
+              name: porchlight.name,
+              statusMessage: porchlight.status_message,
+              isOn: porchlight.is_on,
+              color: porchlight.color,
+            }))}
+            className={styles.map}
+          />
+          <div className={styles.mapItems}>
+            {locatedPorchlights.map((porchlight) => (
+              <Link className={styles.mapTitle} to={`/porchlight/${porchlight.sqid}`} key={porchlight.id}>
                 {porchlight.name || 'Unnamed porchlight'}
               </Link>
-              <MapboxMap
-                location={porchlight.location || porchlight.coordinates}
-                name={porchlight.name}
-                isOn={porchlight.is_on}
-                color={porchlight.color}
-                className={styles.map}
-              />
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       )}
     </div>
