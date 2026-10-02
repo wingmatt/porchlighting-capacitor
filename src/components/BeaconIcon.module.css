@@ -1,5 +1,5 @@
-.button { padding: 0.75rem; border: 0; border-radius: var(--radius-pill); transition: background-color 150ms ease, color 150ms ease; }
+.button { padding: 6px; background: transparent; border: 0; border-radius: var(--radius-pill); transition: background-color 150ms ease, color 150ms ease; cursor: pointer;}
 .button:disabled { cursor: default; }
-.active { color: var(--on-warning-color); background: var(--active-color); box-shadow: 0 10px 15px var(--active-shadow-color); }
-.inactive { color: var(--inactive-color); background: var(--border-color); }
-.icon { display: block; width: 2rem; height: 2rem; background-color: currentColor; mask-repeat: no-repeat; mask-position: center; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; -webkit-mask-position: center; -webkit-mask-size: 100% 100%; transition: color 250ms ease; }
+.active .icon { color: var(--on-warning-color); background: var(--active-color); box-shadow: 0 10px 15px var(--active-shadow-color); }
+.inactive { color: var(--inactive-color);}
+.icon { display: block; width: 3rem; height: 3rem; background-color: currentColor; mask-repeat: no-repeat; mask-position: center; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; -webkit-mask-position: center; -webkit-mask-size: 100% 100%; transition: color 250ms ease; }
