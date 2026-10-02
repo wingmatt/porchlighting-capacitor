@@ -5,6 +5,8 @@ import styles from './App.module.css';
 import { AuthProvider, useAuth } from './auth';
 import { NotificationSettings } from './components/NotificationSettings';
 import { AccessibilityPreferencesProvider } from './contexts/AccessibilityPreferences';
+import { ThemeProvider } from './contexts/Theme';
+import { ThemeToggle } from './components/ThemeToggle';
 
 const AuthPage = lazy(() => import('./pages/AuthPage').then(({ AuthPage }) => ({ default: AuthPage })));
 const InvitationPage = lazy(() => import('./pages/InvitationPage').then(({ InvitationPage }) => ({ default: InvitationPage })));
@@ -18,9 +20,11 @@ const HomePage = lazy(() => import('./pages/HomePage').then(({ HomePage }) => ({
 export const App: FunctionComponent = () => {
   return (
     <BrowserRouter>
-      <AccessibilityPreferencesProvider>
-        <AuthProvider><AppShell /></AuthProvider>
-      </AccessibilityPreferencesProvider>
+      <ThemeProvider>
+        <AccessibilityPreferencesProvider>
+          <AuthProvider><AppShell /></AuthProvider>
+        </AccessibilityPreferencesProvider>
+      </ThemeProvider>
     </BrowserRouter>
   );
 };
@@ -29,7 +33,7 @@ const AppShell: FunctionComponent = () => {
   const { user } = useAuth();
   const location = useLocation();
   return <div className={styles.app}>
-    <header className={styles.header}><Link to="/" className={styles.logo}>Porchlighting</Link><nav className={styles.nav}><Link to="/neighborhood">Neighborhood</Link>{user ? <Link to="/profile">Profile & porchlights</Link> : location.pathname !== '/login' && <Link to="/login">Log in</Link>}</nav><NotificationSettings /></header>
+    <header className={styles.header}><Link to="/" className={styles.logo}>Porchlighting</Link><nav className={styles.nav}><Link to="/neighborhood">Neighborhood</Link>{user ? <Link to="/profile">Profile & porchlights</Link> : location.pathname !== '/login' && <Link to="/login">Log in</Link>}</nav><ThemeToggle /><NotificationSettings /></header>
     <main className={styles.main}>
           <Suspense fallback={<div>Loading...</div>}>
             <Routes>

@@ -1,0 +1,2 @@
+.button { display: inline-flex; align-items: center; gap: .35rem; padding: .35rem .65rem; border: 1px solid var(--border-color); border-radius: .5rem; color: var(--text-color); background: var(--surface-color); cursor: pointer; font-size: .8rem; }
+.button:hover, .button:focus-visible { border-color: var(--accent-color); outline: none; }
