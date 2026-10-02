@@ -8,19 +8,17 @@ import styles from './LocationEditor.module.css';
 interface Props {
   location: LocationCoordinates | null;
   name?: string;
+  broadcastLocation: boolean;
   onChange: (location: LocationCoordinates | null) => void;
+  onBroadcastChange: (broadcast: boolean) => void;
 }
 
-export const LocationEditor: FunctionComponent<Props> = ({ location, name, onChange }) => {
+export const LocationEditor: FunctionComponent<Props> = ({ location, name, broadcastLocation, onChange, onBroadcastChange }) => {
   const [enabled, setEnabled] = useState(Boolean(location));
   const [address, setAddress] = useState({ street: '', city: '', state: '', postalCode: '' });
   const [geocoding, setGeocoding] = useState(false);
   const [error, setError] = useState('');
 
-  const toggle = (checked: boolean) => {
-    setEnabled(checked);
-    if (!checked) onChange(null);
-  };
 
   const useAddress = async () => {
     const formattedAddress = [address.street, address.city, address.state, address.postalCode]
@@ -43,8 +41,19 @@ export const LocationEditor: FunctionComponent<Props> = ({ location, name, onCha
   };
 
   return <>
-    <label className={styles.toggle}><input type="checkbox" checked={enabled} onChange={(event) => toggle(event.currentTarget.checked)} /> Add location</label>
+    {!enabled && <button type="button" className={styles.addLocation} onClick={() => setEnabled(true)}>Add location</button>}
     {enabled && <div className={styles.locationFields}>
+      <div className={styles.locationControls}>
+        <label className={styles.broadcastToggle}>
+          <input type="checkbox" checked={broadcastLocation} onChange={(event) => onBroadcastChange(event.currentTarget.checked)} />
+          Broadcast location
+        </label>
+        <button type="button" className={styles.removeLocation} onClick={() => {
+          setEnabled(false);
+          onChange(null);
+          onBroadcastChange(false);
+        }}>Remove location</button>
+      </div>
       {error && <p>{error}</p>}
       <label>Street address<input value={address.street} onInput={(event) => setAddress({ ...address, street: event.currentTarget.value })} /></label>
       <div className={styles.addressRow}>

@@ -13,7 +13,7 @@ interface PorchlightListProps {
   emptyMessage?: string;
 }
 
-const hasLocation = (porchlight: Beacon) => Boolean(porchlight.location || porchlight.coordinates);
+const hasLocation = (porchlight: Beacon) => porchlight.type === 'physical' && Boolean(porchlight.location || porchlight.coordinates);
 
 const TabLabel: FunctionComponent<{ label: string; isOn: boolean }> = ({ label, isOn }) => (
   <span className={styles.tabLabel}>

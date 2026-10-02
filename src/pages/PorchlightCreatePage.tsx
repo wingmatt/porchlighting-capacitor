@@ -12,7 +12,7 @@ export const PorchlightCreatePage: FunctionComponent = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const [name, setName] = useState('');
-  const [type, setType] = useState('default');
+  const [broadcastLocation, setBroadcastLocation] = useState(false);
   const [description, setDescription] = useState('');
   const [location, setLocation] = useState<LocationCoordinates | null>(null);
   const [error, setError] = useState('');
@@ -31,7 +31,7 @@ export const PorchlightCreatePage: FunctionComponent = () => {
     try {
       const response = await apiClient.post('/porchlights/', {
         name,
-        type,
+        type: broadcastLocation ? 'physical' : 'virtual',
         description,
         location,
       });
@@ -51,7 +51,7 @@ export const PorchlightCreatePage: FunctionComponent = () => {
     <form onSubmit={submit}>
       <label>Name<input required value={name} onInput={(event) => setName(event.currentTarget.value)} /></label>
       <label>Description<textarea value={description} onInput={(event) => setDescription(event.currentTarget.value)} /></label>
-      <LocationEditor location={location} name={name} onChange={setLocation} />
+      <LocationEditor location={location} name={name} broadcastLocation={broadcastLocation} onChange={setLocation} onBroadcastChange={setBroadcastLocation} />
       <div className={styles.actions}><Link to="/profile">Cancel</Link><button type="submit" disabled={saving}>{saving ? 'Creating...' : 'Create porchlight'}</button></div>
     </form>
   </div></div>;

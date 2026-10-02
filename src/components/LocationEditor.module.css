@@ -1,6 +1,9 @@
 .locationFields { display: grid; gap: .75rem; padding: 1rem; background: var(--surface-muted-color); border-radius: var(--radius-md); }
-.toggle { display: flex; align-items: center; gap: .5rem; color: var(--muted-text-color); font-size: .875rem; font-weight: 600; }
-.toggle input { width: auto; }
+.addLocation, .removeLocation { padding: .7rem 1rem; color: var(--on-accent-color); background: var(--accent-color); border: 0; border-radius: var(--radius-sm); cursor: pointer; font: inherit; font-weight: 600; }
+.locationControls { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; }
+.broadcastToggle { display: inline-flex; align-items: center; gap: .5rem; padding: .7rem 1rem; color: var(--on-accent-color); background: var(--accent-color); border-radius: var(--radius-sm); cursor: pointer; font-size: .875rem; font-weight: 600; }
+.broadcastToggle input { width: auto; }
+.removeLocation { background: var(--surface-color); color: var(--text-color); border: 1px solid var(--input-border-color); }
 .addressRow { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: .5rem; }
 .locationFields label { display: grid; gap: .35rem; color: var(--muted-text-color); font-size: .875rem; font-weight: 600; }
 .locationFields input { width: 100%; box-sizing: border-box; padding: .65rem .75rem; border: 1px solid var(--input-border-color); border-radius: var(--radius-sm); font: inherit; color: var(--text-color); background: var(--surface-color); }

@@ -11,7 +11,7 @@ export const PorchlightEditPage: FunctionComponent = () => {
   const navigate = useNavigate();
   const [porchlight, setPorchlight] = useState<Beacon | null>(null);
   const [name, setName] = useState('');
-  const [type, setType] = useState('default');
+  const [broadcastLocation, setBroadcastLocation] = useState(false);
   const [description, setDescription] = useState('');
   const [location, setLocation] = useState<LocationCoordinates | null>(null);
   const [error, setError] = useState('');
@@ -24,7 +24,7 @@ export const PorchlightEditPage: FunctionComponent = () => {
         const data = response.data as Beacon;
         setPorchlight(data);
         setName(data.name || '');
-        setType(data.type || 'default');
+        setBroadcastLocation(data.type === 'physical');
         setDescription(data.description || '');
         setLocation(data.coordinates || (typeof data.location === 'object' ? data.location : null));
       })
@@ -37,7 +37,7 @@ export const PorchlightEditPage: FunctionComponent = () => {
     setError('');
     setSaving(true);
     try {
-      const response = await apiClient.patch(`/porchlights/${id}/`, { name, type, description, location });
+      const response = await apiClient.patch(`/porchlights/${id}/`, { name, type: broadcastLocation ? 'physical' : 'virtual', description, location });
       navigate(`/porchlight/${response.data.sqid || id}`);
     } catch (requestError: any) {
       const data = requestError?.response?.data;
@@ -54,9 +54,8 @@ export const PorchlightEditPage: FunctionComponent = () => {
     {error && <p className={styles.error}>{error}</p>}
     {porchlight && <form onSubmit={submit}>
       <label>Name<input required value={name} onInput={(event) => setName(event.currentTarget.value)} /></label>
-      <label>Type<input value={type} onInput={(event) => setType(event.currentTarget.value)} /></label>
       <label>Description<textarea value={description} onInput={(event) => setDescription(event.currentTarget.value)} /></label>
-      <LocationEditor location={location} name={name} onChange={setLocation} />
+      <LocationEditor location={location} name={name} broadcastLocation={broadcastLocation} onChange={setLocation} onBroadcastChange={setBroadcastLocation} />
       <div className={styles.actions}><Link to={`/porchlight/${porchlight.sqid || id}`}>Cancel</Link><button type="submit" disabled={saving}>{saving ? 'Saving...' : 'Save changes'}</button></div>
     </form>}
   </div></div>;
