@@ -26,7 +26,7 @@ export async function requestNotificationPermission(): Promise<boolean> {
   const permission = await Notification.requestPermission();
   if (permission !== 'granted') return false;
   const registration = await navigator.serviceWorker.register('/sw.js');
-  const subscription = await registration.pushManager.subscribe({
+  const subscription = await registration.pushManager.getSubscription() || await registration.pushManager.subscribe({
     userVisibleOnly: true,
     applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
   });

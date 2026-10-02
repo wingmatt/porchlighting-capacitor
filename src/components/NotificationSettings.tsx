@@ -1,6 +1,7 @@
 import { FunctionComponent } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { Capacitor } from '@capacitor/core';
+import { Preferences } from '@capacitor/preferences';
 import { Info } from 'lucide-preact';
 import { configureNativeNotifications, disableNotifications, requestNotificationPermission } from '../notifications';
 import styles from './NotificationSettings.module.css';
@@ -12,7 +13,18 @@ export const NotificationSettings: FunctionComponent = () => {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    configureNativeNotifications().catch(() => setMessage('Native notifications could not be initialized.'));
+    const restoreNotificationState = async () => {
+      const preference = await Preferences.get({ key: 'notifications_enabled' });
+      let subscriptionExists = true;
+      if (!Capacitor.isNativePlatform() && 'serviceWorker' in navigator && 'PushManager' in window) {
+        const registration = await navigator.serviceWorker.getRegistration('/');
+        subscriptionExists = Boolean(await registration?.pushManager.getSubscription());
+      }
+      setEnabled(preference.value === 'true' && subscriptionExists);
+      await configureNativeNotifications();
+    };
+
+    restoreNotificationState().catch(() => setMessage('Native notifications could not be initialized.'));
   }, []);
 
   const toggleNotifications = async () => {
