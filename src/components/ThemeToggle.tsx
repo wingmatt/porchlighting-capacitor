@@ -1,5 +1,4 @@
 import { FunctionComponent } from 'preact';
-import { Moon, Sun } from 'lucide-preact';
 import { useTheme } from '../contexts/Theme';
 import styles from './ThemeToggle.module.css';
 
@@ -8,12 +7,16 @@ export const ThemeToggle: FunctionComponent = () => {
   const nextTheme = theme === 'dark' ? 'light' : 'dark';
   return <button
     type="button"
-    className={styles.button}
+    className={`${styles.button} ${nextTheme === 'light' ? styles.lightMode : styles.darkMode}`}
+    data-theme={nextTheme}
     onClick={toggleTheme}
     aria-label={`Switch to ${nextTheme} mode`}
     aria-pressed={theme === 'dark'}
   >
-    {theme === 'dark' ? <Sun size={16} aria-hidden="true" /> : <Moon size={16} aria-hidden="true" />}
+    <span
+      className={`${styles.icon} ${nextTheme === 'light' ? styles.sunIcon : styles.moonIcon}`}
+      aria-hidden="true"
+    />
     <span>{theme === 'dark' ? 'Light mode' : 'Dark mode'}</span>
   </button>;
 };
