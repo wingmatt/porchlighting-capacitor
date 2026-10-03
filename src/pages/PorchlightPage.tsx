@@ -141,7 +141,7 @@ const PorchlightLiveView: FunctionComponent<{ initialBeacon: Beacon }> = ({ init
 
       <div className={styles.rsvpCard}>
         <h3 className={styles.sectionTitle}>RSVP Status</h3>
-        <Rsvp beacon={beacon} />
+        <Rsvp beacon={beacon} onUpdate={(updated) => setBeacon((prev) => ({ ...prev, ...updated }))} />
       </div>
 
       {canManageInvitations && (

@@ -6,9 +6,10 @@ import styles from './Rsvp.module.css';
 
 interface Props {
   beacon: Beacon;
+  onUpdate?: (updated: Partial<Beacon>) => void;
 }
 
-export const Rsvp: FunctionComponent<Props> = ({ beacon }) => {
+export const Rsvp: FunctionComponent<Props> = ({ beacon, onUpdate }) => {
   const [hasRsvp, setHasRsvp] = useState(Boolean(beacon.has_rsvp));
   const [rsvpCount, setRsvpCount] = useState<number>(beacon.rsvp_count || 0);
   const [rsvpId, setRsvpId] = useState<string | null>(beacon.rsvp_id || null);
@@ -24,9 +25,11 @@ export const Rsvp: FunctionComponent<Props> = ({ beacon }) => {
       if (nextHasRsvp) {
         const response = await apiClient.post('/rsvps/', { porchlight: beacon.id });
         setRsvpId(response.data.id);
+        onUpdate?.({ has_rsvp: true, rsvp_count: rsvpCount + 1, rsvp_id: response.data.id });
       } else if (rsvpId) {
         await apiClient.delete(`/rsvps/${rsvpId}/`);
         setRsvpId(null);
+        onUpdate?.({ has_rsvp: false, rsvp_count: rsvpCount - 1, rsvp_id: null });
       }
     } catch (error) {
       setHasRsvp(!nextHasRsvp);

@@ -41,7 +41,18 @@ export const BeaconIcon: FunctionComponent<Props> = ({ beacon, editable, onUpdat
       className={`${styles.button} ${isActive ? styles.active : styles.inactive}`}
       aria-label={isActive ? 'Turn off beacon' : 'Turn on beacon'}
     >
-      <BeaconGraphic isOn={isActive} className={styles.icon} label={isActive ? 'Lit porchlight' : 'Unlit porchlight'} />
+      <span className={styles.iconWrapper}>
+        <BeaconGraphic isOn={isActive} className={styles.icon} label={isActive ? 'Lit porchlight' : 'Unlit porchlight'} />
+        {(beacon.rsvp_count ?? 0) > 0 && (
+          <span
+            className={`${styles.rsvpBadge} ${beacon.has_rsvp ? styles.rsvpBadgeSelected : ''}`}
+            aria-label={`${beacon.rsvp_count} RSVP${beacon.rsvp_count === 1 ? '' : 's'}${beacon.has_rsvp ? ', including you' : ''}`}
+          >
+            <span className={styles.rsvpIcon} aria-hidden="true" />
+            <span>{beacon.rsvp_count}</span>
+          </span>
+        )}
+      </span>
     </button>
   );
 };
