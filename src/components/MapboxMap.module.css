@@ -8,9 +8,7 @@
 .darkPopup :global(.mapboxgl-popup-close-button) { color: var(--muted-text-color); }
 .marker { position: relative; display: block; width: 32px; height: 32px; }
 .markerLit::before { content: ''; position: absolute; inset: -4px; z-index: 0; border-radius: 50%; background: radial-gradient(var(--active-shadow-color), transparent 90%); }
-.markerIcon { width: 32px; height: 32px; background-color: var(--inactive-color); mask-repeat: no-repeat; mask-position: center; mask-size: contain; -webkit-mask-repeat: no-repeat; -webkit-mask-position: center; -webkit-mask-size: contain; }
-.markerIconLit { background-color: var(--active-color); animation: beacon-lit-color 250ms ease; }
-.markerIconUnlit { background-color: var(--inactive-color); }
+.markerIcon { width: 32px; height: 32px; }
 .emptyState, .errorState { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1.5rem; }
 .emptyState { color: var(--muted-text-color); background: var(--surface-muted-color); border: 1px dashed var(--input-border-color); }
 .errorState { color: var(--muted-text-color); background: var(--surface-muted-color); border: 1px solid var(--input-border-color); }
@@ -23,4 +21,3 @@
 .errorDescription { color: var(--muted-text-color); }
 .coordinates { position: absolute; bottom: 0.5rem; left: 0.5rem; padding: 0.25rem 0.625rem; color: var(--text-color); background: var(--overlay-color); border-radius: var(--radius-sm); box-shadow: 0 1px 3px var(--shadow-color); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.75rem; pointer-events: none; backdrop-filter: blur(4px); }
 @keyframes pulse { 50% { opacity: 0.5; } }
-@keyframes beacon-lit-color { from { background-color: var(--inactive-color); } to { background-color: var(--active-color); } }

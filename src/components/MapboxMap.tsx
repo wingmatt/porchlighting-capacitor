@@ -2,9 +2,9 @@ import { FunctionComponent, render } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import type { Map as MapboxMapInstance, Marker as MapboxMarker } from 'mapbox-gl';
 import { Beacon, LocationCoordinates } from '../types';
-import { BEACON_LIT_ICON_URL, BEACON_UNLIT_ICON_URL } from '../constants';
 import { MapPin } from 'lucide-preact';
 import { Rsvp } from './Rsvp';
+import { BeaconGraphic } from './BeaconGraphic';
 import styles from './MapboxMap.module.css';
 import { useTheme } from '../contexts/Theme';
 
@@ -156,12 +156,14 @@ export const MapboxMap: FunctionComponent<MapboxMapProps> = ({
             const el = document.createElement('div');
             el.className = `${styles.marker} ${markerIsOn ? styles.markerLit : ''}`;
             const icon = document.createElement('div');
-            icon.className = `${styles.markerIcon} ${markerIsOn ? styles.markerIconLit : styles.markerIconUnlit}`;
-            icon.setAttribute('role', 'img');
-            icon.setAttribute('aria-label', markerIsOn ? 'Lit porchlight' : 'Unlit porchlight');
-            const iconUrl = markerIsOn ? BEACON_LIT_ICON_URL : BEACON_UNLIT_ICON_URL;
-            icon.style.setProperty('mask-image', `url(${iconUrl})`);
-            icon.style.setProperty('-webkit-mask-image', `url(${iconUrl})`);
+            icon.className = styles.markerIcon;
+            render(
+              <BeaconGraphic
+                isOn={markerIsOn}
+                label={markerIsOn ? 'Lit porchlight' : 'Unlit porchlight'}
+              />,
+              icon,
+            );
             el.appendChild(icon);
             el.style.cursor = 'pointer';
 

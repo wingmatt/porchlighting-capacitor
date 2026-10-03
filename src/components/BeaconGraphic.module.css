@@ -1,0 +1,6 @@
+.icon { display: block; width: 100%; height: 100%; overflow: visible; }
+.base { color: var(--inactive-color); fill: currentColor; }
+.lit { color: var(--active-color); fill: currentColor; animation: beacon-lit-color 250ms ease; }
+:global(#beacon-base) { color: var(--inactive-color); fill: currentColor; }
+:global(#beacon-lit) { color: var(--active-color); fill: currentColor; animation: beacon-lit-color 250ms ease; }
+@keyframes beacon-lit-color { from { color: var(--inactive-color); } to { color: var(--active-color); } }

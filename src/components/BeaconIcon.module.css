@@ -2,4 +2,4 @@
 .button:disabled { cursor: default; }
 .active .icon { color: var(--on-warning-color); background: var(--active-color); box-shadow: 0 10px 15px var(--active-shadow-color); }
 .inactive { color: var(--inactive-color);}
-.icon { display: block; width: 3rem; height: 3rem; background-color: currentColor; mask-repeat: no-repeat; mask-position: center; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; -webkit-mask-position: center; -webkit-mask-size: 100% 100%; transition: color 250ms ease; }
+.icon { width: 3rem; height: 3rem; }
