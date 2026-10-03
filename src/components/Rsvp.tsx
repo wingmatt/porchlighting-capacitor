@@ -41,6 +41,8 @@ export const Rsvp: FunctionComponent<Props> = ({ beacon, onUpdate }) => {
     }
   };
 
+  if (!beacon.is_on) return null;
+
   return (
     <div className={styles.form}>
       <button
