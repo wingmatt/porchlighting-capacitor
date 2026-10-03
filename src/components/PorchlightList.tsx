@@ -3,7 +3,6 @@ import { useEffect, useState } from 'preact/hooks';
 import { Link } from 'react-router-dom';
 import { Beacon } from '../types';
 import { BeaconGraphic } from './BeaconGraphic';
-import { canEditBeacon } from './BeaconIcon';
 import { MapboxMap } from './MapboxMap';
 import { PorchlightListItem } from './PorchlightListItem';
 import { useAccessibilityPreferences } from '../contexts/AccessibilityPreferences';
@@ -50,7 +49,7 @@ export const PorchlightList: FunctionComponent<PorchlightListProps> = ({ porchli
   if (displayPorchlights.length === 0) return <>{refreshNote}<p>{emptyMessage}</p></>;
 
   if (locatedPorchlights.length === 0) {
-    return <>{refreshNote}{displayPorchlights.map((porchlight) => <PorchlightListItem porchlight={porchlight} key={porchlight.id} onUpdate={canEditBeacon(porchlight) ? updatePorchlight : undefined} />)}</>;
+    return <>{refreshNote}{displayPorchlights.map((porchlight) => <PorchlightListItem porchlight={porchlight} key={porchlight.id} onUpdate={updatePorchlight} />)}</>;
   }
 
   return (
@@ -87,7 +86,7 @@ export const PorchlightList: FunctionComponent<PorchlightListProps> = ({ porchli
 
       {activeTab === 'all' ? (
         <div id="porchlight-panel-all" role="tabpanel" aria-labelledby="porchlight-tab-all" tabIndex={0}>
-          {displayPorchlights.map((porchlight) => <PorchlightListItem porchlight={porchlight} key={porchlight.id} onUpdate={canEditBeacon(porchlight) ? updatePorchlight : undefined} />)}
+          {displayPorchlights.map((porchlight) => <PorchlightListItem porchlight={porchlight} key={porchlight.id} onUpdate={updatePorchlight} />)}
         </div>
       ) : (
         <div id="porchlight-panel-map" className={styles.mapList} role="tabpanel" aria-labelledby="porchlight-tab-map" tabIndex={0}>

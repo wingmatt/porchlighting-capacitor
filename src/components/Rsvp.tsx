@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'preact';
+import { FunctionComponent, JSX } from 'preact';
 import { useState } from 'preact/hooks';
 import { Beacon } from '../types';
 import { apiClient } from '../api/client';
@@ -15,7 +15,9 @@ export const Rsvp: FunctionComponent<Props> = ({ beacon, onUpdate }) => {
   const [rsvpId, setRsvpId] = useState<string | null>(beacon.rsvp_id || null);
   const [saving, setSaving] = useState(false);
 
-  const toggleRsvp = async () => {
+  const toggleRsvp = async (event: JSX.TargetedMouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
     if (saving) return;
     const nextHasRsvp = !hasRsvp;
     setSaving(true);
@@ -49,7 +51,7 @@ export const Rsvp: FunctionComponent<Props> = ({ beacon, onUpdate }) => {
         aria-busy={saving}
         className={`${styles.button} ${hasRsvp ? styles.yesSelected : styles.unselected}`}
       >
-        <span className={`${styles.icon} ${hasRsvp ? styles.activeIcon : ''}`} aria-hidden="true" /> I'm In ({rsvpCount})
+        <span className={`${styles.icon} ${hasRsvp ? styles.activeIcon : ''}`} aria-hidden="true" />
       </button>
     </div>
   );

@@ -1,1 +1,4 @@
-.item { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .75rem 0; color: var(--accent-color); border-top: 1px solid var(--border-color); text-decoration: none; }
+.item { display: flex; align-items: center; gap: .75rem; padding: .75rem 0; border-top: 1px solid var(--border-color); }
+.name { display: inline-flex; align-items: center; gap: .4rem; min-width: 0; flex: 1; color: var(--accent-color); text-decoration: none; }
+.name > span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.permissionIndicator { display: inline-flex; align-items: center; justify-content: center; width: 1.1rem; height: 1.1rem; flex: 0 0 1.1rem; border-radius: var(--radius-pill); color: var(--on-accent-color); background: var(--accent-color); font-size: .7rem; line-height: 1; }
