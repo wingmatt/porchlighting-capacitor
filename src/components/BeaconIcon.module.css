@@ -1,5 +1,5 @@
 .button { padding: 6px; background: transparent; border: 0; border-radius: var(--radius-pill); transition: background-color 150ms ease, color 150ms ease; cursor: pointer;}
 .button:disabled { cursor: default; }
-.active .icon { color: var(--on-warning-color); background: var(--active-color); box-shadow: 0 10px 15px var(--active-shadow-color); }
+.active .icon { color: var(--on-warning-color);}
 .inactive { color: var(--inactive-color);}
 .icon { width: 3rem; height: 3rem; }
