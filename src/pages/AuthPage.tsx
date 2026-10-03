@@ -60,7 +60,7 @@ export const AuthPage: FunctionComponent<{ mode: AuthMode }> = ({ mode }) => {
     {message && <p className={styles.success}>{message}</p>}
     {error && <p className={styles.error}>{error}</p>}
     {!message && <form onSubmit={submit}>
-      {(!isReset || isLogin || isRegister || mode === 'magic-login') && <label>Email<input type="email" required value={email} onInput={(event) => setEmail(event.currentTarget.value)} /></label>}
+      {!isReset && <label>Email<input type="email" required value={email} onInput={(event) => setEmail(event.currentTarget.value)} /></label>}
       {isRegister && <label>Name<input value={name} onInput={(event) => setName(event.currentTarget.value)} /></label>}
       {(isLogin || isRegister || isReset) && <label>Password<input type="password" required minLength={6} value={password} onInput={(event) => setPassword(event.currentTarget.value)} /></label>}
       {(isRegister || isReset) && <label>Confirm password<input type="password" required minLength={6} value={passwordConfirm} onInput={(event) => setPasswordConfirm(event.currentTarget.value)} /></label>}
