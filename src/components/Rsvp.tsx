@@ -2,7 +2,6 @@ import { FunctionComponent } from 'preact';
 import { useState } from 'preact/hooks';
 import { Beacon } from '../types';
 import { apiClient } from '../api/client';
-import { Check } from 'lucide-preact';
 import styles from './Rsvp.module.css';
 
 interface Props {
@@ -47,7 +46,7 @@ export const Rsvp: FunctionComponent<Props> = ({ beacon }) => {
         aria-busy={saving}
         className={`${styles.button} ${hasRsvp ? styles.yesSelected : styles.unselected}`}
       >
-        <Check className={styles.icon} /> I'm In ({rsvpCount})
+        <span className={`${styles.icon} ${hasRsvp ? styles.activeIcon : ''}`} aria-hidden="true" /> I'm In ({rsvpCount})
       </button>
     </div>
   );
