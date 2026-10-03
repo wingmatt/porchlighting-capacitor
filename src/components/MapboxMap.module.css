@@ -1,7 +1,8 @@
 .defaultMap { width: 100%; height: 16rem; border-radius: var(--radius-lg); overflow: hidden; box-shadow: 0 4px 6px var(--shadow-color); }
 .wrapper { position: relative; }
 .mapContainer { width: 100%; height: 100%; }
-.marker { display: block; }
+.marker { position: relative; display: block; width: 32px; height: 32px; }
+.markerLit::before { content: ''; position: absolute; inset: -4px; z-index: 0; border-radius: 50%; background: radial-gradient(var(--active-shadow-color), transparent 90%); }
 .markerIcon { width: 32px; height: 32px; background-color: var(--inactive-color); mask-repeat: no-repeat; mask-position: center; mask-size: contain; -webkit-mask-repeat: no-repeat; -webkit-mask-position: center; -webkit-mask-size: contain; }
 .markerIconLit { background-color: var(--active-color); animation: beacon-lit-color 250ms ease; }
 .markerIconUnlit { background-color: var(--inactive-color); }

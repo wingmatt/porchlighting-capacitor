@@ -152,7 +152,7 @@ export const MapboxMap: FunctionComponent<MapboxMapProps> = ({
             const markerIsOn = markerDataItem.isOn ?? true;
             const markerCoordinates = markerDataItem.coordinates;
             const el = document.createElement('div');
-            el.className = styles.marker;
+            el.className = `${styles.marker} ${markerIsOn ? styles.markerLit : ''}`;
             const icon = document.createElement('div');
             icon.className = `${styles.markerIcon} ${markerIsOn ? styles.markerIconLit : styles.markerIconUnlit}`;
             icon.setAttribute('role', 'img');
