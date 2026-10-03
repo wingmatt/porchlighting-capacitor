@@ -6,6 +6,7 @@ import { BEACON_LIT_ICON_URL, BEACON_UNLIT_ICON_URL } from '../constants';
 import { MapPin } from 'lucide-preact';
 import { Rsvp } from './Rsvp';
 import styles from './MapboxMap.module.css';
+import { useTheme } from '../contexts/Theme';
 
 interface MapboxMapProps {
   location?: string | LocationCoordinates | [number, number] | null;
@@ -103,6 +104,7 @@ export const MapboxMap: FunctionComponent<MapboxMapProps> = ({
   const markerRefs = useRef<MapboxMarker[]>([]);
   const [mapError, setMapError] = useState<string | null>(null);
   const coordinatesChangeRef = useRef(onCoordinatesChange);
+  const { theme } = useTheme();
   coordinatesChangeRef.current = onCoordinatesChange;
 
   const coords = extractLngLat(location) ?? defaultLocation ?? null;
@@ -136,7 +138,7 @@ export const MapboxMap: FunctionComponent<MapboxMapProps> = ({
         if (!mapRef.current) {
           const map = new mapboxgl.Map({
             container: mapContainerRef.current,
-            style: 'mapbox://styles/mapbox/streets-v12',
+            style: `mapbox://styles/mapbox/${theme === 'dark' ? 'dark-v11' : 'streets-v12'}`,
             center: markerData[0].coordinates,
             zoom: zoom,
             interactive: interactive,
@@ -170,7 +172,7 @@ export const MapboxMap: FunctionComponent<MapboxMapProps> = ({
             const title = document.createElement('strong');
             title.textContent = markerDataItem.name || 'Porchlight';
             title.style.fontSize = '14px';
-            title.style.color = '#0F172A';
+            title.style.color = theme === 'dark' ? '#F8FAFC' : '#0F172A';
             popupContent.appendChild(title);
 
             if (markerDataItem.statusMessage) {
@@ -178,7 +180,7 @@ export const MapboxMap: FunctionComponent<MapboxMapProps> = ({
               status.textContent = markerDataItem.statusMessage;
               status.style.margin = '4px 0 0';
               status.style.fontSize = '12px';
-              status.style.color = '#64748B';
+              status.style.color = theme === 'dark' ? '#CBD5E1' : '#64748B';
               popupContent.appendChild(status);
             }
 
@@ -187,7 +189,7 @@ export const MapboxMap: FunctionComponent<MapboxMapProps> = ({
               description.textContent = markerDataItem.description;
               description.style.margin = '4px 0 0';
               description.style.fontSize = '12px';
-              description.style.color = '#64748B';
+              description.style.color = theme === 'dark' ? '#CBD5E1' : '#64748B';
               popupContent.appendChild(description);
             }
 
@@ -197,7 +199,7 @@ export const MapboxMap: FunctionComponent<MapboxMapProps> = ({
               render(<Rsvp beacon={markerDataItem.rsvpBeacon} />, rsvpContainer);
             }
 
-            const popup = new mapboxgl.Popup({ offset: 25 }).setDOMContent(popupContent);
+            const popup = new mapboxgl.Popup({ offset: 25, className: theme === 'dark' ? styles.darkPopup : undefined }).setDOMContent(popupContent);
 
             return new mapboxgl.Marker({ element: el, draggable: markers?.length ? false : draggable })
               .setLngLat(markerCoordinates)
@@ -232,7 +234,7 @@ export const MapboxMap: FunctionComponent<MapboxMapProps> = ({
         mapRef.current = null;
       }
     };
-  }, [markerKey, zoom, interactive, draggable]);
+  }, [markerKey, zoom, interactive, draggable, theme]);
 
   if (!displayCoords) {
     return (
@@ -262,7 +264,7 @@ export const MapboxMap: FunctionComponent<MapboxMapProps> = ({
 
   return (
     <div className={`${styles.wrapper} ${className}`}>
-      <div ref={mapContainerRef} className={styles.mapContainer} />
+      <div ref={mapContainerRef} className={`${styles.mapContainer} ${theme === 'dark' ? styles.darkMap : ''}`} />
       <div className={styles.coordinates}>
         📍 {displayCoords[1].toFixed(4)}, {displayCoords[0].toFixed(4)}
       </div>
