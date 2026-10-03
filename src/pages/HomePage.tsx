@@ -1,40 +1,115 @@
 import { FunctionComponent } from 'preact';
-import { BeaconIcon } from '../components/BeaconIcon';
-import { MapboxMap } from '../components/MapboxMap';
-import { Rsvp } from '../components/Rsvp';
-import styles from '../App.module.css';
+import { useEffect, useState } from 'preact/hooks';
+import { Link } from 'react-router-dom';
+import { Preferences } from '@capacitor/preferences';
+import { apiClient } from '../api/client';
+import { useAuth } from '../auth';
+import { PorchlightCarousel } from '../components/PorchlightCarousel';
+import { PorchlightList } from '../components/PorchlightList';
+import { Beacon } from '../types';
+import styles from './HomePage.module.css';
 
-export const HomePage: FunctionComponent = () => (
-  <div className={styles.homeStack}>
-    <div className={styles.cardWide}>
-      <h2 className={styles.cardTitle}>Welcome to Porchlighting Mobile</h2>
-      <p className={styles.cardDescription}>
-        View and interact with real-time active porchlights and beacons in your neighborhood.
-      </p>
-      <div className={styles.beaconActions}>
-        <BeaconIcon
-          beacon={{
-            id: 1,
-            name: 'Front Porch',
-            is_on: true,
-            active_until: new Date(Date.now() + 3600000 * 4).toISOString(),
-          }}
-          editable
-        />
-        <Rsvp beacon={{ id: 1, name: 'Front Porch' }} />
+const editableRoles = new Set(['OWNER', 'ADMIN', 'EDIT', 'SHARE']);
+
+export const HomePage: FunctionComponent = () => {
+  const { user, loading: authLoading } = useAuth();
+  const [guestName, setGuestName] = useState('');
+  const [guestReady, setGuestReady] = useState(false);
+  const [accessiblePorchlights, setAccessiblePorchlights] = useState<Beacon[]>([]);
+  const [editablePorchlights, setEditablePorchlights] = useState<Beacon[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (authLoading) return;
+    let cancelled = false;
+    setLoading(true);
+    setError('');
+
+    const loadHome = async () => {
+      const [{ value: token }, { value: name }] = await Promise.all([
+        Preferences.get({ key: 'guestToken' }),
+        Preferences.get({ key: 'guestName' }),
+      ]);
+      if (cancelled) return;
+      setGuestName(name || '');
+      setGuestReady(!user && Boolean(token));
+
+      if (!user && !token) {
+        setAccessiblePorchlights([]);
+        setEditablePorchlights([]);
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const accessibleRequest = apiClient.get('/neighborhood/');
+        const responses = user
+          ? await Promise.all([accessibleRequest, apiClient.get('/porchlights/')])
+          : [await accessibleRequest];
+        if (cancelled) return;
+        const accessible = responses[0].data as Beacon[];
+        setAccessiblePorchlights(accessible);
+        if (user) {
+          setEditablePorchlights((responses[1].data as Beacon[]).filter((porchlight) => (
+            porchlight.is_owner || editableRoles.has(String(porchlight.user_role || '').toUpperCase())
+          )));
+        } else {
+          setEditablePorchlights([]);
+        }
+      } catch {
+        if (!cancelled) setError('Unable to load your porchlights right now.');
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+
+    loadHome();
+    return () => { cancelled = true; };
+  }, [authLoading, user]);
+
+  if (authLoading || loading) return <p>Loading porchlights...</p>;
+  if (error) return <p role="alert">{error}</p>;
+  if (!user && !guestReady) return (
+    <div className={styles.homeStack}>
+      <section className={styles.card}>
+        <h1>Welcome to Porchlighting</h1>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean commodo ligula eget dolor. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.</p>
+        <div className={styles.actions}>
+          <Link className={styles.button} to="/login">Log in</Link>
+          <Link className={styles.secondaryButton} to="/register">Sign up</Link>
+        </div>
+      </section>
+    </div>
+  );
+
+  if (!user) {
+    const litCount = accessiblePorchlights.filter((porchlight) => porchlight.is_on).length;
+    return (
+      <div className={styles.homeStack}>
+        <section className={styles.card}>
+          <h1>Hello, {guestName || 'guest'}!</h1>
+          <p className={styles.summary}>{litCount} lit porchlights</p>
+        </section>
+        <section className={styles.card}>
+          <h2>Porchlights you can access</h2>
+          <PorchlightList porchlights={accessiblePorchlights} />
+        </section>
       </div>
-    </div>
+    );
+  }
 
-    <div className={styles.cardWideCompact}>
-      <h3 className={styles.sectionTitle}>Nearby Porchlight Location</h3>
-      <MapboxMap
-        location={{ latitude: 37.7749, longitude: -122.4194 }}
-        name="Sample Porchlight"
-        statusMessage="Open for neighborhood drinks"
-        isOn={true}
-        color="#F59E0B"
-        className={styles.homeMap}
-      />
+  return (
+    <div className={styles.homeStack}>
+      <section className={styles.card}>
+        <h1>Welcome back{user.first_name ? `, ${user.first_name}` : ''}!</h1>
+        <h2>Porchlights you can edit</h2>
+        <PorchlightCarousel porchlights={editablePorchlights} />
+      </section>
+      <section className={styles.card}>
+        <h2>All accessible porchlights</h2>
+        <PorchlightList porchlights={accessiblePorchlights} />
+      </section>
     </div>
-  </div>
-);
+  );
+};

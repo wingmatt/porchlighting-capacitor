@@ -1,0 +1,10 @@
+.homeStack { display: grid; gap: 1.5rem; }
+.card { display: grid; gap: 1rem; padding: 1.5rem; background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--radius-lg); box-shadow: 0 1px 2px var(--shadow-subtle-color); }
+.card h1, .card h2 { margin: 0; color: var(--text-color); }
+.card p { margin: 0; color: var(--muted-text-color); }
+.summary { color: var(--text-color) !important; font-size: 1.25rem; font-weight: 600; }
+.actions { display: flex; flex-wrap: wrap; gap: .75rem; }
+.button, .secondaryButton { padding: .65rem 1rem; border-radius: var(--radius-sm); text-decoration: none; }
+.button { color: var(--on-accent-color); background: var(--accent-color); }
+.button:hover { background: var(--accent-hover-color); }
+.secondaryButton { color: var(--text-color); border: 1px solid var(--border-color); }
