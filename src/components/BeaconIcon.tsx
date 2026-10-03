@@ -1,5 +1,5 @@
 import { FunctionComponent, JSX } from 'preact';
-import { useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import { Beacon } from '../types';
 import { apiClient } from '../api/client';
 import { BeaconGraphic } from './BeaconGraphic';
@@ -11,22 +11,33 @@ interface Props {
   onUpdate?: (updated: Beacon) => void;
 }
 
+const editableRoles = new Set(['OWNER', 'ADMIN', 'EDIT', 'SHARE']);
+
+export const canEditBeacon = (beacon: Beacon) => (
+  Boolean(beacon.is_owner) || editableRoles.has(String(beacon.user_role || '').toUpperCase())
+);
+
 export const BeaconIcon: FunctionComponent<Props> = ({ beacon, editable, onUpdate }) => {
-  const isActive = beacon.is_on ?? Boolean(
-    beacon.active_until && new Date(beacon.active_until) > new Date(),
-  );
+  const [currentBeacon, setCurrentBeacon] = useState(beacon);
   const [saving, setSaving] = useState(false);
+  useEffect(() => setCurrentBeacon(beacon), [beacon]);
+
+  const isActive = currentBeacon.is_on ?? Boolean(
+    currentBeacon.active_until && new Date(currentBeacon.active_until) > new Date(),
+  );
 
   const handleToggle = async (e: JSX.TargetedMouseEvent<HTMLButtonElement>) => {
     if (!editable) return;
     e.preventDefault();
+    e.stopPropagation();
     setSaving(true);
     try {
       const response = await apiClient.post(`/porchlights/${beacon.sqid}/control/`, {
         action: 'toggle',
       });
-      if (onUpdate && response.data?.porchlight) {
-        onUpdate(response.data.porchlight);
+      if (response.data?.porchlight) {
+        setCurrentBeacon(response.data.porchlight);
+        onUpdate?.(response.data.porchlight);
       }
     } finally {
       setSaving(false);
@@ -43,13 +54,13 @@ export const BeaconIcon: FunctionComponent<Props> = ({ beacon, editable, onUpdat
     >
       <span className={styles.iconWrapper}>
         <BeaconGraphic isOn={isActive} className={styles.icon} label={isActive ? 'Lit porchlight' : 'Unlit porchlight'} />
-        {(beacon.rsvp_count ?? 0) > 0 && (
+        {(currentBeacon.rsvp_count ?? 0) > 0 && (
           <span
-            className={`${styles.rsvpBadge} ${beacon.has_rsvp ? styles.rsvpBadgeSelected : ''}`}
-            aria-label={`${beacon.rsvp_count} RSVP${beacon.rsvp_count === 1 ? '' : 's'}${beacon.has_rsvp ? ', including you' : ''}`}
+            className={`${styles.rsvpBadge} ${currentBeacon.has_rsvp ? styles.rsvpBadgeSelected : ''}`}
+            aria-label={`${currentBeacon.rsvp_count} RSVP${currentBeacon.rsvp_count === 1 ? '' : 's'}${currentBeacon.has_rsvp ? ', including you' : ''}`}
           >
             <span className={styles.rsvpIcon} aria-hidden="true" />
-            <span>{beacon.rsvp_count}</span>
+            <span>{currentBeacon.rsvp_count}</span>
           </span>
         )}
       </span>

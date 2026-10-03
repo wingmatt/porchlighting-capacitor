@@ -1,8 +1,9 @@
 import { FunctionComponent } from 'preact';
-import { useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import { Link } from 'react-router-dom';
 import { Beacon } from '../types';
 import { BeaconGraphic } from './BeaconGraphic';
+import { canEditBeacon } from './BeaconIcon';
 import { MapboxMap } from './MapboxMap';
 import { PorchlightListItem } from './PorchlightListItem';
 import { useAccessibilityPreferences } from '../contexts/AccessibilityPreferences';
@@ -11,6 +12,7 @@ import styles from './PorchlightList.module.css';
 interface PorchlightListProps {
   porchlights: Beacon[];
   emptyMessage?: string;
+  onUpdate?: (updated: Beacon) => void;
 }
 
 const hasLocation = (porchlight: Beacon) => porchlight.type === 'physical' && Boolean(porchlight.location || porchlight.coordinates);
@@ -22,11 +24,17 @@ const TabLabel: FunctionComponent<{ label: string; isOn: boolean }> = ({ label, 
   </span>
 );
 
-export const PorchlightList: FunctionComponent<PorchlightListProps> = ({ porchlights, emptyMessage = 'No porchlights yet.' }) => {
+export const PorchlightList: FunctionComponent<PorchlightListProps> = ({ porchlights, emptyMessage = 'No porchlights yet.', onUpdate }) => {
   const [activeTab, setActiveTab] = useState<'all' | 'map'>('all');
+  const [displayPorchlights, setDisplayPorchlights] = useState(porchlights);
   const { reducedMotion } = useAccessibilityPreferences();
-  const locatedPorchlights = porchlights.filter(hasLocation);
-  const anyPorchlightOn = porchlights.some((porchlight) => porchlight.is_on);
+  useEffect(() => setDisplayPorchlights(porchlights), [porchlights]);
+  const updatePorchlight = (updated: Beacon) => {
+    setDisplayPorchlights((current) => current.map((porchlight) => porchlight.id === updated.id ? updated : porchlight));
+    onUpdate?.(updated);
+  };
+  const locatedPorchlights = displayPorchlights.filter(hasLocation);
+  const anyPorchlightOn = displayPorchlights.some((porchlight) => porchlight.is_on);
   const anyLocatedPorchlightOn = locatedPorchlights.some((porchlight) => porchlight.is_on);
   const refreshNote = reducedMotion && <p className={styles.refreshNote} role="status">Reduced-motion mode is active. Refresh this page manually to see updates.</p>;
 
@@ -39,10 +47,10 @@ export const PorchlightList: FunctionComponent<PorchlightListProps> = ({ porchli
     document.getElementById(`porchlight-tab-${nextTab}`)?.focus();
   };
 
-  if (porchlights.length === 0) return <>{refreshNote}<p>{emptyMessage}</p></>;
+  if (displayPorchlights.length === 0) return <>{refreshNote}<p>{emptyMessage}</p></>;
 
   if (locatedPorchlights.length === 0) {
-    return <>{refreshNote}{porchlights.map((porchlight) => <PorchlightListItem porchlight={porchlight} key={porchlight.id} />)}</>;
+    return <>{refreshNote}{displayPorchlights.map((porchlight) => <PorchlightListItem porchlight={porchlight} key={porchlight.id} onUpdate={canEditBeacon(porchlight) ? updatePorchlight : undefined} />)}</>;
   }
 
   return (
@@ -79,7 +87,7 @@ export const PorchlightList: FunctionComponent<PorchlightListProps> = ({ porchli
 
       {activeTab === 'all' ? (
         <div id="porchlight-panel-all" role="tabpanel" aria-labelledby="porchlight-tab-all" tabIndex={0}>
-          {porchlights.map((porchlight) => <PorchlightListItem porchlight={porchlight} key={porchlight.id} />)}
+          {displayPorchlights.map((porchlight) => <PorchlightListItem porchlight={porchlight} key={porchlight.id} onUpdate={canEditBeacon(porchlight) ? updatePorchlight : undefined} />)}
         </div>
       ) : (
         <div id="porchlight-panel-map" className={styles.mapList} role="tabpanel" aria-labelledby="porchlight-tab-map" tabIndex={0}>

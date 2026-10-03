@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
+import { useCallback, useEffect, useState } from 'preact/hooks';
 import { Link } from 'react-router-dom';
 import { Preferences } from '@capacitor/preferences';
 import { apiClient } from '../api/client';
@@ -19,6 +19,10 @@ export const HomePage: FunctionComponent = () => {
   const [editablePorchlights, setEditablePorchlights] = useState<Beacon[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const updatePorchlight = useCallback((updated: Beacon) => {
+    setAccessiblePorchlights((current) => current.map((porchlight) => porchlight.id === updated.id ? updated : porchlight));
+    setEditablePorchlights((current) => current.map((porchlight) => porchlight.id === updated.id ? updated : porchlight));
+  }, []);
 
   useEffect(() => {
     if (authLoading) return;
@@ -70,6 +74,7 @@ export const HomePage: FunctionComponent = () => {
 
   if (authLoading || loading) return <p>Loading porchlights...</p>;
   if (error) return <p role="alert">{error}</p>;
+  const litCount = accessiblePorchlights.filter((porchlight) => porchlight.is_on).length;
   if (!user && !guestReady) return (
     <div className={styles.homeStack}>
       <section className={styles.card}>
@@ -84,16 +89,12 @@ export const HomePage: FunctionComponent = () => {
   );
 
   if (!user) {
-    const litCount = accessiblePorchlights.filter((porchlight) => porchlight.is_on).length;
     return (
       <div className={styles.homeStack}>
         <section className={styles.card}>
           <h1>Hello, {guestName || 'guest'}!</h1>
-          <p className={styles.summary}>{litCount} lit porchlights</p>
-        </section>
-        <section className={styles.card}>
-          <h2>Porchlights you can access</h2>
-          <PorchlightList porchlights={accessiblePorchlights} />
+          <h2>{litCount} lit porchlights</h2>
+          <PorchlightList porchlights={accessiblePorchlights} onUpdate={updatePorchlight} />
         </section>
       </div>
     );
@@ -104,11 +105,11 @@ export const HomePage: FunctionComponent = () => {
       <section className={styles.card}>
         <h1>Welcome back{user.first_name ? `, ${user.first_name}` : ''}!</h1>
         <h2>Porchlights you can edit</h2>
-        <PorchlightCarousel porchlights={editablePorchlights} />
+        <PorchlightCarousel porchlights={editablePorchlights} onUpdate={updatePorchlight} />
       </section>
       <section className={styles.card}>
-        <h2>All accessible porchlights</h2>
-        <PorchlightList porchlights={accessiblePorchlights} />
+        <h2>{litCount} lit porchlights</h2>
+        <PorchlightList porchlights={accessiblePorchlights} onUpdate={updatePorchlight} />
       </section>
     </div>
   );
