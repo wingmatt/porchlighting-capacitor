@@ -61,6 +61,7 @@ const PorchlightLiveView: FunctionComponent<{ initialBeacon: Beacon }> = ({ init
   const [accessError, setAccessError] = useState('');
   const [editingAccess, setEditingAccess] = useState<PorchlightAccess | null>(null);
   const [accessRole, setAccessRole] = useState('view');
+  const [accessIsClose, setAccessIsClose] = useState(false);
   const [savingAccess, setSavingAccess] = useState(false);
   const canManageInvitations = beacon.is_owner || ['OWNER', 'EDIT'].includes(beacon.user_role || '');
   const canEdit = beacon.is_owner || ['OWNER', 'EDIT'].includes(beacon.user_role || '');
@@ -120,6 +121,7 @@ const PorchlightLiveView: FunctionComponent<{ initialBeacon: Beacon }> = ({ init
   const openAccessDialog = (entry: PorchlightAccess) => {
     setEditingAccess(entry);
     setAccessRole(['view', 'edit', 'share'].includes(entry.role) ? entry.role : 'view');
+    setAccessIsClose(entry.is_close);
   };
 
   const saveAccess = async (event: JSX.TargetedSubmitEvent<HTMLFormElement>) => {
@@ -128,7 +130,7 @@ const PorchlightLiveView: FunctionComponent<{ initialBeacon: Beacon }> = ({ init
     setSavingAccess(true);
     setAccessError('');
     try {
-      const response = await apiClient.patch(`/porchlights/${beacon.sqid}/access/${editingAccess.id}/`, { role: accessRole });
+      const response = await apiClient.patch(`/porchlights/${beacon.sqid}/access/${editingAccess.id}/`, { role: accessRole, is_close: accessIsClose });
       setAccess((current) => current.map((entry) => entry.id === editingAccess.id ? response.data : entry));
       setEditingAccess(null);
     } catch (requestError: any) {
@@ -248,6 +250,10 @@ const PorchlightLiveView: FunctionComponent<{ initialBeacon: Beacon }> = ({ init
                   <option value="edit">Edit</option>
                   <option value="share">Share</option>
                 </select></label>
+                <label className={styles.guestToggle}>
+                  <input type="checkbox" checked={accessIsClose} onChange={(event) => setAccessIsClose(event.currentTarget.checked)} />
+                  Close to porchlight
+                </label>
                 <div className={styles.dialogActions}>
                   <button type="button" onClick={() => setEditingAccess(null)} disabled={savingAccess}>Cancel</button>
                   <button type="button" onClick={removeAccess} disabled={savingAccess} className={styles.removeButton}>Remove access</button>

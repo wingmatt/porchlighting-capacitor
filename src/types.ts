@@ -65,6 +65,7 @@ export interface PorchlightAccess {
   email?: string;
   name?: string;
   role: string;
+  is_close: boolean;
   source?: string;
   created_at: string;
   from_invitation?: string | null;
