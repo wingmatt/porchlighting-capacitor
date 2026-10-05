@@ -46,21 +46,24 @@ export const LocationEditor: FunctionComponent<Props> = ({ location, name, broad
     {enabled && <div className={styles.locationFields}>
       <div className={styles.locationControls}>
         <LocationToggle label="Broadcast location" checked={broadcastLocation} onChange={onBroadcastChange} />
-        <button type="button" className={styles.removeLocation} onClick={() => {
+        {location && <button type="button" className={styles.removeLocation} onClick={() => {
           setEnabled(false);
           onChange(null);
           onBroadcastChange(false);
-        }}>Remove location</button>
+        }}>Remove location</button>}
       </div>
-      {error && <p>{error}</p>}
-      <label>Street address<input value={address.street} onInput={(event) => setAddress({ ...address, street: event.currentTarget.value })} /></label>
-      <div className={styles.addressRow}>
-        <label>City<input value={address.city} onInput={(event) => setAddress({ ...address, city: event.currentTarget.value })} /></label>
-        <label>State<input value={address.state} onInput={(event) => setAddress({ ...address, state: event.currentTarget.value })} /></label>
-        <label>ZIP code<input value={address.postalCode} onInput={(event) => setAddress({ ...address, postalCode: event.currentTarget.value })} /></label>
-      </div>
-      <button type="button" onClick={useAddress} disabled={geocoding}>{geocoding ? 'Finding address...' : 'Use Address'}</button>
-      <MapboxMap location={location} defaultLocation={[-98.5795, 39.8283]} name={name || 'Porchlight'} draggable onCoordinatesChange={onChange} />
+      {!location && <>
+        {error && <p>{error}</p>}
+        <label>Street address<input value={address.street} onInput={(event) => setAddress({ ...address, street: event.currentTarget.value })} /></label>
+        <div className={styles.addressRow}>
+          <label>City<input value={address.city} onInput={(event) => setAddress({ ...address, city: event.currentTarget.value })} /></label>
+          <label>State<input value={address.state} onInput={(event) => setAddress({ ...address, state: event.currentTarget.value })} /></label>
+          <label>ZIP code<input value={address.postalCode} onInput={(event) => setAddress({ ...address, postalCode: event.currentTarget.value })} /></label>
+        </div>
+        <button type="button" onClick={useAddress} disabled={geocoding}>{geocoding ? 'Finding address...' : 'Use Address'}</button>
+      </>
+      }
+      {location && <MapboxMap location={location} defaultLocation={[-98.5795, 39.8283]} name={name || 'Porchlight'} draggable onCoordinatesChange={onChange} />}
       {location && <p className={styles.coordinates}>Coordinates: {location.latitude?.toFixed(5)}, {location.longitude?.toFixed(5)}</p>}
     </div>}
   </>;
