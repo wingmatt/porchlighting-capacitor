@@ -28,3 +28,12 @@
 .invitationForm button { min-height: 2.25rem; border: 0; border-radius: var(--radius-sm); color: var(--on-accent-color); background: var(--accent-color); cursor: pointer; }
 .invitationForm button:disabled { opacity: 0.6; cursor: wait; }
 .invitationForm .guestToggle { display: flex; grid-template-columns: auto 1fr; align-items: center; }
+.accessSection { display: grid; gap: 0.6rem; border-top: 1px solid var(--border-color); padding-top: 0.75rem; }
+.accessTitle { margin: 0; color: var(--text-color); font-size: 0.8rem; font-weight: 600; }
+.accessItem { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; padding: 0.6rem; background: var(--surface-muted-color); border-radius: var(--radius-md); font-size: 0.8rem; }
+.accessItem > div { display: grid; gap: 0.2rem; }
+.accessItem button, .dialogActions button { min-height: 2rem; padding: 0.35rem 0.55rem; border: 0; border-radius: var(--radius-sm); color: var(--on-accent-color); background: var(--accent-color); cursor: pointer; }
+.accessDialog { width: min(90vw, 24rem); padding: 1rem; color: var(--text-color); background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--radius-lg); box-shadow: 0 0.5rem 2rem var(--shadow-color); }
+.accessDialog::backdrop { background: rgb(0 0 0 / 45%); }
+.dialogActions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.5rem; }
+.dialogActions .removeButton { margin-right: auto; color: var(--danger-strong-color); background: var(--danger-surface-color); }

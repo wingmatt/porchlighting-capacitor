@@ -2,7 +2,7 @@ import { FunctionComponent, JSX } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { Link, useParams } from 'react-router-dom';
 import { apiClient } from '../api/client';
-import { Beacon, Invitation } from '../types';
+import { Beacon, Invitation, PorchlightAccess } from '../types';
 import { useFirebaseBeacon } from '../hooks/useFirebaseBeacon';
 import { BeaconIcon } from '../components/BeaconIcon';
 import { Rsvp } from '../components/Rsvp';
@@ -57,6 +57,11 @@ const PorchlightLiveView: FunctionComponent<{ initialBeacon: Beacon }> = ({ init
   const [isGuestInvitation, setIsGuestInvitation] = useState(true);
   const [invitationError, setInvitationError] = useState('');
   const [creatingInvitation, setCreatingInvitation] = useState(false);
+  const [access, setAccess] = useState<PorchlightAccess[]>([]);
+  const [accessError, setAccessError] = useState('');
+  const [editingAccess, setEditingAccess] = useState<PorchlightAccess | null>(null);
+  const [accessRole, setAccessRole] = useState('view');
+  const [savingAccess, setSavingAccess] = useState(false);
   const canManageInvitations = beacon.is_owner || ['OWNER', 'EDIT'].includes(beacon.user_role || '');
   const canEdit = beacon.is_owner || ['OWNER', 'EDIT'].includes(beacon.user_role || '');
   const activeInvitations = invitations.filter((invitation) => invitation.is_valid);
@@ -81,6 +86,13 @@ const PorchlightLiveView: FunctionComponent<{ initialBeacon: Beacon }> = ({ init
       .catch(() => setInvitationError('Unable to load invitations.'));
   }, [beacon.id, canManageInvitations]);
 
+  useEffect(() => {
+    if (!canManageInvitations || !beacon.sqid) return;
+    apiClient.get(`/porchlights/${beacon.sqid}/access/`)
+      .then((response) => setAccess(response.data.access || []))
+      .catch(() => setAccessError('Unable to load porchlight access.'));
+  }, [beacon.sqid, canManageInvitations]);
+
   const createInvitation = async (event: JSX.TargetedSubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     setInvitationError('');
@@ -102,6 +114,42 @@ const PorchlightLiveView: FunctionComponent<{ initialBeacon: Beacon }> = ({ init
       setInvitationError(data?.porchlight?.[0] || data?.detail || 'Unable to create invitation.');
     } finally {
       setCreatingInvitation(false);
+    }
+  };
+
+  const openAccessDialog = (entry: PorchlightAccess) => {
+    setEditingAccess(entry);
+    setAccessRole(['view', 'edit', 'share'].includes(entry.role) ? entry.role : 'view');
+  };
+
+  const saveAccess = async (event: JSX.TargetedSubmitEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!beacon.sqid || !editingAccess) return;
+    setSavingAccess(true);
+    setAccessError('');
+    try {
+      const response = await apiClient.patch(`/porchlights/${beacon.sqid}/access/${editingAccess.id}/`, { role: accessRole });
+      setAccess((current) => current.map((entry) => entry.id === editingAccess.id ? response.data : entry));
+      setEditingAccess(null);
+    } catch (requestError: any) {
+      setAccessError(requestError?.response?.data?.detail || 'Unable to update this permission.');
+    } finally {
+      setSavingAccess(false);
+    }
+  };
+
+  const removeAccess = async () => {
+    if (!beacon.sqid || !editingAccess || !window.confirm(`Remove ${editingAccess.name || editingAccess.email || 'this access'}?`)) return;
+    setSavingAccess(true);
+    setAccessError('');
+    try {
+      await apiClient.delete(`/porchlights/${beacon.sqid}/access/${editingAccess.id}/`);
+      setAccess((current) => current.filter((entry) => entry.id !== editingAccess.id));
+      setEditingAccess(null);
+    } catch (requestError: any) {
+      setAccessError(requestError?.response?.data?.detail || 'Unable to remove this permission.');
+    } finally {
+      setSavingAccess(false);
     }
   };
 
@@ -169,6 +217,45 @@ const PorchlightLiveView: FunctionComponent<{ initialBeacon: Beacon }> = ({ init
             <label className={styles.guestToggle}><input type="checkbox" checked={isGuestInvitation} onChange={(event) => setIsGuestInvitation(event.currentTarget.checked)} /> Guest invitation</label>
             <button type="submit" disabled={creatingInvitation}>{creatingInvitation ? 'Creating...' : 'Create invitation'}</button>
           </form>
+          <div className={styles.accessSection}>
+            <h4 className={styles.accessTitle}>People with access</h4>
+            {accessError && <p className={styles.invitationError}>{accessError}</p>}
+            {access.length > 0 ? (
+              <ul className={styles.invitationList}>
+                {access.map((entry) => (
+                  <li key={`${entry.type}-${entry.id}`} className={styles.accessItem}>
+                    <div>
+                      <strong>{entry.name || entry.email || 'Guest'}</strong>
+                      {entry.email && <span className={styles.acceptedCount}>{entry.email}</span>}
+                      {entry.guest_name && <span className={styles.acceptedCount}>Guest name: {entry.guest_name}</span>}
+                      <span className={styles.acceptedCount}>Permission: {entry.role}</span>
+                      <span className={styles.acceptedCount}>Created: {new Date(entry.created_at).toLocaleString()}</span>
+                      <span className={styles.acceptedCount}>From invitation: {entry.from_invitation || 'No'}</span>
+                    </div>
+                    {entry.editable && <button type="button" onClick={() => openAccessDialog(entry)}>Edit access</button>}
+                  </li>
+                ))}
+              </ul>
+            ) : <p className={styles.emptyInvitations}>No other users or guests have access.</p>}
+          </div>
+          <dialog open={Boolean(editingAccess)} className={styles.accessDialog}>
+            {editingAccess && (
+              <form onSubmit={saveAccess} className={styles.invitationForm}>
+                <h4 className={styles.accessTitle}>Edit access</h4>
+                <p className={styles.acceptedCount}>{editingAccess.name || editingAccess.email || 'Guest'}</p>
+                <label>Permission<select value={accessRole} onChange={(event) => setAccessRole(event.currentTarget.value)}>
+                  <option value="view">View</option>
+                  <option value="edit">Edit</option>
+                  <option value="share">Share</option>
+                </select></label>
+                <div className={styles.dialogActions}>
+                  <button type="button" onClick={() => setEditingAccess(null)} disabled={savingAccess}>Cancel</button>
+                  <button type="button" onClick={removeAccess} disabled={savingAccess} className={styles.removeButton}>Remove access</button>
+                  <button type="submit" disabled={savingAccess}>{savingAccess ? 'Saving...' : 'Save'}</button>
+                </div>
+              </form>
+            )}
+          </dialog>
         </div>
       )}
     </div>

@@ -59,6 +59,19 @@ export interface InvitationParticipant {
   role?: string;
 }
 
+export interface PorchlightAccess {
+  id: string;
+  type: 'user' | 'guest';
+  email?: string;
+  name?: string;
+  role: string;
+  source?: string;
+  created_at: string;
+  from_invitation?: string | null;
+  guest_name?: string | null;
+  editable?: boolean;
+}
+
 export interface User {
   id: number;
   email: string;
