@@ -3,6 +3,7 @@ import { useState } from 'preact/hooks';
 import { apiClient } from '../api/client';
 import { LocationCoordinates } from '../types';
 import { MapboxMap } from './MapboxMap';
+import { LocationToggle } from './LocationToggle';
 import styles from './LocationEditor.module.css';
 
 interface Props {
@@ -44,10 +45,7 @@ export const LocationEditor: FunctionComponent<Props> = ({ location, name, broad
     {!enabled && <button type="button" className={styles.addLocation} onClick={() => setEnabled(true)}>Add location</button>}
     {enabled && <div className={styles.locationFields}>
       <div className={styles.locationControls}>
-        <label className={styles.broadcastToggle}>
-          <input type="checkbox" checked={broadcastLocation} onChange={(event) => onBroadcastChange(event.currentTarget.checked)} />
-          Broadcast location
-        </label>
+        <LocationToggle label="Broadcast location" checked={broadcastLocation} onChange={onBroadcastChange} />
         <button type="button" className={styles.removeLocation} onClick={() => {
           setEnabled(false);
           onChange(null);

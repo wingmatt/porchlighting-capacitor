@@ -1,7 +1,7 @@
 .button { padding: 6px; background: transparent; border: 0; border-radius: var(--radius-pill); transition: background-color 150ms ease, color 150ms ease; cursor: pointer;}
 .button:disabled { cursor: default; }
 .active .icon { color: var(--on-warning-color);}
-.inactive { color: var(--inactive-color);}
+.inactive { color: var(--inactive-color);fill: var(--inactive-color);}
 .icon { width: 3rem; height: 3rem; }
 .iconWrapper { position: relative; display: inline-flex; }
 .rsvpBadge { position: absolute; right: -0.45rem; bottom: -0.2rem; display: inline-flex; align-items: center; gap: .15rem; min-width: 1.35rem; padding: .15rem .3rem; border: 2px solid var(--page-color); border-radius: var(--radius-pill); background: var(--text-color); color: var(--page-color); font-size: .65rem; font-weight: 700; line-height: 1; }
