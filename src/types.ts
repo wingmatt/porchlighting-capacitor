@@ -24,6 +24,7 @@ export interface Beacon {
   has_close_permission?: boolean;
   color?: string;
   status_message?: string;
+  updated_at?: string;
   rsvp_count?: number;
   has_rsvp?: boolean;
   rsvp_id?: string | null;
