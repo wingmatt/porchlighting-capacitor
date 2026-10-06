@@ -53,7 +53,6 @@ const PorchlightLiveView: FunctionComponent<{ initialBeacon: Beacon }> = ({ init
   const [beacon, setBeacon] = useFirebaseBeacon(initialBeacon);
   const [invitations, setInvitations] = useState<Invitation[]>([]);
   const [invitationRole, setInvitationRole] = useState('view');
-  const [invitedEmail, setInvitedEmail] = useState('');
   const [isGuestInvitation, setIsGuestInvitation] = useState(true);
   const [invitationError, setInvitationError] = useState('');
   const [creatingInvitation, setCreatingInvitation] = useState(false);
@@ -128,11 +127,9 @@ const PorchlightLiveView: FunctionComponent<{ initialBeacon: Beacon }> = ({ init
         role,
         role_granted: invitationRole,
         is_guest: isGuestInvitation,
-        invited_email: invitedEmail || null,
         max_uses: 0,
       });
       setInvitations((current) => [response.data, ...current]);
-      setInvitedEmail('');
     } catch (requestError: any) {
       const data = requestError?.response?.data;
       setInvitationError(data?.porchlight?.[0] || data?.detail || 'Unable to create invitation.');
@@ -207,6 +204,7 @@ const PorchlightLiveView: FunctionComponent<{ initialBeacon: Beacon }> = ({ init
                 type="range"
                 min="0"
                 max="100"
+                step="100"
                 value={beacon.brightness ?? 100}
                 onInput={updateBrightness}
                 disabled={savingBrightness}
@@ -263,7 +261,6 @@ const PorchlightLiveView: FunctionComponent<{ initialBeacon: Beacon }> = ({ init
               <option value="edit">Edit</option>
               <option value="share">Share</option>
             </select></label>
-            <label>Email (optional)<input type="email" value={invitedEmail} onInput={(event) => setInvitedEmail(event.currentTarget.value)} /></label>
             <label className={styles.guestToggle}><input type="checkbox" checked={isGuestInvitation} onChange={(event) => setIsGuestInvitation(event.currentTarget.checked)} /> Guest invitation</label>
             <button type="submit" disabled={creatingInvitation}>{creatingInvitation ? 'Creating...' : 'Create invitation'}</button>
           </form>

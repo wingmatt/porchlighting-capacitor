@@ -53,7 +53,11 @@ export const BeaconIcon: FunctionComponent<Props> = ({ beacon, editable, onUpdat
       aria-label={isActive ? 'Turn off beacon' : 'Turn on beacon'}
     >
       <span className={styles.iconWrapper}>
-        <BeaconGraphic isOn={isActive} className={styles.icon} label={isActive ? 'Lit porchlight' : 'Unlit porchlight'} />
+        <BeaconGraphic
+          isOn={isActive}
+          className={`${styles.icon} brightness-${currentBeacon.brightness ?? 100}`}
+          label={isActive ? 'Lit porchlight' : 'Unlit porchlight'}
+        />
         {(currentBeacon.rsvp_count ?? 0) > 0 && (
           <span
             className={`${styles.rsvpBadge} ${currentBeacon.has_rsvp ? styles.rsvpBadgeSelected : ''}`}
