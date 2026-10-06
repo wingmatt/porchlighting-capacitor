@@ -33,7 +33,7 @@ const AppShell: FunctionComponent = () => {
   const { user } = useAuth();
   const location = useLocation();
   return <div className={styles.app}>
-    <header className={styles.header}><Link to="/" className={styles.logo}>Porchlighting</Link><nav className={styles.nav}><Link to="/neighborhood">Neighborhood</Link><Link to="/policies">Policies</Link>{user ? <Link to="/profile">Profile</Link> : location.pathname !== '/login' && <Link to="/login">Log in</Link>}</nav><NotificationSettings /></header>
+    <header className={styles.header}><Link to="/" className={styles.logo}>Porchlighting</Link><nav className={styles.nav}><Link to="/neighborhood">Neighborhood</Link>{user ? <Link to="/profile">Profile</Link> : location.pathname !== '/login' && <Link to="/login">Log in</Link>}</nav><NotificationSettings /></header>
     <main className={styles.main}>
           <Suspense fallback={<div>Loading...</div>}>
             <Routes>
@@ -55,5 +55,6 @@ const AppShell: FunctionComponent = () => {
             </Routes>
           </Suspense>
     </main>
+    <footer className={styles.footer}><span>© 2026 Porchlighting</span><Link to="/policies">Policies</Link></footer>
   </div>;
 };
