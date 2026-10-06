@@ -222,7 +222,7 @@ const PorchlightLiveView: FunctionComponent<{ initialBeacon: Beacon }> = ({ init
           />
         </div>
       </div>
-
+      {beacon.location || beacon.coordinates && (
       <div className={styles.sectionCard}>
         <h3 className={styles.sectionTitle}>Location Map</h3>
         <MapboxMap
@@ -234,11 +234,7 @@ const PorchlightLiveView: FunctionComponent<{ initialBeacon: Beacon }> = ({ init
           className={styles.map}
         />
       </div>
-
-      <div className={styles.rsvpCard}>
-        <h3 className={styles.sectionTitle}>RSVP Status</h3>
-        <Rsvp beacon={beacon} onUpdate={(updated) => setBeacon((prev) => ({ ...prev, ...updated }))} />
-      </div>
+      )}
 
       {canManageInvitations && (
         <div className={styles.invitationCard}>
