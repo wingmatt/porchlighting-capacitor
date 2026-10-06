@@ -1,0 +1,21 @@
+.page { max-width: 48rem; margin: 0 auto; display: grid; gap: 1rem; }
+.intro, .card { padding: 1.5rem; background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--radius-lg); box-shadow: 0 1px 2px var(--shadow-subtle-color); }
+.intro h1, .card h2, .card h3 { color: var(--text-color); }
+.intro h1 { margin: 0 0 .75rem; font-size: clamp(1.75rem, 5vw, 2.25rem); }
+.intro p, .card p, .card li { color: var(--muted-text-color); line-height: 1.65; }
+.intro p { margin: .75rem 0 0; }
+.eyebrow { margin: 0 0 .5rem !important; color: var(--accent-color) !important; font-size: .8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.notice { padding: .75rem 1rem; border-left: .25rem solid var(--accent-color); background: var(--surface-muted-color); }
+.tabs { display: flex; gap: .35rem; border-bottom: 1px solid var(--border-color); }
+.tab { padding: .6rem .8rem; color: var(--muted-text-color); background: transparent; border: 0; border-bottom: 2px solid transparent; border-radius: var(--radius-sm) var(--radius-sm) 0 0; cursor: pointer; font: inherit; }
+.activeTab { color: var(--accent-hover-color); border-bottom-color: var(--accent-color); }
+.card h2 { margin: 0 0 1rem; font-size: 1.5rem; }
+.card h3 { margin: 1.5rem 0 .5rem; font-size: 1.05rem; }
+.card h3:first-of-type { margin-top: 1.25rem; }
+.card p { margin: 0; }
+.card ul { margin: .5rem 0 0; padding-left: 1.25rem; }
+.card li + li { margin-top: .5rem; }
+
+@media (max-width: 36rem) {
+  .intro, .card { padding: 1.1rem; }
+}
