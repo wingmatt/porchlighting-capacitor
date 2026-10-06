@@ -21,6 +21,7 @@ export interface Beacon {
   description?: string;
   is_on?: boolean;
   brightness?: number;
+  has_close_permission?: boolean;
   color?: string;
   status_message?: string;
   rsvp_count?: number;

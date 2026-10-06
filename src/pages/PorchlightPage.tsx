@@ -66,6 +66,9 @@ const PorchlightLiveView: FunctionComponent<{ initialBeacon: Beacon }> = ({ init
   const [savingBrightness, setSavingBrightness] = useState(false);
   const canManageInvitations = beacon.is_owner || ['OWNER', 'EDIT'].includes(beacon.user_role || '');
   const canEdit = beacon.is_owner || ['OWNER', 'EDIT'].includes(beacon.user_role || '');
+  const hasClosePermission = access.length > 0
+    ? access.some((entry) => entry.is_close)
+    : beacon.has_close_permission === true;
   const activeInvitations = invitations.filter((invitation) => invitation.is_valid);
   const expiredInvitations = invitations.filter((invitation) => invitation.is_expired);
 
@@ -106,7 +109,11 @@ const PorchlightLiveView: FunctionComponent<{ initialBeacon: Beacon }> = ({ init
   useEffect(() => {
     if (!canManageInvitations || !beacon.sqid) return;
     apiClient.get(`/porchlights/${beacon.sqid}/access/`)
-      .then((response) => setAccess(response.data.access || []))
+      .then((response) => {
+        const nextAccess = response.data.access || [];
+        setAccess(nextAccess);
+        setBeacon((current) => ({ ...current, has_close_permission: nextAccess.some((entry: PorchlightAccess) => entry.is_close) }));
+      })
       .catch(() => setAccessError('Unable to load porchlight access.'));
   }, [beacon.sqid, canManageInvitations]);
 
@@ -147,7 +154,11 @@ const PorchlightLiveView: FunctionComponent<{ initialBeacon: Beacon }> = ({ init
     setAccessError('');
     try {
       const response = await apiClient.patch(`/porchlights/${beacon.sqid}/access/${editingAccess.id}/`, { role: accessRole, is_close: accessIsClose });
-      setAccess((current) => current.map((entry) => entry.id === editingAccess.id ? response.data : entry));
+      setAccess((current) => {
+        const nextAccess = current.map((entry) => entry.id === editingAccess.id ? response.data : entry);
+        setBeacon((currentBeacon) => ({ ...currentBeacon, has_close_permission: nextAccess.some((entry) => entry.is_close) }));
+        return nextAccess;
+      });
       setEditingAccess(null);
     } catch (requestError: any) {
       setAccessError(requestError?.response?.data?.detail || 'Unable to update this permission.');
@@ -162,7 +173,11 @@ const PorchlightLiveView: FunctionComponent<{ initialBeacon: Beacon }> = ({ init
     setAccessError('');
     try {
       await apiClient.delete(`/porchlights/${beacon.sqid}/access/${editingAccess.id}/`);
-      setAccess((current) => current.filter((entry) => entry.id !== editingAccess.id));
+      setAccess((current) => {
+        const nextAccess = current.filter((entry) => entry.id !== editingAccess.id);
+        setBeacon((currentBeacon) => ({ ...currentBeacon, has_close_permission: nextAccess.some((entry) => entry.is_close) }));
+        return nextAccess;
+      });
       setEditingAccess(null);
     } catch (requestError: any) {
       setAccessError(requestError?.response?.data?.detail || 'Unable to remove this permission.');
@@ -185,7 +200,7 @@ const PorchlightLiveView: FunctionComponent<{ initialBeacon: Beacon }> = ({ init
         </div>
         <div className={styles.headerActions}>
           {canEdit && <Link to={`/porchlight/${beacon.sqid}/edit`} className={styles.editButton}>Edit</Link>}
-          {canEdit && (
+          {canEdit && hasClosePermission && (
             <div className={styles.brightnessControl} aria-label="Brightness control">
               <span className={styles.brightnessLabel}>Bright</span>
               <input
