@@ -1,17 +1,21 @@
 import { FunctionComponent } from 'preact';
 import { JSX } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { apiClient } from '../api/client';
 import { useAuth } from '../auth';
 import styles from './AuthPage.module.css';
 
-type AuthMode = 'login' | 'register' | 'forgot-password' | 'magic-login';
+type AuthMode = 'login' | 'register' | 'forgot-password' | 'magic-login' | 'confirm-email';
+
+type AuthLocationState = { message?: string; error?: string };
 
 export const AuthPage: FunctionComponent<{ mode: AuthMode }> = ({ mode }) => {
   const { login, loginWithToken } = useAuth();
+  const location = useLocation();
   const navigate = useNavigate();
   const params = useParams<{ uid: string; token: string }>();
+  const locationState = location.state as AuthLocationState | null;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
@@ -20,8 +24,31 @@ export const AuthPage: FunctionComponent<{ mode: AuthMode }> = ({ mode }) => {
   const [error, setError] = useState('');
   const isReset = mode === 'forgot-password' && Boolean(params.uid && params.token);
   const isMagicConfirm = mode === 'magic-login' && Boolean(params.uid && params.token);
+  const isEmailConfirm = mode === 'confirm-email' && Boolean(params.uid && params.token);
   const isLogin = mode === 'login';
   const isRegister = mode === 'register';
+
+  useEffect(() => {
+    setEmail('');
+    setPassword('');
+    setPasswordConfirm('');
+    setName('');
+    setMessage(locationState?.message || '');
+    setError(locationState?.error || '');
+  }, [locationState?.error, locationState?.message, mode, params.token, params.uid]);
+
+  useEffect(() => {
+    if (isEmailConfirm) {
+      apiClient.get(`/auth/confirm-email/${params.uid}/${params.token}/`).then((response) => {
+        navigate('/login', { replace: true, state: { message: response.data.message } });
+      }).catch((requestError: any) => {
+        navigate('/login', {
+          replace: true,
+          state: { error: requestError?.response?.data?.error || 'This email confirmation link is invalid or has expired.' },
+        });
+      });
+    }
+  }, [isEmailConfirm, navigate, params.token, params.uid]);
 
   useEffect(() => {
     if (isMagicConfirm) {
@@ -54,12 +81,13 @@ export const AuthPage: FunctionComponent<{ mode: AuthMode }> = ({ mode }) => {
   };
 
   if (isMagicConfirm) return <div className={styles.page}><div className={styles.card}><h1>Signing you in...</h1>{error && <p className={styles.error}>{error}</p>}</div></div>;
+  if (isEmailConfirm) return <div className={styles.page}><div className={styles.card}><h1>Confirming your email...</h1></div></div>;
   const title = isLogin ? 'Log in' : isRegister ? 'Create your account' : isReset ? 'Choose a new password' : mode === 'magic-login' ? 'Email me a login link' : 'Reset your password';
   return <div className={styles.page}><div className={styles.card}>
     <h1>{title}</h1>
     {message && <p className={styles.success}>{message}</p>}
     {error && <p className={styles.error}>{error}</p>}
-    {!message && <form onSubmit={submit}>
+    {(!message || isLogin) && <form onSubmit={submit}>
       {!isReset && <label>Email<input type="email" required value={email} onInput={(event) => setEmail(event.currentTarget.value)} /></label>}
       {isRegister && <label>Name<input value={name} onInput={(event) => setName(event.currentTarget.value)} /></label>}
       {(isLogin || isRegister || isReset) && <label>Password<input type="password" required minLength={6} value={password} onInput={(event) => setPassword(event.currentTarget.value)} /></label>}

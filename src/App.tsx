@@ -42,6 +42,7 @@ const AppShell: FunctionComponent = () => {
             <Route path="/forgot-password/:uid/:token/" element={<AuthPage mode="forgot-password" />} />
             <Route path="/magic-login" element={<AuthPage mode="magic-login" />} />
             <Route path="/magic-login/:uid/:token/" element={<AuthPage mode="magic-login" />} />
+            <Route path="/confirm-email/:uid/:token/" element={<AuthPage mode="confirm-email" />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/neighborhood" element={<NeighborhoodPage />} />
             <Route path="/porchlight/new" element={<PorchlightCreatePage />} />

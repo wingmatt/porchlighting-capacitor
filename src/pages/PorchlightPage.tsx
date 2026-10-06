@@ -63,10 +63,26 @@ const PorchlightLiveView: FunctionComponent<{ initialBeacon: Beacon }> = ({ init
   const [accessRole, setAccessRole] = useState('view');
   const [accessIsClose, setAccessIsClose] = useState(false);
   const [savingAccess, setSavingAccess] = useState(false);
+  const [savingBrightness, setSavingBrightness] = useState(false);
   const canManageInvitations = beacon.is_owner || ['OWNER', 'EDIT'].includes(beacon.user_role || '');
   const canEdit = beacon.is_owner || ['OWNER', 'EDIT'].includes(beacon.user_role || '');
   const activeInvitations = invitations.filter((invitation) => invitation.is_valid);
   const expiredInvitations = invitations.filter((invitation) => invitation.is_expired);
+
+  const updateBrightness = async (event: JSX.TargetedEvent<HTMLInputElement, Event>) => {
+    if (!canEdit || !beacon.sqid) return;
+    setSavingBrightness(true);
+    try {
+      const response = await apiClient.post(`/porchlights/${beacon.sqid}/control/`, {
+        brightness: Number(event.currentTarget.value),
+      });
+      if (response.data?.porchlight) {
+        setBeacon((current) => ({ ...current, ...response.data.porchlight }));
+      }
+    } finally {
+      setSavingBrightness(false);
+    }
+  };
 
   const renderInvitation = (invitation: Invitation) => (
     <li key={invitation.id} className={styles.invitationItem}>
@@ -169,6 +185,23 @@ const PorchlightLiveView: FunctionComponent<{ initialBeacon: Beacon }> = ({ init
         </div>
         <div className={styles.headerActions}>
           {canEdit && <Link to={`/porchlight/${beacon.sqid}/edit`} className={styles.editButton}>Edit</Link>}
+          {canEdit && (
+            <div className={styles.brightnessControl} aria-label="Brightness control">
+              <span className={styles.brightnessLabel}>Bright</span>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={beacon.brightness ?? 100}
+                onInput={updateBrightness}
+                disabled={savingBrightness}
+                aria-label="Brightness"
+                aria-valuetext={`${beacon.brightness ?? 100}%`}
+                className={styles.brightnessSlider}
+              />
+              <span className={styles.brightnessLabel}>Dim</span>
+            </div>
+          )}
           <BeaconIcon
             beacon={beacon}
             editable={beacon.is_owner || beacon.user_role === 'OWNER' || beacon.user_role === 'ADMIN'}
