@@ -25,6 +25,10 @@
 .logo:hover { color: var(--accent-color); }
 .nav { display: flex; gap: 1rem; margin-left: auto; font-size: .875rem; }
 
+.nav a, .footer a {
+  color: var(--text-color);
+  text-decoration: none;
+}
 .main {
   max-width: 42rem;
   margin: 0 auto;

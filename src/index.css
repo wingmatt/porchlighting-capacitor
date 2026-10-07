@@ -10,13 +10,13 @@
 :root {
   color-scheme: light;
   --page-color: #f8fafc;
-  --surface-color: #f1fdf3;
+  --surface-color: #D5DED9;
   --surface-muted-color: #D5DED9;
   --text-color: #0f172a;
   --muted-text-color: #475569;
   --border-color: #99B2B7;
   --input-border-color: #99B2B7;
-  --accent-color: #A8CABA;
+  --accent-color: #B38184;
   --accent-hover-color: #A8CABA;
   --accent-focus-color: #A8CABA;
   --success-color: #166534;

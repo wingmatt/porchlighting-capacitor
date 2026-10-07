@@ -103,8 +103,6 @@ export const HomePage: FunctionComponent = () => {
   return (
     <div className={styles.homeStack}>
       <section className={styles.card}>
-        <h1>Welcome back{user.first_name ? `, ${user.first_name}` : ''}!</h1>
-        <h2>Porchlights you can edit</h2>
         <PorchlightCarousel porchlights={editablePorchlights} onUpdate={updatePorchlight} />
       </section>
       <section className={styles.card}>

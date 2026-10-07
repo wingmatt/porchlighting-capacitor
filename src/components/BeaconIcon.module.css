@@ -4,6 +4,6 @@
 .inactive { color: var(--inactive-color);fill: var(--inactive-color);}
 .icon { width: 3rem; height: 3rem; }
 .iconWrapper { position: relative; display: inline-flex; }
-.rsvpBadge { position: absolute; right: -0.45rem; bottom: -0.2rem; display: inline-flex; align-items: center; gap: .15rem; min-width: 1.35rem; padding: .15rem .3rem; border: 2px solid var(--page-color); border-radius: var(--radius-pill); background: var(--text-color); color: var(--page-color); font-size: .65rem; font-weight: 700; line-height: 1; }
-.rsvpBadgeSelected { background: var(--success-color); color: var(--on-accent-color); }
+.rsvpBadge { position: absolute; right: -0.45rem; bottom: -0.2rem; display: inline-flex; align-items: center; gap: .15rem; min-width: 1.35rem; padding: .15rem .3rem; border: 2px solid var(--page-color); border-radius: var(--radius-pill); background: var(--active-color); color: var(--page-color); opacity: .5; font-size: .65rem; font-weight: 700; line-height: 1; }
+.rsvpBadgeSelected { opacity: 1; background: var(--accent-color); }
 .rsvpIcon { width: .65rem; height: .65rem; flex: 0 0 .65rem; transform: rotate(-45deg); }

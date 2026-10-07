@@ -62,10 +62,9 @@ export const BeaconIcon: FunctionComponent<Props> = ({ beacon, editable, onUpdat
         {(currentBeacon.rsvp_count ?? 0) > 0 && (
           <span
             className={`${styles.rsvpBadge} ${currentBeacon.has_rsvp ? styles.rsvpBadgeSelected : ''}`}
-            aria-label={`${currentBeacon.rsvp_count} RSVP${currentBeacon.rsvp_count === 1 ? '' : 's'}${currentBeacon.has_rsvp ? ', including you' : ''}`}
+            aria-label={`Porchlight has at least one RSVP${currentBeacon.has_rsvp ? ', including you' : ''}`}
           >
             <AssetSvg asset="moth.svg" className={styles.rsvpIcon} />
-            <span>{currentBeacon.rsvp_count}</span>
           </span>
         )}
       </span>
