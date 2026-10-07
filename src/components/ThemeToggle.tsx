@@ -1,5 +1,6 @@
 import { FunctionComponent } from 'preact';
 import { useTheme } from '../contexts/Theme';
+import { AssetSvg } from './AssetSvg';
 import styles from './ThemeToggle.module.css';
 
 export const ThemeToggle: FunctionComponent = () => {
@@ -13,9 +14,9 @@ export const ThemeToggle: FunctionComponent = () => {
     aria-label={`Switch to ${nextTheme} mode`}
     aria-pressed={theme === 'dark'}
   >
-    <span
+    <AssetSvg
+      asset={nextTheme === 'light' ? 'sun.svg' : 'moon.svg'}
       className={`${styles.icon} ${nextTheme === 'light' ? styles.sunIcon : styles.moonIcon}`}
-      aria-hidden="true"
     />
     <span>{theme === 'dark' ? 'Light mode' : 'Dark mode'}</span>
   </button>;

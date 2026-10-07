@@ -3,6 +3,7 @@ import { useEffect, useState } from 'preact/hooks';
 import { Beacon } from '../types';
 import { apiClient } from '../api/client';
 import { BeaconGraphic } from './BeaconGraphic';
+import { AssetSvg } from './AssetSvg';
 import styles from './BeaconIcon.module.css';
 
 interface Props {
@@ -63,7 +64,7 @@ export const BeaconIcon: FunctionComponent<Props> = ({ beacon, editable, onUpdat
             className={`${styles.rsvpBadge} ${currentBeacon.has_rsvp ? styles.rsvpBadgeSelected : ''}`}
             aria-label={`${currentBeacon.rsvp_count} RSVP${currentBeacon.rsvp_count === 1 ? '' : 's'}${currentBeacon.has_rsvp ? ', including you' : ''}`}
           >
-            <span className={styles.rsvpIcon} aria-hidden="true" />
+            <AssetSvg asset="moth.svg" className={styles.rsvpIcon} />
             <span>{currentBeacon.rsvp_count}</span>
           </span>
         )}

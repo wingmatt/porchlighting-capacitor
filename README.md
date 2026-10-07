@@ -61,6 +61,28 @@ VITE_WEB_PUSH_VAPID_PUBLIC_KEY=your-vapid-public-key
 > - Android Emulator: use `http://10.0.2.2:8000/api` instead of `localhost`.
 > - Physical Devices: use your machine's local LAN IP (e.g., `http://192.168.1.X:8000/api`).
 
+#### Hosted assets
+
+SVGs are loaded from `VITE_ASSET_URL` (default:
+`https://assets.porchlighting.net`). Use the `AssetSvg` component for hosted
+SVGs instead of hard-coding asset URLs in components or CSS. It first inlines
+the SVG so its internal selectors can be themed, and falls back to an `<img>`
+when the asset host does not allow fetches.
+
+Hosted SVGs used with `AssetSvg` must follow these conventions:
+
+- The document root must be an `<svg>` element with a `viewBox`; width and
+  height may be omitted because the component controls sizing.
+- The visible artwork must be inside the root element, not dependent on an
+  external stylesheet, and should use `currentColor` for recolorable fills or
+  strokes.
+- Stable IDs or classes must identify independently colored parts. Pass a
+  `colorVariables` map such as `{ '#beacon-lit': '--active-color' }` when a
+  component needs to map those selectors to theme variables.
+- IDs and classes must be unique within an asset and must not depend on
+  generated or page-specific names. Keep the asset free of scripts and
+  external resource references.
+
 #### Firebase Configuration
 Copy `.env.example` to `.env.local` and set the Firebase Web SDK values for a
 Firebase project dedicated to local or integration testing. Vite exposes only

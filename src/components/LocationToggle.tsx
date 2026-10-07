@@ -1,4 +1,5 @@
 import { FunctionComponent } from 'preact';
+import { AssetSvg } from './AssetSvg';
 import styles from './LocationToggle.module.css';
 
 interface Props {
@@ -15,11 +16,9 @@ export const LocationToggle: FunctionComponent<Props> = ({ label, checked, onCha
       aria-label={label}
       onChange={(event) => onChange(event.currentTarget.checked)}
     />
-    <img
+    <AssetSvg
+      asset={checked ? 'checkmark.svg' : 'xmark.svg'}
       className={styles.icon}
-      src={checked ? 'https://assets.porchlighting.net/checkmark.svg' : 'https://assets.porchlighting.net/xmark.svg'}
-      alt=""
-      aria-hidden="true"
     />
     {label}
   </label>

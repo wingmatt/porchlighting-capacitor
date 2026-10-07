@@ -2,6 +2,7 @@ import { FunctionComponent, JSX } from 'preact';
 import { useState } from 'preact/hooks';
 import { Beacon } from '../types';
 import { apiClient } from '../api/client';
+import { AssetSvg } from './AssetSvg';
 import styles from './Rsvp.module.css';
 
 interface Props {
@@ -53,7 +54,7 @@ export const Rsvp: FunctionComponent<Props> = ({ beacon, onUpdate }) => {
         aria-busy={saving}
         className={`${styles.button} ${hasRsvp ? styles.yesSelected : styles.unselected}`}
       >
-        <span className={`${styles.icon} ${hasRsvp ? styles.activeIcon : ''}`} aria-hidden="true" />
+        <AssetSvg asset="moth.svg" className={`${styles.icon} ${hasRsvp ? styles.activeIcon : ''}`} />
       </button>
     </div>
   );

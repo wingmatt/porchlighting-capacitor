@@ -4,6 +4,7 @@ import { Capacitor } from '@capacitor/core';
 import { Preferences } from '@capacitor/preferences';
 import { Info } from 'lucide-preact';
 import { configureNativeNotifications, disableNotifications, requestNotificationPermission } from '../notifications';
+import { AssetSvg } from './AssetSvg';
 import styles from './NotificationSettings.module.css';
 
 export const NotificationSettings: FunctionComponent = () => {
@@ -51,7 +52,7 @@ export const NotificationSettings: FunctionComponent = () => {
   if (!supported) return null;
   return <div className={styles.container}>
     <button type="button" className={styles.modeButton} onClick={toggleNotifications} disabled={busy} aria-pressed={enabled}>
-      <span className={`${styles.icon} ${enabled ? styles.activeIcon : ''}`} aria-hidden="true" />
+      <AssetSvg asset="moth.svg" className={`${styles.icon} ${enabled ? styles.activeIcon : ''}`} />
       {enabled ? 'Moth Mode On' : 'Moth Mode Off'}
     </button>
     <div className={styles.infoWrapper}>
