@@ -2,8 +2,7 @@ import { FunctionComponent } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { useParams, useNavigate } from 'react-router-dom';
 import QRCode from 'qrcode';
-import { apiClient } from '../api/client';
-import { Preferences } from '@capacitor/preferences';
+import { apiClient, getCredentials, setGuestCredentials } from '../api/client';
 import { Beacon, Invitation, InvitationParticipant } from '../types';
 import { MapboxMap } from '../components/MapboxMap';
 import { useAuth } from '../auth';
@@ -33,13 +32,9 @@ export const InvitationPage: FunctionComponent = () => {
   const [qrCode, setQrCode] = useState('');
 
   useEffect(() => {
-    Promise.all([
-      Preferences.get({ key: 'guestToken' }),
-      Preferences.get({ key: 'guestName' }),
-    ]).then(([token, name]) => {
-      setGuestToken(token.value || '');
-      setGuestName(name.value || '');
-    });
+    const credentials = getCredentials();
+    setGuestToken(credentials.guestToken || '');
+    setGuestName(credentials.guestName || '');
     if (sqid && !authLoading) {
       apiClient.get(`/invitations/validate/${sqid}/`)
         .then((res) => setData({ ...res.data, invitation: res.data, beacon: res.data.porchlight }))
@@ -133,8 +128,7 @@ export const InvitationPage: FunctionComponent = () => {
           invitation_code: sqid,
           guest_name: guestName,
         });
-        await Preferences.set({ key: 'guestToken', value: response.data.guest_token });
-        await Preferences.set({ key: 'guestName', value: response.data.guest_name });
+        await setGuestCredentials(response.data.guest_token, response.data.guest_name);
         await signInToFirebase(response.data.firebase_token);
       } else {
         await apiClient.post('/invitations/accept/', { code: sqid });

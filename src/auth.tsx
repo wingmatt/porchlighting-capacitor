@@ -1,7 +1,6 @@
 import { createContext, FunctionComponent, ComponentChildren } from 'preact';
 import { useContext, useEffect, useState } from 'preact/hooks';
-import { Preferences } from '@capacitor/preferences';
-import { apiClient } from './api/client';
+import { apiClient, clearAuthToken, getCredentials, hydrateCredentials, setAuthToken } from './api/client';
 import { User } from './types';
 import { signInToFirebase, signOutOfFirebase } from './firebase';
 
@@ -21,10 +20,8 @@ export const AuthProvider: FunctionComponent<{ children: ComponentChildren }> = 
 
   useEffect(() => {
     const restoreSession = async () => {
-      const [{ value: authToken }, { value: guestToken }] = await Promise.all([
-        Preferences.get({ key: 'auth_token' }),
-        Preferences.get({ key: 'guestToken' }),
-      ]);
+      await hydrateCredentials();
+      const { authToken, guestToken } = getCredentials();
       try {
         if (authToken) {
           const response = await apiClient.get('/auth/me/');
@@ -34,7 +31,7 @@ export const AuthProvider: FunctionComponent<{ children: ComponentChildren }> = 
           await synchronizeFirebaseAuth();
         }
       } catch {
-        if (authToken) await Preferences.remove({ key: 'auth_token' });
+        if (authToken) await clearAuthToken();
       } finally {
         setLoading(false);
       }
@@ -53,20 +50,20 @@ export const AuthProvider: FunctionComponent<{ children: ComponentChildren }> = 
 
   const login = async (email: string, password: string) => {
     const response = await apiClient.post('/auth/login/', { email, password });
-    await Preferences.set({ key: 'auth_token', value: response.data.token });
+    await setAuthToken(response.data.token);
     setUser(response.data.user);
     await synchronizeFirebaseAuth(response.data.firebase_token);
   };
 
   const loginWithToken = async (token: string, nextUser: User) => {
-    await Preferences.set({ key: 'auth_token', value: token });
+    await setAuthToken(token);
     setUser(nextUser);
     await synchronizeFirebaseAuth();
   };
 
   const logout = async () => {
     try { await apiClient.post('/auth/logout/'); } finally {
-      await Preferences.remove({ key: 'auth_token' });
+      await clearAuthToken();
       await signOutOfFirebase();
       setUser(null);
     }
