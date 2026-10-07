@@ -146,27 +146,11 @@ export const InvitationPage: FunctionComponent = () => {
   return (
     <div className={styles.page}>
       <div className={styles.card}>
-        <h2 className={styles.title}>
-          {data.has_permission ? `You're part of ${data.beacon.name}` : `Invitation to ${data.beacon.name}`}
-        </h2>
-        {!user && guestToken && guestName && <p className={styles.greeting}>Welcome back, {guestName}!</p>}
+        <h2 className={styles.title}>Welcome {data.has_permission && 'back '} to <span className={styles.beaconName}>{data.beacon.name}</span></h2>
+        {!data.has_permission && (
+            <p>Someone wants you to know when their porchlight is lit! It's quick to join:</p>
+        )}
         {error && <p className={styles.error} role="alert">{error}</p>}
-        {data.beacon.description && (
-          <p className={styles.description}>{data.beacon.description}</p>
-        )}
-
-        {data.beacon.location && (
-          <div className={styles.mapContainer}>
-            <MapboxMap
-              location={data.beacon.location || data.beacon.coordinates}
-              name={data.beacon.name}
-              isOn={data.beacon.is_on}
-              color={data.beacon.color}
-              className={styles.map}
-            />
-          </div>
-        )}
-
         {!authLoading && !data.has_permission && data.invitation.is_valid && !data.invitation.is_guest && user && (
           <form className={styles.joinForm} onSubmit={(event) => { event.preventDefault(); void handleJoin(); }}>
             <button
@@ -197,6 +181,24 @@ export const InvitationPage: FunctionComponent = () => {
               {saving ? 'Joining...' : 'Join Beacon'}
             </button>
           </form>
+        )}
+
+        {!data.has_permission && (
+            <>
+              <p>What could this porchlight represent?</p>
+              <ul>
+                <li>Freeform in-person hangouts?</li>
+                <li>Hoppin' online to the gamerverse?</li>
+                <li>Body doubling availability?</li>
+                <li>Presence at a third space?</li>
+                <li>Parents that can socialize for once?</li>
+                <li>Some mysterious other situation?</li>
+              </ul>
+              <p>You should know from the name or the context of the invite - or you should ask!</p>
+              <p>No matter what, it's the kind of invitation that allows a vampire to enter but doesn't spam the group chat. The new glue for this wonky social age.</p>
+              <p>Just give us your name and send a moth to let 'em know you're coming.</p>
+              <p>If you want to set up your own porchlight, <a href="/register">make a full account here</a>.</p>
+            </>
         )}
 
         {data.has_permission && (

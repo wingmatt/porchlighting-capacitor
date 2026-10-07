@@ -1,6 +1,6 @@
 .page { max-width: 28rem; margin: 0 auto; padding: 1rem; }
 .loading { padding: 1rem; color: var(--muted-text-color); }
-.card { padding: 1.5rem; text-align: center; background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--radius-lg); box-shadow: 0 1px 2px var(--shadow-subtle-color); }
+.card { padding: 1.5rem; text-align: start; background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--radius-lg); box-shadow: 0 1px 2px var(--shadow-subtle-color); }
 .title { margin: 0; color: var(--text-color); font-size: 1.25rem; font-weight: 700; }
 .description { margin: 0.5rem 0 0; color: var(--muted-text-color); font-size: 0.875rem; }
 .greeting { margin: 0; color: var(--success-color); font-weight: 600; }
