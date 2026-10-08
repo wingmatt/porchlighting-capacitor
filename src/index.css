@@ -69,7 +69,7 @@
 
 html, body { margin: 0; min-width: 320px; color: var(--text-color); background: var(--page-color); font-family: "ThornAndThistleRustic", sans-serif; }
 
-button, input { font: inherit; }
+button, input { font: inherit; accent-color: var(--accent-color); }
 input:focus-visible {
   outline: 2px solid var(--accent-focus-color);
 }
