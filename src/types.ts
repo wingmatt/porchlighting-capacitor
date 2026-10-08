@@ -1,11 +1,6 @@
-export interface LocationCoordinates {
-  latitude?: number;
-  longitude?: number;
-  lat?: number;
-  lng?: number;
-  lon?: number;
-  coordinates?: [number, number];
-  [key: string]: any;
+export interface GeoJSONPoint {
+  type: 'Point';
+  coordinates: [number, number];
 }
 
 export interface Beacon {
@@ -16,8 +11,7 @@ export interface Beacon {
   active_duration?: number;
   active_until?: string | null;
   is_active?: boolean;
-  location?: string | LocationCoordinates | null;
-  coordinates?: LocationCoordinates | null;
+  location?: GeoJSONPoint | null;
   description?: string;
   is_on?: boolean;
   brightness?: number;

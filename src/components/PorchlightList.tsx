@@ -14,7 +14,7 @@ interface PorchlightListProps {
   onUpdate?: (updated: Beacon) => void;
 }
 
-const hasLocation = (porchlight: Beacon) => porchlight.type === 'physical' && Boolean(porchlight.location || porchlight.coordinates);
+const hasLocation = (porchlight: Beacon) => porchlight.type === 'physical' && Boolean(porchlight.location);
 
 const TabLabel: FunctionComponent<{ label: string; isOn: boolean }> = ({ label, isOn }) => (
   <span className={styles.tabLabel}>
@@ -92,7 +92,7 @@ export const PorchlightList: FunctionComponent<PorchlightListProps> = ({ porchli
         <div id="porchlight-panel-map" className={styles.mapList} role="tabpanel" aria-labelledby="porchlight-tab-map" tabIndex={0}>
           <MapboxMap
             markers={locatedPorchlights.map((porchlight) => ({
-              location: porchlight.location || porchlight.coordinates!,
+              location: porchlight.location!,
               name: porchlight.name,
               statusMessage: porchlight.status_message,
               description: porchlight.description,

@@ -1,7 +1,7 @@
 import { FunctionComponent, render } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import type { Map as MapboxMapInstance, Marker as MapboxMarker } from 'mapbox-gl';
-import { Beacon, LocationCoordinates } from '../types';
+import { Beacon, GeoJSONPoint } from '../types';
 import { MapPin } from 'lucide-preact';
 import { Rsvp } from './Rsvp';
 import { BeaconGraphic } from './BeaconGraphic';
@@ -9,7 +9,7 @@ import styles from './MapboxMap.module.css';
 import { useTheme } from '../contexts/Theme';
 
 interface MapboxMapProps {
-  location?: string | LocationCoordinates | [number, number] | null;
+  location?: GeoJSONPoint | [number, number] | null;
   markers?: MapboxMapMarker[];
   defaultLocation?: [number, number];
   name?: string;
@@ -19,12 +19,12 @@ interface MapboxMapProps {
   zoom?: number;
   interactive?: boolean;
   draggable?: boolean;
-  onCoordinatesChange?: (coordinates: { latitude: number; longitude: number }) => void;
+  onCoordinatesChange?: (location: GeoJSONPoint) => void;
   className?: string;
 }
 
 export interface MapboxMapMarker {
-  location: string | LocationCoordinates | [number, number];
+  location: GeoJSONPoint | [number, number];
   name?: string;
   statusMessage?: string;
   description?: string;
@@ -34,52 +34,24 @@ export interface MapboxMapMarker {
 }
 
 /**
- * Normalizes various location formats into [longitude, latitude] for Mapbox GL.
+ * Validates GeoJSON coordinates and returns [longitude, latitude] for Mapbox GL.
  */
 export function extractLngLat(
-  location?: string | LocationCoordinates | [number, number] | null
+  location?: GeoJSONPoint | [number, number] | null
 ): [number, number] | null {
   if (!location) return null;
 
   // Array format [lng, lat]
-  if (Array.isArray(location) && location.length >= 2) {
+  if (Array.isArray(location) && location.length === 2) {
     const lng = Number(location[0]);
     const lat = Number(location[1]);
-    if (!isNaN(lng) && !isNaN(lat)) {
+    if (Number.isFinite(lng) && Number.isFinite(lat) && lng >= -180 && lng <= 180 && lat >= -90 && lat <= 90) {
       return [lng, lat];
     }
   }
 
-  // Object format
-  if (typeof location === 'object' && !Array.isArray(location)) {
-    const locObj = location as LocationCoordinates;
-    // GeoJSON coordinates [lng, lat]
-    if (Array.isArray(locObj.coordinates) && locObj.coordinates.length >= 2) {
-      const lng = Number(locObj.coordinates[0]);
-      const lat = Number(locObj.coordinates[1]);
-      if (!isNaN(lng) && !isNaN(lat)) {
-        return [lng, lat];
-      }
-    }
-
-    const lat = locObj.latitude ?? locObj.lat;
-    const lng = locObj.longitude ?? locObj.lng ?? locObj.lon;
-
-    if (lat !== undefined && lng !== undefined) {
-      const numLat = Number(lat);
-      const numLng = Number(lng);
-      if (!isNaN(numLat) && !isNaN(numLng)) {
-        return [numLng, numLat]; // Mapbox uses [longitude, latitude]
-      }
-    }
-  }
-
-  // String format "lat, lng" or "lat,lng"
-  if (typeof location === 'string') {
-    const parts = location.split(',').map((p) => parseFloat(p.trim()));
-    if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
-      return [parts[1], parts[0]]; // [lng, lat]
-    }
+  if (typeof location === 'object' && location.type === 'Point' && Array.isArray(location.coordinates)) {
+    return extractLngLat(location.coordinates);
   }
 
   return null;
@@ -203,10 +175,17 @@ export const MapboxMap: FunctionComponent<MapboxMapProps> = ({
 
             const popup = new mapboxgl.Popup({ offset: 25, className: theme === 'dark' ? styles.darkPopup : undefined }).setDOMContent(popupContent);
 
-            return new mapboxgl.Marker({ element: el, draggable: markers?.length ? false : draggable })
+            const marker = new mapboxgl.Marker({ element: el, draggable: markers?.length ? false : draggable })
               .setLngLat(markerCoordinates)
               .setPopup(popup)
               .addTo(map);
+            if (draggable && !markers?.length) {
+              marker.on('dragend', () => {
+                const position = marker.getLngLat();
+                coordinatesChangeRef.current?.({ type: 'Point', coordinates: [position.lng, position.lat] });
+              });
+            }
+            return marker;
           });
 
           if (markerData.length > 1) {

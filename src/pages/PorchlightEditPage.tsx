@@ -3,7 +3,7 @@ import { useEffect, useState } from 'preact/hooks';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { apiClient } from '../api/client';
 import { LocationEditor } from '../components/LocationEditor';
-import { Beacon, LocationCoordinates } from '../types';
+import { Beacon, GeoJSONPoint } from '../types';
 import styles from './PorchlightCreatePage.module.css';
 
 export const PorchlightEditPage: FunctionComponent = () => {
@@ -13,7 +13,7 @@ export const PorchlightEditPage: FunctionComponent = () => {
   const [name, setName] = useState('');
   const [broadcastLocation, setBroadcastLocation] = useState(false);
   const [description, setDescription] = useState('');
-  const [location, setLocation] = useState<LocationCoordinates | null>(null);
+  const [location, setLocation] = useState<GeoJSONPoint | null>(null);
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
 
@@ -26,7 +26,7 @@ export const PorchlightEditPage: FunctionComponent = () => {
         setName(data.name || '');
         setBroadcastLocation(data.type === 'physical');
         setDescription(data.description || '');
-        setLocation(data.coordinates || (typeof data.location === 'object' ? data.location : null));
+        setLocation(data.location || null);
       })
       .catch((requestError: any) => setError(requestError?.response?.data?.detail || 'Unable to load porchlight.'));
   }, [id]);

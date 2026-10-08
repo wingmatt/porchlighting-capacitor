@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { apiClient } from '../api/client';
 import { useAuth } from '../auth';
 import { LocationEditor } from '../components/LocationEditor';
-import { LocationCoordinates } from '../types';
+import { GeoJSONPoint } from '../types';
 import styles from './PorchlightCreatePage.module.css';
 
 export const PorchlightCreatePage: FunctionComponent = () => {
@@ -14,7 +14,7 @@ export const PorchlightCreatePage: FunctionComponent = () => {
   const [name, setName] = useState('');
   const [broadcastLocation, setBroadcastLocation] = useState(false);
   const [description, setDescription] = useState('');
-  const [location, setLocation] = useState<LocationCoordinates | null>(null);
+  const [location, setLocation] = useState<GeoJSONPoint | null>(null);
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
 

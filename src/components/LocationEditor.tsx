@@ -1,16 +1,16 @@
 import { FunctionComponent } from 'preact';
 import { useState } from 'preact/hooks';
 import { apiClient } from '../api/client';
-import { LocationCoordinates } from '../types';
+import { GeoJSONPoint } from '../types';
 import { MapboxMap } from './MapboxMap';
 import { LocationToggle } from './LocationToggle';
 import styles from './LocationEditor.module.css';
 
 interface Props {
-  location: LocationCoordinates | null;
+  location: GeoJSONPoint | null;
   name?: string;
   broadcastLocation: boolean;
-  onChange: (location: LocationCoordinates | null) => void;
+  onChange: (location: GeoJSONPoint | null) => void;
   onBroadcastChange: (broadcast: boolean) => void;
 }
 
@@ -64,7 +64,7 @@ export const LocationEditor: FunctionComponent<Props> = ({ location, name, broad
       </>
       }
       {location && <MapboxMap location={location} defaultLocation={[-98.5795, 39.8283]} name={name || 'Porchlight'} draggable onCoordinatesChange={onChange} />}
-      {location && <p className={styles.coordinates}>Coordinates: {location.latitude?.toFixed(5)}, {location.longitude?.toFixed(5)}</p>}
+      {location && <p className={styles.coordinates}>Coordinates: {location.coordinates[1].toFixed(5)}, {location.coordinates[0].toFixed(5)}</p>}
     </div>}
   </>;
 };

@@ -222,11 +222,11 @@ const PorchlightLiveView: FunctionComponent<{ initialBeacon: Beacon }> = ({ init
           />
         </div>
       </div>
-      {beacon.location || beacon.coordinates && (
+      {beacon.location && (
       <div className={styles.sectionCard}>
         <h3 className={styles.sectionTitle}>Location Map</h3>
         <MapboxMap
-          location={beacon.location || beacon.coordinates}
+          location={beacon.location}
           name={beacon.name}
           statusMessage={beacon.status_message}
           isOn={beacon.is_on}

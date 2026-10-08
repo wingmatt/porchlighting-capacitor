@@ -37,7 +37,6 @@ export function useFirebaseBeacon(initialBeacon: Beacon) {
             active_until: data.active_until ?? prev.active_until,
             is_active: data.is_active ?? prev.is_active,
             location: data.location ?? prev.location,
-            coordinates: data.coordinates ?? prev.coordinates,
             is_on: data.is_on ?? prev.is_on,
             brightness: data.brightness ?? prev.brightness,
             color: data.color ?? prev.color,
