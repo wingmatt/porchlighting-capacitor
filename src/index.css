@@ -70,7 +70,9 @@
 html, body { margin: 0; min-width: 320px; color: var(--text-color); background: var(--page-color); font-family: "ThornAndThistleRustic", sans-serif; }
 
 button, input { font: inherit; }
-
+input:focus-visible {
+  outline: 2px solid var(--accent-focus-color);
+}
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation: none !important;
