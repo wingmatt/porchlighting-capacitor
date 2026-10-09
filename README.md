@@ -1,15 +1,15 @@
 # Porchlight Capacitor Mobile App
 
-A cross-platform mobile application for Porchlight, built with **Preact**, **TypeScript**, **Tailwind CSS v4**, and **Capacitor 8**, interfacing with a **Django REST Framework (DRF)** backend and **Firebase Cloud Firestore** for real-time synchronization.
+A cross-platform mobile application for Porchlight, built with **Vue 3**, **Ionic Vue**, **TypeScript**, and **Capacitor 8**, interfacing with a **Django REST Framework (DRF)** backend and **Firebase Cloud Firestore** for real-time synchronization.
 
 ---
 
 ## 🛠 Tech Stack
 
-- **Frontend**: [Preact](https://preactjs.com/) + TypeScript (`@preact/preset-vite`)
-- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/) (`@tailwindcss/vite`)
-- **Icons**: `lucide-preact`
-- **Routing**: `react-router-dom`
+- **Frontend**: [Vue 3](https://vuejs.org/) + TypeScript (`@vitejs/plugin-vue`)
+- **UI framework**: [Ionic Vue](https://ionicframework.com/docs/vue/overview)
+- **Icons**: `lucide-vue-next`
+- **Routing**: `@ionic/vue-router`
 - **Mobile Container**: [Capacitor 8](https://capacitorjs.com/) (iOS & Android)
 - **Local Storage / Persistence**: `@capacitor/preferences`
 - **Real-Time Data**: Firebase Cloud Firestore

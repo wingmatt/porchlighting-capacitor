@@ -1,57 +1,60 @@
-import { useState, useEffect } from 'preact/hooks';
+import { onBeforeUnmount, ref, watch, type Ref } from 'vue';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { firestore } from '../firebase';
 import { Beacon } from '../types';
 import { useAccessibilityPreferences } from '../contexts/AccessibilityPreferences';
 
-export function useFirebaseBeacon(initialBeacon: Beacon) {
-  const [beacon, setBeacon] = useState<Beacon>(initialBeacon);
+export function useFirebaseBeacon(initialBeacon: Ref<Beacon | null>) {
+  const beacon = ref<Beacon>(initialBeacon.value as Beacon);
   const { reducedMotion, liveUpdates } = useAccessibilityPreferences();
+  let unsubscribe: (() => void) | undefined;
 
-  useEffect(() => {
-    if (!initialBeacon?.id) return;
+  const stopListening = () => {
+    unsubscribe?.();
+    unsubscribe = undefined;
+  };
 
-    if (reducedMotion || !liveUpdates) return;
-    
+  const startListening = () => {
+    stopListening();
+    if (!initialBeacon.value?.id || reducedMotion.value || !liveUpdates.value) return;
     // Listen to porchlights collection broadcast from PostgreSQL
-    const docRef = doc(firestore, 'porchlights', String(initialBeacon.id));
-    const unsub = onSnapshot(docRef, (snapshot) => {
+    const docRef = doc(firestore, 'porchlights', String(initialBeacon.value.id));
+    unsubscribe = onSnapshot(docRef, (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.data();
-        setBeacon((prev) => {
-          const incomingUpdatedAt = toTimestamp(data.updated_at);
-          const currentUpdatedAt = toTimestamp(prev.updated_at);
-          if (
-            incomingUpdatedAt !== null &&
-            currentUpdatedAt !== null &&
-            incomingUpdatedAt < currentUpdatedAt
-          ) {
-            return prev;
-          }
-          return {
-            ...prev,
-            ...data,
-            id: prev.id,
-            name: data.name ?? prev.name,
-            type: data.type ?? prev.type,
-            active_until: data.active_until ?? prev.active_until,
-            is_active: data.is_active ?? prev.is_active,
-            location: data.location ?? prev.location,
-            is_on: data.is_on ?? prev.is_on,
-            brightness: data.brightness ?? prev.brightness,
-            color: data.color ?? prev.color,
-            status_message: data.status_message ?? prev.status_message,
-            updated_at: data.updated_at ?? prev.updated_at,
-            rsvp_count: data.rsvp_count ?? prev.rsvp_count,
-          };
-        });
+        const previous = beacon.value;
+        const incomingUpdatedAt = toTimestamp(data.updated_at);
+        const currentUpdatedAt = toTimestamp(previous.updated_at);
+        if (incomingUpdatedAt !== null && currentUpdatedAt !== null && incomingUpdatedAt < currentUpdatedAt) return;
+        beacon.value = {
+          ...previous,
+          ...data,
+          id: previous.id,
+          name: data.name ?? previous.name,
+          type: data.type ?? previous.type,
+          active_until: data.active_until ?? previous.active_until,
+          is_active: data.is_active ?? previous.is_active,
+          location: data.location ?? previous.location,
+          is_on: data.is_on ?? previous.is_on,
+          brightness: data.brightness ?? previous.brightness,
+          color: data.color ?? previous.color,
+          status_message: data.status_message ?? previous.status_message,
+          updated_at: data.updated_at ?? previous.updated_at,
+          rsvp_count: data.rsvp_count ?? previous.rsvp_count,
+        };
       }
     });
+  };
 
-    return () => unsub();
-  }, [initialBeacon.id, reducedMotion, liveUpdates]);
+  watch([initialBeacon, () => reducedMotion.value, () => liveUpdates.value], ([nextBeacon]) => {
+    if (nextBeacon) beacon.value = nextBeacon;
+    startListening();
+  }, { immediate: true });
+  onBeforeUnmount(stopListening);
 
-  return [beacon, setBeacon] as const;
+  return { beacon, setBeacon: (value: Beacon | ((current: Beacon) => Beacon)) => {
+    beacon.value = typeof value === 'function' ? value(beacon.value) : value;
+  }};
 }
 
 function toTimestamp(value: unknown): number | null {
