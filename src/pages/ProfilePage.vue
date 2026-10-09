@@ -1,12 +1,14 @@
 <template>
-  <p v-if="loading">Loading profile...</p>
-  <div v-else-if="user" :class="$style.page">
-    <div :class="$style.card">
+  <ion-page>
+    <ion-content>
+      <p v-if="loading">Loading profile...</p>
+      <div v-else-if="user" :class="$style.page">
+        <div :class="$style.card">
       <h1>{{ profile?.first_name || profile?.email }}</h1>
       <p>{{ profile?.email }}</p>
       <button @click="handleLogout">Log out</button>
-    </div>
-    <div :class="$style.card">
+        </div>
+        <div :class="$style.card">
       <h2>Appearance and Behavior</h2>
       <div :class="$style.preference">
         <ThemeToggle />
@@ -26,19 +28,22 @@
         </label>
         <p>Automatically receive Porchlight changes while this app is open.</p>
       </div>
-    </div>
-    <div :class="$style.card">
+        </div>
+        <div :class="$style.card">
       <div :class="$style.sectionHeader">
         <h2>Your porchlights</h2>
         <RouterLink :class="$style.createLink" to="/porchlight/new">New porchlight</RouterLink>
       </div>
       <PorchlightCarousel :porchlights="porchlights" :on-update="updatePorchlight" />
-    </div>
-  </div>
+        </div>
+      </div>
+    </ion-content>
+  </ion-page>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue';
+import { IonContent, IonPage } from '@ionic/vue';
 import { useRouter, RouterLink } from 'vue-router';
 import { apiClient } from '../api/client';
 import { useAuth } from '../auth';

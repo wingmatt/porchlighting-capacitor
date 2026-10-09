@@ -1,21 +1,26 @@
 <template>
-  <div :class="$style.page">
-    <div :class="$style.card">
-      <h1>Neighborhood</h1>
-      <p>Porchlights you own or can access.</p>
-      <p v-if="loading">Loading Porchlights...</p>
-      <p v-if="error" :class="$style.error">{{ error }}</p>
-      <PorchlightList
-        v-if="!loading && !error"
-        :porchlights="porchlights"
-        empty-message="No accessible Porchlights yet."
-      />
-    </div>
-  </div>
+  <ion-page>
+    <ion-content>
+      <div :class="$style.page">
+        <div :class="$style.card">
+          <h1>Neighborhood</h1>
+          <p>Porchlights you own or can access.</p>
+          <p v-if="loading">Loading Porchlights...</p>
+          <p v-if="error" :class="$style.error">{{ error }}</p>
+          <PorchlightList
+            v-if="!loading && !error"
+            :porchlights="porchlights"
+            empty-message="No accessible Porchlights yet."
+          />
+        </div>
+      </div>
+    </ion-content>
+  </ion-page>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
+import { IonContent, IonPage } from '@ionic/vue';
 import { apiClient } from '../api/client';
 import PorchlightList from '../components/PorchlightList.vue';
 import type { Beacon } from '../types';

@@ -26,13 +26,12 @@ import { IonApp, IonButton, IonButtons, IonFooter, IonHeader, IonRouterOutlet, I
 import { useRoute } from 'vue-router';
 import { ThemeProvider } from './contexts/Theme';
 import { AccessibilityPreferencesProvider } from './contexts/AccessibilityPreferences';
-import { AuthProvider, useAuth } from './auth';
+import { AuthProvider } from './auth';
 import NotificationSettings from './components/NotificationSettings.vue';
 import ThemeToggle from './components/ThemeToggle.vue';
 
 ThemeProvider();
 AccessibilityPreferencesProvider();
-AuthProvider();
+const { user } = AuthProvider();
 const route = useRoute();
-const { user } = useAuth();
 </script>

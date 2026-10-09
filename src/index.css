@@ -37,6 +37,7 @@
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
   --radius-pill: 9999px;
+  --ion-font-family: "ThornAndThistleRustic", sans-serif;
 }
 
 :root[data-theme="dark"] {

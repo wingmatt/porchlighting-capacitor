@@ -1,6 +1,8 @@
 <template>
-  <article :class="$style.page">
-    <header :class="$style.intro">
+  <ion-page>
+    <ion-content>
+      <article :class="$style.page">
+        <header :class="$style.intro">
       <p :class="$style.eyebrow">Porchlighting policies</p>
       <h1>Privacy policy and terms of use</h1>
       <p>
@@ -11,9 +13,9 @@
         This is general product information, not legal advice. Please contact {{ operatorName }} at
         <a :href="`mailto:${contactEmail}`">{{ contactEmail }}</a> with questions or concerns.
       </p>
-    </header>
+        </header>
 
-    <div :class="$style.tabs" role="tablist" aria-label="Policies">
+        <div :class="$style.tabs" role="tablist" aria-label="Policies">
       <button
         id="policy-tab-privacy"
         type="button"
@@ -40,9 +42,9 @@
       >
         Terms of use
       </button>
-    </div>
+        </div>
 
-    <section
+        <section
       v-if="activeTab === 'privacy'"
       id="policy-panel-privacy"
       :class="$style.card"
@@ -106,9 +108,9 @@
         will post the revised policy here and update the date above; continued use after an update
         means the revised policy will apply to the extent permitted by law.
       </p>
-    </section>
+        </section>
 
-    <section
+        <section
       v-else
       id="policy-panel-terms"
       :class="$style.card"
@@ -165,12 +167,15 @@
         applicable governing law, dispute procedures, liability limits, and consumer disclosures
         will be determined under applicable law in {{ jurisdiction }}.
       </p>
-    </section>
-  </article>
+        </section>
+      </article>
+    </ion-content>
+  </ion-page>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { IonContent, IonPage } from '@ionic/vue';
 
 const operatorName = import.meta.env.VITE_POLICY_OPERATOR_NAME || 'the Porchlighting operator';
 const contactEmail = import.meta.env.VITE_POLICY_CONTACT_EMAIL || 'the support email address';

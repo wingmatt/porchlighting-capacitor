@@ -1,10 +1,12 @@
 <template>
-  <p v-if="!porchlight && !error">Loading...</p>
-  <div v-else class="page">
-    <div class="card">
-      <h1>Edit porchlight</h1>
-      <p v-if="error" class="error">{{ error }}</p>
-      <form v-if="porchlight" @submit.prevent="submit">
+  <ion-page>
+    <ion-content>
+      <p v-if="!porchlight && !error">Loading...</p>
+      <div v-else class="page">
+        <div class="card">
+          <h1>Edit porchlight</h1>
+          <p v-if="error" class="error">{{ error }}</p>
+          <form v-if="porchlight" @submit.prevent="submit">
         <label>
           Name
           <ion-input v-model="name" required />
@@ -26,14 +28,16 @@
             {{ saving ? 'Saving...' : 'Save changes' }}
           </ion-button>
         </div>
-      </form>
-    </div>
-  </div>
+          </form>
+        </div>
+      </div>
+    </ion-content>
+  </ion-page>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { IonButton, IonInput, IonTextarea } from '@ionic/vue';
+import { IonButton, IonContent, IonInput, IonPage, IonTextarea } from '@ionic/vue';
 import { useRoute, useRouter } from 'vue-router';
 import { apiClient } from '../api/client';
 import LocationEditor from '../components/LocationEditor.vue';
