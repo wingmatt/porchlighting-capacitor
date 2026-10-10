@@ -27,7 +27,6 @@
         </ion-buttons>
         <ion-title><router-link to="/">Porchlighting</router-link></ion-title>
         <ion-buttons slot="end">
-          <theme-toggle />
           <notification-settings />
         </ion-buttons>
       </ion-toolbar>
