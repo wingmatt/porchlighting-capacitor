@@ -8,14 +8,14 @@
       </ion-header>
       <ion-content>
         <ion-list lines="none">
-          <ion-item router-link="/neighborhood" detail="false">
-            <ion-label>Neighborhood</ion-label>
-          </ion-item>
           <ion-item v-if="user" router-link="/profile" detail="false">
             <ion-label>Profile</ion-label>
           </ion-item>
           <ion-item v-else-if="route.path !== '/login'" router-link="/login" detail="false">
             <ion-label>Log in</ion-label>
+          </ion-item>
+          <ion-item>
+            <router-link to="/policies">Policies</router-link>
           </ion-item>
         </ion-list>
       </ion-content>
@@ -27,16 +27,22 @@
         </ion-buttons>
         <ion-title><router-link to="/">Porchlighting</router-link></ion-title>
         <ion-buttons slot="end">
-          <notification-settings />
+
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
     <ion-router-outlet id="main-content" />
     <ion-footer>
       <ion-toolbar>
-        <ion-title size="small">© 2026 Porchlighting · <router-link to="/policies">Policies</router-link></ion-title>
-      </ion-toolbar>
-    </ion-footer>
+
+          <ion-buttons>
+            <ion-item router-link="/neighborhood" detail="false">
+            <ion-label>Neighborhood</ion-label>
+          </ion-item>
+            <notification-settings/>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-footer>
   </ion-app>
 </template>
 

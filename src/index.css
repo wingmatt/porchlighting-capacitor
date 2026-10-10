@@ -37,6 +37,7 @@
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
   --radius-pill: 9999px;
+  --ion-color-primary: var(--active-color);
   --ion-font-family: "ThornAndThistleRustic", sans-serif;
 }
 
@@ -86,4 +87,9 @@ html[data-reduced-motion] *, html[data-reduced-motion] *::before, html[data-redu
   animation: none !important;
   transition: none !important;
   scroll-behavior: auto !important;
+}
+
+a {
+  text-decoration: none;
+  --ion-color-primary: var(--text-color);
 }
