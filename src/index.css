@@ -71,6 +71,14 @@
 
 html, body { margin: 0; min-width: 320px; color: var(--text-color); background: var(--page-color); font-family: "ThornAndThistleRustic", sans-serif; }
 
+ion-app { display: flex; flex-direction: column; }
+ion-router-outlet#main-content { position: relative; flex: 1; min-height: 0; }
+ion-router-outlet#main-content ion-content,
+ion-router-outlet#main-content ion-content.ion-padding {
+  --padding-start: 8px;
+  --padding-end: 8px;
+}
+
 button, input { font: inherit; accent-color: var(--accent-color); }
 input:focus-visible {
   outline: 2px solid var(--accent-focus-color);

@@ -25,9 +25,8 @@
         <ion-buttons slot="start">
           <ion-menu-button aria-label="Open navigation menu" />
         </ion-buttons>
-        <ion-title><router-link to="/">Porchlighting</router-link></ion-title>
         <ion-buttons slot="end">
-
+          <ion-button router-link="/help" fill="clear" aria-label="Help">Help</ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
@@ -36,9 +35,15 @@
       <ion-toolbar>
 
           <ion-buttons>
-            <ion-item router-link="/neighborhood" detail="false">
-            <ion-label>Neighborhood</ion-label>
-          </ion-item>
+            <ion-button router-link="/neighborhood" fill="clear" aria-label="Neighborhood">
+              <AssetSvg
+                asset="neighborhood.svg"
+                :label="anyPorchlightOn ? 'Neighborhood, porchlights lit' : 'Neighborhood'"
+                :colorVariables="anyPorchlightOn ? { '#neighborhood-base': '--text-color', '#neighborhood-lit': '--active-color' } : { '#neighborhood-base': '--text-color', '#neighborhood-lit': '--text-color' }"
+                :style="{ width: '2rem', height: '2rem' }"
+              />
+              <ion-label>Neighborhood</ion-label>
+            </ion-button>
             <notification-settings/>
           </ion-buttons>
         </ion-toolbar>
@@ -47,8 +52,10 @@
 </template>
 
 <script setup lang="ts">
+import { computed, watch } from 'vue';
 import {
   IonApp,
+  IonButton,
   IonButtons,
   IonContent,
   IonFooter,
@@ -68,9 +75,17 @@ import { AccessibilityPreferencesProvider } from './contexts/AccessibilityPrefer
 import { AuthProvider } from './auth';
 import NotificationSettings from './components/NotificationSettings.vue';
 import ThemeToggle from './components/ThemeToggle.vue';
+import AssetSvg from './components/AssetSvg.vue';
+import { useNeighborhood } from './hooks/useNeighborhood';
 
 ThemeProvider();
 AccessibilityPreferencesProvider();
-const { user } = AuthProvider();
+const { user, loading: authLoading } = AuthProvider();
 const route = useRoute();
+const { porchlights, refresh } = useNeighborhood();
+const anyPorchlightOn = computed(() => porchlights.value.some((porchlight) => porchlight.is_on));
+
+watch([authLoading, user], async ([isLoading]) => {
+  if (!isLoading) await refresh(Boolean(user.value));
+}, { immediate: true });
 </script>

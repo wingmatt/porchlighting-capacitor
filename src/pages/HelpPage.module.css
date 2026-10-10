@@ -1,0 +1,8 @@
+.page { max-width: 42rem; margin: 0 auto; padding: 1.25rem; }
+.intro { margin-bottom: 1rem; }
+.eyebrow { margin: 0 0 .35rem; color: var(--active-color); font-weight: 700; }
+h1 { margin: 0 0 .75rem; }
+h2 { margin: 0 0 .5rem; font-size: 1.2rem; }
+p { color: var(--muted-text-color); line-height: 1.55; }
+.card { margin-top: 1rem; padding: 1.25rem; background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--radius-lg); }
+.card p:last-child { margin-bottom: 0; }

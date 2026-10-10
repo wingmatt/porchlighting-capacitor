@@ -40,6 +40,7 @@ import { useAuth } from '../auth';
 import type { Beacon } from '../types';
 import PorchlightCarousel from '../components/PorchlightCarousel.vue';
 import PorchlightList from '../components/PorchlightList.vue';
+import { useNeighborhood } from '../hooks/useNeighborhood';
 import styles from './HomePage.module.css';
 
 const editableRoles = new Set(['OWNER', 'ADMIN', 'EDIT', 'SHARE']);
@@ -50,6 +51,7 @@ const accessiblePorchlights = ref<Beacon[]>([]);
 const editablePorchlights = ref<Beacon[]>([]);
 const loading = ref(true);
 const error = ref('');
+const { setPorchlights } = useNeighborhood();
 const litCount = computed(() => accessiblePorchlights.value.filter(
   (porchlight) => porchlight.is_on,
 ).length);
@@ -58,6 +60,7 @@ const updatePorchlight = (updated: Beacon) => {
   accessiblePorchlights.value = accessiblePorchlights.value.map((item) => (
     item.id === updated.id ? updated : item
   ));
+  setPorchlights(accessiblePorchlights.value);
   editablePorchlights.value = editablePorchlights.value.map((item) => (
     item.id === updated.id ? updated : item
   ));
@@ -85,6 +88,7 @@ const loadHome = async () => {
       ? await Promise.all([accessibleRequest, apiClient.get('/porchlights/')])
       : [await accessibleRequest];
     accessiblePorchlights.value = responses[0].data as Beacon[];
+    setPorchlights(accessiblePorchlights.value);
     editablePorchlights.value = user.value
       ? (responses[1].data as Beacon[]).filter((item) => (
         item.is_owner || editableRoles.has(String(item.user_role || '').toUpperCase())

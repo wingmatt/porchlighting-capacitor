@@ -23,15 +23,20 @@ import { onMounted, ref } from 'vue';
 import { IonContent, IonPage } from '@ionic/vue';
 import { apiClient } from '../api/client';
 import PorchlightList from '../components/PorchlightList.vue';
+import { useNeighborhood } from '../hooks/useNeighborhood';
 import type { Beacon } from '../types';
 
 const porchlights = ref<Beacon[]>([]);
 const loading = ref(true);
 const error = ref('');
+const { setPorchlights } = useNeighborhood();
 
 onMounted(() => {
   apiClient.get<Beacon[]>('/neighborhood/')
-    .then((response) => { porchlights.value = response.data; })
+    .then((response) => {
+      porchlights.value = response.data;
+      setPorchlights(response.data);
+    })
     .catch(() => { error.value = 'Unable to load your neighborhood Porchlights.'; })
     .finally(() => { loading.value = false; });
 });

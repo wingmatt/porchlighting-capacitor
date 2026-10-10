@@ -2,11 +2,8 @@
   <div v-if="supported" class="notification-settings">
     <ion-button fill="clear" :disabled="busy" :aria-pressed="enabled" @click="toggleNotifications">
       <AssetSvg asset="moth.svg"  :style="{marginRight: '.33em', width: '1.33em'}" />
-      {{ enabled ? 'Moth Mode On' : 'Moth Mode Off' }}
+      {{ enabled ? 'Moth Mode: On' : 'Moth Mode: Off' }}
     </ion-button>
-    <ion-button fill="clear" aria-label="About Moth Mode" @click="showInfo = !showInfo">ⓘ</ion-button>
-    <small v-if="showInfo">Be the moth to their flame. Get a heads up when your friends turn their light on</small>
-    <small v-if="message">{{ message }}</small>
   </div>
 </template>
 

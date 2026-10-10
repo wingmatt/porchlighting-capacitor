@@ -15,6 +15,7 @@ const routes: RouteRecordRaw[] = [
   { path: '/join/:sqid', component: () => import('./pages/InvitationPage.vue') },
   { path: '/porchlight/:id', component: () => import('./pages/PorchlightPage.vue') },
   { path: '/policies', component: () => import('./pages/PoliciesPage.vue') },
+  { path: '/help', component: () => import('./pages/HelpPage.vue') },
   { path: '/', component: () => import('./pages/HomePage.vue') },
 ];
 
