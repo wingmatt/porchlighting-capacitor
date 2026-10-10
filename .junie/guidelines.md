@@ -1,4 +1,4 @@
-# Project Guidelines: Porchlight Capacitor (Preact + Django API)
+# Project Guidelines: Porchlight Capacitor (Ionic Vue + Django API)
 
 These guidelines document the architecture, coding conventions, and backend integration patterns for the Porchlight Capacitor project.
 
@@ -6,27 +6,28 @@ These guidelines document the architecture, coding conventions, and backend inte
 
 ## 1. Tech Stack Overview
 
-- **Frontend Framework**: [Preact](https://preactjs.com/) with TypeScript (`@preact/preset-vite`).
+- **Frontend Framework**: [Vue 3](https://vuejs.org/) with TypeScript (`@vitejs/plugin-vue`).
+- **UI Framework**: [Ionic Vue](https://ionicframework.com/docs/vue/overview) (`@ionic/vue`).
 - **Build Tool**: [Vite](https://vite.dev/) with CSS Modules for component-scoped styling.
 - **Mobile Container**: [Capacitor 8](https://capacitorjs.com/) (`@capacitor/core`, `@capacitor/android`, `@capacitor/ios`, `@capacitor/preferences`).
 - **Maps & Geolocation**: [Mapbox GL JS](https://docs.mapbox.com/mapbox-gl-js/) (`mapbox-gl`, `@types/mapbox-gl`) for interactive map rendering and beacon geocoordinates display.
 - **Backend**: Django REST Framework (DRF) API (`http://localhost:8000/api`) backed by PostgreSQL/PostGIS.
 - **Real-time Synchronization**: Firebase Cloud Firestore document listeners (used strictly to broadcast backend state updates).
-- **Routing & Navigation**: `react-router-dom`.
-- **Icons**: `lucide-preact`.
+- **Routing & Navigation**: `@ionic/vue-router`.
+- **Icons**: `lucide-vue-next`.
 
 ---
 
 ## 2. Frontend & Component Conventions
 
-### Preact & Hooks
-- Import component types and hooks from `preact` and `preact/hooks`:
+### Vue & Ionic Components
+- Use Vue's Composition API and Ionic Vue components:
   ```typescript
-  import { FunctionComponent, JSX } from 'preact';
-  import { useState, useEffect, useMemo, useCallback } from 'preact/hooks';
+  import { computed, onMounted, ref, watch } from 'vue';
+  import { IonButton, IonContent, IonPage } from '@ionic/vue';
   ```
-- Avoid importing from `react` directly; prefer `preact` / `preact/hooks` to keep bundle size minimal.
-- Use `lucide-preact` for UI icons.
+- Prefer Ionic primitives for platform-aware controls and layout. Keep route views inside `IonPage` and `IonContent` where Ionic navigation requires them.
+- Use `lucide-vue-next` for icons and preserve accessible labels for icon-only controls.
 
 ### TypeScript & Typing
 - Place shared domain interfaces and types in `src/types.ts` (e.g., `Beacon`, `Invitation`).
