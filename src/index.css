@@ -37,7 +37,16 @@
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
   --radius-pill: 9999px;
-  --ion-color-primary: var(--active-color);
+  --ion-color-primary: var(--accent-color);
+  --ion-color-secondary: var(--active-color);
+  --ion-color-tertiary: var(--accent-hover-color);
+  --ion-color-success: var(--success-color);
+  --ion-color-warning: var(--warning-color);
+  --ion-color-danger: var(--danger-color);
+  --ion-color-light: var(--page-color);
+  --ion-color-medium: var(--muted-text-color);
+  --ion-color-dark: var(--text-color);
+  --ion-background-color: var(--page-color);
   --ion-font-family: "ThornAndThistleRustic", sans-serif;
 }
 
