@@ -1,7 +1,7 @@
 <template>
   <div v-if="supported" class="notification-settings">
     <ion-button fill="clear" :disabled="busy" :aria-pressed="enabled" @click="toggleNotifications">
-      <span aria-hidden="true">🦋</span>
+      <AssetSvg asset="moth.svg"  :style="{marginRight: '.33em', width: '1.33em'}" />
       {{ enabled ? 'Moth Mode On' : 'Moth Mode Off' }}
     </ion-button>
     <ion-button fill="clear" aria-label="About Moth Mode" @click="showInfo = !showInfo">ⓘ</ion-button>
@@ -16,6 +16,7 @@ import { IonButton } from '@ionic/vue';
 import { Capacitor } from '@capacitor/core';
 import { Preferences } from '@capacitor/preferences';
 import { configureNativeNotifications, disableNotifications, requestNotificationPermission } from '../notifications';
+import AssetSvg from "./AssetSvg.vue";
 
 const enabled = ref(false);
 const message = ref('');
@@ -60,6 +61,6 @@ const toggleNotifications = async () => {
 </script>
 
 <style scoped>
-.notification-settings { display: flex; align-items: center; gap: .25rem; flex-wrap: wrap; }
+.notification-settings { display: flex; align-items: center; gap: .33rem; flex-wrap: wrap; }
 .notification-settings small { color: var(--muted-text-color); }
 </style>

@@ -2,4 +2,4 @@
 .lightMode { color: #0f172a; background: #fff; border: 1px solid #e2e8f0; }
 .darkMode { color: #f8fafc; background: #1e293b; border: 1px solid #475569; }
 .button:hover, .button:focus-visible { border-color: var(--accent-color); outline: none; }
-.icon { width: 1rem; height: 1rem; color: var(--accent-color); }
+.theme-icon { margin-right:.33em; color: var(--accent-color); }
