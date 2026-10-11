@@ -17,6 +17,7 @@ export function extractLngLat(location?: GeoJSONPoint | [number, number] | null)
     const lat = Number(location[1]);
     return Number.isFinite(lng) && Number.isFinite(lat) && lng >= -180 && lng <= 180 && lat >= -90 && lat <= 90 ? [lng, lat] : null;
   }
+  //@ts-ignore
   if (location.type === 'Point' && Array.isArray(location.coordinates)) return extractLngLat(location.coordinates);
   return null;
 }
