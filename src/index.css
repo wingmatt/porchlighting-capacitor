@@ -7,7 +7,7 @@
 
 * { box-sizing: border-box; }
 
-:root {
+:root, :host {
   color-scheme: light;
   --page-color: #f8fafc;
   --surface-color: #D5DED9;
@@ -53,9 +53,10 @@
   --ion-color-dark: var(--text-color);
   --ion-background-color: var(--page-color);
   --ion-font-family: "ThornAndThistleRustic", sans-serif;
+  --color: var(--text-color);
 }
 
-:root[data-theme="dark"] {
+:root[data-theme="dark"] :host[data-theme="dark"] {
   color-scheme: dark;
   --page-color: #0f172a;
   --surface-color: #413E4A;

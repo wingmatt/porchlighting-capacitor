@@ -9,7 +9,6 @@ const routes: RouteRecordRaw[] = [
   { path: '/magic-login/:uid/:token/', component: () => import('./pages/AuthPage.vue'), props: { mode: 'magic-login' } },
   { path: '/confirm-email/:uid/:token/', component: () => import('./pages/AuthPage.vue'), props: { mode: 'confirm-email' } },
   { path: '/profile', component: () => import('./pages/ProfilePage.vue') },
-  { path: '/neighborhood', component: () => import('./pages/NeighborhoodPage.vue') },
   { path: '/porchlight/new', component: () => import('./pages/PorchlightCreatePage.vue') },
   { path: '/porchlight/:id/edit', component: () => import('./pages/PorchlightEditPage.vue') },
   { path: '/join/:sqid', component: () => import('./pages/InvitationPage.vue') },
@@ -17,6 +16,7 @@ const routes: RouteRecordRaw[] = [
   { path: '/policies', component: () => import('./pages/PoliciesPage.vue') },
   { path: '/help', component: () => import('./pages/HelpPage.vue') },
   { path: '/', component: () => import('./pages/HomePage.vue') },
+  { path: '/neighborhood', component: () => import('./pages/HomePage.vue') },
 ];
 
 export const router = createRouter({

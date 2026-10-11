@@ -6,7 +6,7 @@
       <div v-else :class="styles.homeStack">
         <section v-if="!user && !guestReady" :class="styles.card">
           <h1>Welcome to Porchlighting</h1>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean commodo ligula eget dolor.</p>
+          <p>Porchlights are a simple way to say hello to the people around you. Sign up to add your porchlight to the neighborhood and share a little warmth.</p>
           <div :class="styles.actions">
             <ion-button router-link="/login">Log in</ion-button>
             <ion-button fill="outline" router-link="/register">Sign up</ion-button>
@@ -41,10 +41,13 @@ import type { Beacon } from '../types';
 import PorchlightCarousel from '../components/PorchlightCarousel.vue';
 import PorchlightList from '../components/PorchlightList.vue';
 import { useNeighborhood } from '../hooks/useNeighborhood';
+import { useRoute, useRouter } from 'vue-router';
 import styles from './HomePage.module.css';
 
 const editableRoles = new Set(['OWNER', 'ADMIN', 'EDIT', 'SHARE']);
 const { user, loading: authLoading } = useAuth();
+const route = useRoute();
+const router = useRouter();
 const guestName = ref('');
 const guestReady = ref(false);
 const accessiblePorchlights = ref<Beacon[]>([]);
@@ -76,6 +79,11 @@ const loadHome = async () => {
   ]);
   guestName.value = name || '';
   guestReady.value = !user.value && Boolean(token);
+  if (route.path === '/' && (user.value || token)) {
+    loading.value = false;
+    await router.replace('/neighborhood');
+    return;
+  }
   if (!user.value && !token) {
     accessiblePorchlights.value = [];
     editablePorchlights.value = [];

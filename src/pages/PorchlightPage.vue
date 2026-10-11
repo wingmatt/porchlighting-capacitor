@@ -8,7 +8,7 @@
           <div><h2 :class="styles.title">{{ beacon.name || 'Porchlight' }}</h2><p v-if="beacon.status_message" :class="styles.statusMessage">{{ beacon.status_message }}</p><p v-if="beacon.description" :class="styles.description">{{ beacon.description }}</p><p v-if="canEdit && beacon.active_until" :class="styles.expiry">{{ expiryLabel }}</p></div>
           <div :class="styles.headerActions">
             <ion-button v-if="canEdit" fill="outline" :router-link="`/porchlight/${beacon.sqid}/edit`">Edit</ion-button>
-            <label v-if="canEdit && hasClosePermission" :class="styles.brightnessControl">Bright <ion-range v-model="brightness" :disabled="savingBrightness" :min="0" :max="100" :step="100" aria-label="Brightness" @ion-change="updateBrightness" /> Dim</label>
+            <label v-if="canEdit && hasClosePermission" :class="styles.brightnessControl">Bright <ion-range v-model="brightness" :class="styles.brightnessSlider" :disabled="savingBrightness" :min="0" :max="100" :step="100" :snaps="true" :ticks="true" aria-label="Brightness" @ion-change="updateBrightness" /> Dim</label>
             <beacon-icon :beacon="beacon" :editable="canEdit" @update="mergeBeacon" />
           </div>
         </div>
