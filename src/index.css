@@ -38,6 +38,11 @@
   --radius-lg: 0.75rem;
   --radius-pill: 9999px;
   --ion-color-primary: var(--accent-color);
+  --ion-color-primary-rgb: 179, 129, 132;
+  --ion-color-primary-contrast: var(--on-accent-color);
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #9e7174;
+  --ion-color-primary-tint: #bb8d90;
   --ion-color-secondary: var(--active-color);
   --ion-color-tertiary: var(--accent-hover-color);
   --ion-color-success: var(--success-color);
@@ -76,6 +81,8 @@
   --overlay-color: rgb(15 23 42 / 0.9);
   --shadow-color: rgb(0 0 0 / 0.3);
   --shadow-subtle-color: rgb(0 0 0 / 0.2);
+  --ion-color-primary-contrast: var(--on-accent-color);
+  --ion-color-primary-contrast-rgb: 65, 62, 74;
 }
 
 html, body { margin: 0; min-width: 320px; color: var(--text-color); background: var(--page-color); font-family: "ThornAndThistleRustic", sans-serif; }
@@ -108,5 +115,4 @@ html[data-reduced-motion] *, html[data-reduced-motion] *::before, html[data-redu
 
 a {
   text-decoration: none;
-  --ion-color-primary: var(--text-color);
 }

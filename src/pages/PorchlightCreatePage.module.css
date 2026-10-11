@@ -4,9 +4,11 @@ h1 { margin: 0 0 1.25rem; }
 form { display: grid; gap: 1rem; }
 label { display: grid; gap: .35rem; color: var(--muted-text-color); font-size: .875rem; font-weight: 600; }
 input, textarea { width: 100%; box-sizing: border-box; padding: .65rem .75rem; border: 1px solid var(--input-border-color); border-radius: var(--radius-sm); font: inherit; color: var(--text-color); background: var(--surface-color); }
+ion-input, ion-textarea { --color: var(--text-color); --background: var(--surface-color); --border-color: var(--input-border-color); --border-style: solid; --border-width: 1px; --border-radius: var(--radius-sm); --padding-start: .75rem; --padding-end: .75rem; }
 textarea { min-height: 6rem; resize: vertical; }
 .actions { display: flex; align-items: center; justify-content: flex-end; gap: 1rem; }
 .actions a { color: var(--muted-text-color); }
+.actions ion-button { --background: var(--ion-color-primary); --background-hover: var(--accent-hover-color); --background-activated: var(--accent-hover-color); --color: var(--ion-color-primary-contrast); }
 .toggle { display: flex; grid-template-columns: auto 1fr; align-items: center; gap: .5rem; }
 .toggle input { width: auto; }
 .locationFields { display: grid; gap: .75rem; padding: 1rem; background: var(--surface-muted-color); border-radius: var(--radius-md); }

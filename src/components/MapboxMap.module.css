@@ -1,5 +1,5 @@
 .defaultMap { width: 100%; height: 16rem; border-radius: var(--radius-lg); overflow: hidden; box-shadow: 0 4px 6px var(--shadow-color); }
-.wrapper { position: relative; }
+.wrapper { position: relative; width: 100%; height: 16rem; border-radius: var(--radius-lg); overflow: hidden; box-shadow: 0 4px 6px var(--shadow-color); }
 .mapContainer { width: 100%; height: 100%; }
 .darkMap :global(.mapboxgl-ctrl-group) { background: var(--surface-color); }
 .darkMap :global(.mapboxgl-ctrl-group button) { filter: invert(1); }

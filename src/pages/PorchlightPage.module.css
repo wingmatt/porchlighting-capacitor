@@ -11,6 +11,7 @@
 .title { margin: 0; color: var(--text-color); font-size: 1.25rem; font-weight: 700; }
 .statusMessage { margin: 0.25rem 0 0; color: var(--muted-text-color); font-size: 0.875rem; }
 .description { margin: 0.125rem 0 0; color: var(--inactive-color); font-size: 0.75rem; }
+.expiry { margin: 0.35rem 0 0; color: var(--muted-text-color); font-size: 0.8rem; }
 .sectionCard, .rsvpCard, .invitationCard { padding: 1rem; background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--radius-lg); box-shadow: 0 1px 2px var(--shadow-subtle-color); }
 .sectionCard { display: grid; gap: 0.75rem; }
 .rsvpCard { padding-bottom: 1rem; }
@@ -26,12 +27,10 @@
 .invitationItem a { color: var(--accent-color); overflow-wrap: anywhere; }
 .emptyInvitations, .invitationError { margin: 0; font-size: 0.8rem; color: var(--muted-text-color); }
 .invitationError { color: var(--danger-strong-color); }
-.invitationForm { display: grid; gap: 0.6rem; }
-.invitationForm label { display: grid; gap: 0.25rem; color: var(--muted-text-color); font-size: 0.8rem; }
-.invitationForm input, .invitationForm select { min-height: 2.25rem; padding: 0.4rem 0.5rem; border: 1px solid var(--input-border-color); border-radius: var(--radius-sm); color: var(--text-color); background: var(--surface-color); }
-.invitationForm button { min-height: 2.25rem; border: 0; border-radius: var(--radius-sm); color: var(--on-accent-color); background: var(--accent-color); cursor: pointer; }
-.invitationForm button:disabled { opacity: 0.6; cursor: wait; }
-.invitationForm .guestToggle { display: flex; grid-template-columns: auto 1fr; align-items: center; }
+.invitationButton { margin-top: 0.25rem; }
+.copyStatus { margin: 0; color: var(--success-color); font-size: 0.8rem; }
+.qrCode { display: grid; justify-items: center; gap: 0.35rem; margin: 0.25rem 0; color: var(--muted-text-color); font-size: 0.75rem; }
+.qrCode img { width: 220px; height: 220px; border: 1px solid var(--border-color); border-radius: var(--radius-md); }
 .accessSection { display: grid; gap: 0.6rem; border-top: 1px solid var(--border-color); padding-top: 0.75rem; }
 .accessTitle { margin: 0; color: var(--text-color); font-size: 0.8rem; font-weight: 600; }
 .accessItem { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; padding: 0.6rem; background: var(--surface-muted-color); border-radius: var(--radius-md); font-size: 0.8rem; }

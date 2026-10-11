@@ -13,11 +13,33 @@
     </div>
     <template v-if="!location">
       <p v-if="error">{{ error }}</p>
-      <label>Street address<input v-model="address.street" /></label>
+      <label>
+        Street address
+        <ion-input
+          v-model="address.street"
+          name="street-address"
+          autocomplete="street-address"
+          inputmode="text"
+        />
+      </label>
       <div :class="$style.addressRow">
-        <label>City<input v-model="address.city" /></label>
-        <label>State<input v-model="address.state" /></label>
-        <label>ZIP code<input v-model="address.postalCode" /></label>
+        <label>
+          City
+          <ion-input v-model="address.city" name="address-level2" autocomplete="address-level2" />
+        </label>
+        <label>
+          State
+          <ion-input v-model="address.state" name="address-level1" autocomplete="address-level1" />
+        </label>
+        <label>
+          ZIP code
+          <ion-input
+            v-model="address.postalCode"
+            name="postal-code"
+            autocomplete="postal-code"
+            inputmode="numeric"
+          />
+        </label>
       </div>
       <button type="button" :disabled="geocoding" @click="useAddress">
         {{ geocoding ? 'Finding address...' : 'Use Address' }}
@@ -29,7 +51,7 @@
       :defaultLocation="[-98.5795, 39.8283]"
       :name="name || 'Porchlight'"
       draggable
-      @coordinatesChange="emit('change', $event)"
+      :on-coordinates-change="handleCoordinatesChange"
     />
     <p v-if="location" :class="$style.coordinates">
       Coordinates: {{ location.coordinates[1].toFixed(5) }}, {{ location.coordinates[0].toFixed(5) }}
@@ -38,6 +60,7 @@
 </template>
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
+import { IonInput } from '@ionic/vue';
 import { apiClient } from '../api/client';
 import type { GeoJSONPoint } from '../types';
 import MapboxMap from './MapboxMap.vue';
@@ -48,6 +71,10 @@ const enabled = ref(Boolean(props.location));
 const address = reactive({ street: '', city: '', state: '', postalCode: '' });
 const geocoding = ref(false);
 const error = ref('');
+
+const handleCoordinatesChange = (newLocation: GeoJSONPoint) => {
+  emit('change', newLocation);
+};
 
 const useAddress = async () => {
   const formattedAddress = [address.street, address.city, address.state, address.postalCode]
