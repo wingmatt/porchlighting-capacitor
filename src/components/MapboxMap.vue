@@ -1,7 +1,7 @@
 <template>
   <div v-if="!displayCoords" :class="[className, styles.emptyState]"><p :class="styles.emptyTitle">No geocoordinates set for {{ name }}</p><p :class="styles.emptyDescription">Location will appear here once configured</p></div>
   <div v-else-if="mapError" :class="[className, styles.errorState]"><p :class="styles.errorTitle">{{ name }}</p><p :class="styles.errorDescription">{{ mapError }}</p><p :class="styles.errorDescription">Coordinates: {{ displayCoords[1].toFixed(5) }}, {{ displayCoords[0].toFixed(5) }}</p></div>
-  <div v-else :class="[styles.wrapper, className]"><div ref="mapContainer" :class="[styles.mapContainer, theme === 'dark' ? styles.darkMap : '']" /><div :class="styles.coordinates">📍 {{ displayCoords[1].toFixed(4) }}, {{ displayCoords[0].toFixed(4) }}</div></div>
+  <div v-else :class="[styles.wrapper, className]"><div ref="mapContainer" :class="[styles.mapContainer, theme === 'dark' ? styles.darkMap : '']" /></div>
 </template>
 
 <script setup lang="ts">
