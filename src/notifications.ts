@@ -7,10 +7,10 @@ const VAPID_PUBLIC_KEY = import.meta.env.VITE_WEB_PUSH_VAPID_PUBLIC_KEY || '';
 const NATIVE_TOKEN_KEY = 'notifications_native_token';
 const WEB_ENDPOINT_KEY = 'notifications_web_endpoint';
 
-function urlBase64ToUint8Array(value: string): Uint8Array {
+function urlBase64ToArrayBuffer(value: string): ArrayBuffer {
   const padding = '='.repeat((4 - (value.length % 4)) % 4);
   const base64 = (value + padding).replace(/-/g, '+').replace(/_/g, '/');
-  return Uint8Array.from(atob(base64), (character) => character.charCodeAt(0));
+  return Uint8Array.from(atob(base64), (character) => character.charCodeAt(0)).buffer as ArrayBuffer;
 }
 
 export async function requestNotificationPermission(): Promise<boolean> {
@@ -28,7 +28,7 @@ export async function requestNotificationPermission(): Promise<boolean> {
   const registration = await navigator.serviceWorker.register('/sw.js');
   const subscription = await registration.pushManager.getSubscription() || await registration.pushManager.subscribe({
     userVisibleOnly: true,
-    applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
+    applicationServerKey: urlBase64ToArrayBuffer(VAPID_PUBLIC_KEY),
   });
   const json = subscription.toJSON();
   await apiClient.post('/auth/web-push/register/', {

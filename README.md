@@ -43,8 +43,8 @@ Ensure the following tools are installed on your development machine:
 git clone <repository-url>
 cd porchlight-capacitor
 
-# Install npm dependencies
-npm install
+# Install the locked npm dependencies
+npm ci
 ```
 
 ### 2. Configure Environment Variables & Firebase
@@ -113,6 +113,7 @@ sessions are separate.
 | Command | Description |
 |---|---|
 | `npm run dev` | Starts the Vite local development server (with HMR) |
+| `npm run typecheck` | Runs the TypeScript compiler without emitting files |
 | `npm run build` | Type-checks and compiles web assets into the `dist/` directory |
 | `npm run preview` | Locally previews the production build from `dist/` |
 
