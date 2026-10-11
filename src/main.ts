@@ -12,6 +12,7 @@ import '@ionic/vue/css/text-alignment.css';
 import '@ionic/vue/css/text-transformation.css';
 import '@ionic/vue/css/flex-utils.css';
 import '@ionic/vue/css/display.css';
+import 'mapbox-gl/dist/mapbox-gl.css';
 import './index.css';
 
 const appElement = document.getElementById('app');

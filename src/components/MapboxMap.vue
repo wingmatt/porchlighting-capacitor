@@ -1,15 +1,16 @@
 <template>
   <div v-if="!displayCoords" :class="[className, styles.emptyState]"><p :class="styles.emptyTitle">No geocoordinates set for {{ name }}</p><p :class="styles.emptyDescription">Location will appear here once configured</p></div>
-  <div v-else-if="mapError" :class="[className, styles.errorState]"><p :class="styles.errorTitle">{{ name }}</p><p :class="styles.errorDescription">Coordinates: {{ displayCoords[1].toFixed(5) }}, {{ displayCoords[0].toFixed(5) }}</p></div>
+  <div v-else-if="mapError" :class="[className, styles.errorState]"><p :class="styles.errorTitle">{{ name }}</p><p :class="styles.errorDescription">{{ mapError }}</p><p :class="styles.errorDescription">Coordinates: {{ displayCoords[1].toFixed(5) }}, {{ displayCoords[0].toFixed(5) }}</p></div>
   <div v-else :class="[styles.wrapper, className]"><div ref="mapContainer" :class="[styles.mapContainer, theme === 'dark' ? styles.darkMap : '']" /><div :class="styles.coordinates">📍 {{ displayCoords[1].toFixed(4) }}, {{ displayCoords[0].toFixed(4) }}</div></div>
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref, watch } from 'vue';
+import { computed, createApp, h, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import type { GeoJSONPoint } from '../types';
 import { extractLngLat, type MapboxMapMarker } from './mapboxUtils';
 import styles from './MapboxMap.module.css';
 import { useTheme } from '../contexts/Theme';
+import BeaconIcon from './BeaconIcon.vue';
 
 const props = withDefaults(defineProps<{
   location?: GeoJSONPoint | [number, number] | null;
@@ -30,25 +31,53 @@ const { theme } = useTheme();
 const mapContainer = ref<HTMLElement | null>(null);
 const mapInstance = ref<any>(null);
 const markerInstances = ref<any[]>([]);
+const markerApps = ref<ReturnType<typeof createApp>[]>([]);
 const mapError = ref<string | null>(null);
 const normalizedMarkers = computed(() => (props.markers?.length ? props.markers : props.location || props.defaultLocation ? [{ location: props.location || props.defaultLocation!, name: props.name, statusMessage: props.statusMessage, isOn: props.isOn, color: props.color }] : []).map((marker) => ({ ...marker, coordinates: extractLngLat(marker.location) })).filter((marker): marker is MapboxMapMarker & { coordinates: [number, number] } => Boolean(marker.coordinates)));
 const displayCoords = computed(() => extractLngLat(props.location) || props.defaultLocation || normalizedMarkers.value[0]?.coordinates || null);
 const markerKey = computed(() => normalizedMarkers.value.map((marker) => `${marker.coordinates.join(',')}:${marker.name}:${marker.statusMessage}:${marker.isOn}:${marker.rsvpBeacon?.rsvp_count}`).join('|'));
 
-const clearMap = () => { markerInstances.value.forEach((marker) => marker.remove()); markerInstances.value = []; mapInstance.value?.remove(); mapInstance.value = null; };
+const clearMap = () => {
+  markerApps.value.forEach((app) => app.unmount());
+  markerApps.value = [];
+  markerInstances.value.forEach((marker) => marker.remove());
+  markerInstances.value = [];
+  mapInstance.value?.remove();
+  mapInstance.value = null;
+};
 const initializeMap = async () => {
   clearMap();
   mapError.value = null;
   if (!mapContainer.value || !normalizedMarkers.value.length) return;
   try {
-    const [{ default: mapboxgl }] = await Promise.all([import('mapbox-gl'), import('mapbox-gl/dist/mapbox-gl.css')]);
-    mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN || import.meta.env.VITE_MAPBOX_ACCESS_TOKEN || '';
+    await nextTick();
+    const { default: mapboxgl } = await import('mapbox-gl');
+    const accessToken = import.meta.env.VITE_MAPBOX_TOKEN || import.meta.env.VITE_MAPBOX_ACCESS_TOKEN || '';
+    if (!accessToken || !accessToken.startsWith('pk.')) {
+      throw new Error('Mapbox access token is not configured. Set VITE_MAPBOX_TOKEN.');
+    }
+    mapboxgl.accessToken = accessToken;
     const first = normalizedMarkers.value[0].coordinates;
     const map = new mapboxgl.Map({ container: mapContainer.value, style: `mapbox://styles/mapbox/${theme.value === 'dark' ? 'dark-v11' : 'streets-v12'}`, center: first, zoom: props.zoom, interactive: props.interactive });
+    map.on('error', (event: { error?: Error }) => {
+      if (event.error) mapError.value = event.error.message;
+    });
+    map.on('load', () => map.resize());
     if (props.interactive) map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
     mapInstance.value = map;
     markerInstances.value = normalizedMarkers.value.map((item) => {
-      const element = document.createElement('div'); element.className = `${styles.marker} ${item.isOn === false ? '' : styles.markerLit}`; element.textContent = '●'; element.style.color = item.color || props.color;
+      const element = document.createElement('div');
+      element.className = `${styles.marker} ${item.isOn ? styles.markerLit : ''}`;
+      const beacon = item.rsvpBeacon || {
+        id: item.name || 'map-marker',
+        name: item.name,
+        location: { type: 'Point', coordinates: item.coordinates },
+        is_on: item.isOn ?? false,
+        color: item.color,
+      };
+      const beaconApp = createApp({ render: () => h(BeaconIcon, { beacon, editable: false }) });
+      beaconApp.mount(element);
+      markerApps.value.push(beaconApp);
       const popupContent = document.createElement('div'); popupContent.style.fontFamily = 'sans-serif'; popupContent.innerHTML = `<strong>${item.name || 'Porchlight'}</strong>${item.statusMessage ? `<p>${item.statusMessage}</p>` : ''}${item.description ? `<p>${item.description}</p>` : ''}`;
       const marker = new mapboxgl.Marker({ element, draggable: Boolean(props.draggable && !props.markers?.length) }).setLngLat(item.coordinates).setPopup(new mapboxgl.Popup({ offset: 25 }).setDOMContent(popupContent)).addTo(map);
       if (props.draggable && !props.markers?.length) marker.on('dragend', () => { const position = marker.getLngLat(); props.onCoordinatesChange?.({ type: 'Point', coordinates: [position.lng, position.lat] }); });
@@ -58,5 +87,6 @@ const initializeMap = async () => {
   } catch (error) { console.warn('Mapbox initialization error:', error); mapError.value = error instanceof Error ? error.message : 'Failed to initialize Mapbox map'; }
 };
 watch([markerKey, () => theme.value], initializeMap, { immediate: true });
+onMounted(initializeMap);
 onBeforeUnmount(clearMap);
 </script>
