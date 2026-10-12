@@ -12,8 +12,13 @@
         :className="`${$style.icon} brightness-${currentBeacon.brightness ?? 100}`"
         :label="isActive ? 'Lit porchlight' : 'Unlit porchlight'"
       />
+      <div v-if="isActive && hasActiveRsvps && !reducedMotion" :class="$style.mothSwarm" aria-hidden="true">
+        <div class="fluttering"><AssetSvg asset="moth.svg" :className="`${$style.moth} ${$style.mothOne}`" /></div>
+        <div class="fluttering"><AssetSvg asset="moth.svg" :className="`${$style.moth} ${$style.mothTwo}`" /></div>
+        <div class="fluttering"><AssetSvg asset="moth.svg" :className="`${$style.moth} ${$style.mothThree}`" /></div>
+      </div>
       <span
-        v-if="(currentBeacon.rsvp_count ?? 0) > 0"
+        v-if="hasActiveRsvps && (!isActive || reducedMotion)"
         :class="[$style.rsvpBadge, currentBeacon.has_rsvp ? $style.rsvpBadgeSelected : '']"
         :aria-label="`Porchlight has at least one RSVP${currentBeacon.has_rsvp ? ', including you' : ''}`"
       >
@@ -30,6 +35,7 @@ export const canEditBeacon = (beacon: Beacon) => Boolean(beacon.is_owner) || edi
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { apiClient } from '../api/client';
+import { useAccessibilityPreferences } from '../contexts/AccessibilityPreferences';
 import type { Beacon } from '../types';
 import AssetSvg from './AssetSvg.vue';
 import BeaconGraphic from './BeaconGraphic.vue';
@@ -37,6 +43,7 @@ const props = withDefaults(defineProps<{ beacon: Beacon; editable?: boolean }>()
 const emit = defineEmits<{ update: [updated: Beacon] }>();
 const currentBeacon = ref(props.beacon);
 const saving = ref(false);
+const { reducedMotion } = useAccessibilityPreferences();
 
 watch(() => props.beacon, (beacon) => {
   currentBeacon.value = beacon;
@@ -45,6 +52,7 @@ watch(() => props.beacon, (beacon) => {
 const isActive = computed(() => currentBeacon.value.is_on ?? Boolean(
   currentBeacon.value.active_until && new Date(currentBeacon.value.active_until) > new Date(),
 ));
+const hasActiveRsvps = computed(() => (currentBeacon.value.rsvp_count ?? 0) > 0);
 
 const handleToggle = async (event: MouseEvent) => {
   if (!props.editable) return;
