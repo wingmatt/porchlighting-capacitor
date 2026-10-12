@@ -2,7 +2,7 @@
   <div v-if="supported" class="notification-settings">
     <ion-button fill="clear" :disabled="busy" :aria-pressed="enabled" @click="toggleNotifications">
       <AssetSvg asset="moth.svg"  :style="{marginRight: '.33em', width: '1.33em'}" />
-      {{ enabled ? 'Moth Mode: On' : 'Moth Mode: Off' }}
+      {{ enabled ? 'Moth Alert: On' : 'Moth Alert: Off' }}
     </ion-button>
   </div>
 </template>

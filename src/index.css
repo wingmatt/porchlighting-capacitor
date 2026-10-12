@@ -56,7 +56,7 @@
   --color: var(--text-color);
 }
 
-:root[data-theme="dark"] :host[data-theme="dark"] {
+:root[data-theme="dark"] {
   color-scheme: dark;
   --page-color: #0f172a;
   --surface-color: #413E4A;
