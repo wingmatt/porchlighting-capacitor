@@ -13,9 +13,9 @@
         :label="isActive ? 'Lit porchlight' : 'Unlit porchlight'"
       />
       <div v-if="isActive && hasActiveRsvps && !reducedMotion" :class="$style.mothSwarm" aria-hidden="true">
-        <div class="fluttering"><AssetSvg asset="moth.svg" :className="`${$style.moth} ${$style.mothOne}`" /></div>
-        <div class="fluttering"><AssetSvg asset="moth.svg" :className="`${$style.moth} ${$style.mothTwo}`" /></div>
-        <div class="fluttering"><AssetSvg asset="moth.svg" :className="`${$style.moth} ${$style.mothThree}`" /></div>
+        <div :class="$style.fluttering"><AssetSvg asset="moth.svg" :className="`${$style.moth} ${$style.mothOne}`" /></div>
+        <div :class="$style.fluttering"><AssetSvg asset="moth.svg" :className="`${$style.moth} ${$style.mothTwo}`" /></div>
+        <div :class="$style.fluttering"><AssetSvg asset="moth.svg" :className="`${$style.moth} ${$style.mothThree}`" /></div>
       </div>
       <span
         v-if="hasActiveRsvps && (!isActive || reducedMotion)"
