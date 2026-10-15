@@ -18,16 +18,16 @@
   to { transform: rotateX(18deg) rotateY(24deg) rotateZ(12deg) scale(1.05); }
 }
 @keyframes moth-flight-one {
-  0% { left: 8%; top: 58%; transform: rotate(-25deg) scale(.75); opacity: 0; }
+  0% { left: 8%; top: 58%; transform: rotatex(-25deg) scale(.75); opacity: 0; }
   12%, 72% { opacity: .9; }
-  50% { left: 68%; top: 4%; transform: rotate(35deg) scale(1); }
-  88%, 100% { left: 88%; top: 66%; transform: rotate(145deg) scale(.7); opacity: 0; }
+  50% { left: 68%; top: 4%; transform: rotatex(35deg) scale(1); }
+  88%, 100% { left: 88%; top: 66%; transform: rotatex(145deg) scale(.7); opacity: 0; }
 }
 @keyframes moth-flight-two {
-  0% { left: 80%; top: 78%; transform: rotate(155deg) scale(.65); opacity: 0; }
+  0% { left: 80%; top: 78%; transform: rotatey(155deg) scale(.65); opacity: 0; }
   14%, 70% { opacity: .85; }
-  50% { left: 14%; top: 8%; transform: rotate(-35deg) scale(1); }
-  90%, 100% { left: 2%; top: 72%; transform: rotate(-145deg) scale(.7); opacity: 0; }
+  50% { left: 14%; top: 8%; transform: rotatey(-35deg) scale(1); }
+  90%, 100% { left: 2%; top: 72%; transform: rotatey(-145deg) scale(.7); opacity: 0; }
 }
 @keyframes moth-flight-three {
   0% { left: 52%; top: 92%; transform: rotate(180deg) scale(.7); opacity: 0; }
