@@ -1,7 +1,7 @@
 <template>
   <button
     :class="[$style.button, isActive ? $style.active : $style.inactive]"
-    :disabled="!editable || saving"
+    :disabled="saving"
     :aria-busy="saving"
     :aria-label="isActive ? 'Turn off beacon' : 'Turn on beacon'"
     @click="handleToggle"
