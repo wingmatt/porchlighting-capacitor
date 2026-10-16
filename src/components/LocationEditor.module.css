@@ -5,6 +5,6 @@
 .addressRow { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: .5rem; }
 .locationFields > label, .addressRow label { display: grid; gap: .35rem; color: var(--muted-text-color); font-size: .875rem; font-weight: 600; }
 .locationFields ion-input { --color: var(--text-color); --background: var(--surface-color); --border-color: var(--input-border-color); --border-style: solid; --border-width: 1px; --border-radius: var(--radius-sm); --padding-start: .75rem; --padding-end: .75rem; }
-.locationFields button { padding: .7rem 1rem; color: var(--on-accent-color); background: var(--accent-color); border: 0; border-radius: var(--radius-sm); cursor: pointer; }
-.locationFields button:disabled { opacity: .65; cursor: wait; }
+.locationFields > button { padding: .7rem 1rem; color: var(--on-accent-color); background: var(--accent-color); border: 0; border-radius: var(--radius-sm); cursor: pointer; }
+.locationFields > button:disabled { opacity: .65; cursor: wait; }
 .coordinates { margin: 0; color: var(--muted-text-color); font-size: .8rem; }

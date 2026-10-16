@@ -54,6 +54,7 @@
   --ion-background-color: var(--page-color);
   --ion-font-family: "ThornAndThistleRustic", sans-serif;
   --color: var(--text-color);
+  --icon-toolbar-color: var(--text-color);
 }
 
 :root[data-theme="dark"] {
@@ -116,4 +117,10 @@ html[data-reduced-motion] *, html[data-reduced-motion] *::before, html[data-redu
 
 a {
   text-decoration: none;
+}
+ion-toolbar, ion-item {
+  --ion-toolbar-color: var(--text-color);
+}
+ion-item a {
+  color: var(--text-color);
 }

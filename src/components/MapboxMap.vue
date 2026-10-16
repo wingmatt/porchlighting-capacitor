@@ -10,6 +10,7 @@ import type { GeoJSONPoint } from '../types';
 import { extractLngLat, type MapboxMapMarker } from './mapboxUtils';
 import styles from './MapboxMap.module.css';
 import { useTheme } from '../contexts/Theme';
+import { useAccessibilityPreferences } from '../contexts/AccessibilityPreferences';
 import BeaconIcon from './BeaconIcon.vue';
 
 const props = withDefaults(defineProps<{
@@ -28,6 +29,7 @@ const props = withDefaults(defineProps<{
 }>(), { name: 'Porchlight', color: '#F59E0B', zoom: 14, interactive: true, draggable: false, className: '' });
 
 const { theme } = useTheme();
+const { reducedMotion } = useAccessibilityPreferences();
 const mapContainer = ref<HTMLElement | null>(null);
 const mapInstance = ref<any>(null);
 const markerInstances = ref<any[]>([]);
@@ -75,7 +77,7 @@ const initializeMap = async () => {
         is_on: item.isOn ?? false,
         color: item.color,
       };
-      const beaconApp = createApp({ render: () => h(BeaconIcon, { beacon, editable: false }) });
+      const beaconApp = createApp({ render: () => h(BeaconIcon, { beacon, editable: false, reducedMotion: reducedMotion.value }) });
       beaconApp.mount(element);
       markerApps.value.push(beaconApp);
       const popupContent = document.createElement('div'); popupContent.style.fontFamily = 'sans-serif'; popupContent.innerHTML = `<strong>${item.name || 'Porchlight'}</strong>${item.statusMessage ? `<p>${item.statusMessage}</p>` : ''}${item.description ? `<p>${item.description}</p>` : ''}`;

@@ -39,11 +39,10 @@ import { useAccessibilityPreferences } from '../contexts/AccessibilityPreference
 import type { Beacon } from '../types';
 import AssetSvg from './AssetSvg.vue';
 import BeaconGraphic from './BeaconGraphic.vue';
-const props = withDefaults(defineProps<{ beacon: Beacon; editable?: boolean }>(), { editable: false });
+const props = withDefaults(defineProps<{ beacon: Beacon; editable?: boolean; reducedMotion?: boolean }>(), { editable: false });
 const emit = defineEmits<{ update: [updated: Beacon] }>();
 const currentBeacon = ref(props.beacon);
 const saving = ref(false);
-const { reducedMotion } = useAccessibilityPreferences();
 
 watch(() => props.beacon, (beacon) => {
   currentBeacon.value = beacon;

@@ -8,11 +8,21 @@
       </ion-header>
       <ion-content>
         <ion-list lines="none">
-          <ion-item v-if="user" router-link="/profile" detail="false">
-            <ion-label>Profile</ion-label>
+          <ion-item>
+            <router-link to="/neighborhood">Neighborhood</router-link>
           </ion-item>
-          <ion-item v-else-if="route.path !== '/login'" router-link="/login" detail="false">
-            <ion-label>Log in</ion-label>
+          <ion-item>
+            <router-link to="/policies">Moth Alert Setup</router-link>
+          </ion-item>
+          <ion-item-divider>
+            <ion-label>Account</ion-label>
+          </ion-item-divider>
+        </ion-list>
+        <hr>
+        <ion-list lines="none">
+          <ion-item>
+            <router-link v-if="user" to="/profile">Profile</router-link>
+            <router-link v-else-if="route.path !== '/login'" to="/login">Login</router-link>
           </ion-item>
           <ion-item>
             <router-link to="/policies">Policies</router-link>

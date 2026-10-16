@@ -11,7 +11,7 @@ textarea { min-height: 6rem; resize: vertical; }
 .actions ion-button { --background: var(--ion-color-primary); --background-hover: var(--accent-hover-color); --background-activated: var(--accent-hover-color); --color: var(--ion-color-primary-contrast); }
 .toggle { display: flex; grid-template-columns: auto 1fr; align-items: center; gap: .5rem; }
 .toggle input { width: auto; }
-.locationFields { display: grid; gap: .75rem; padding: 1rem; background: var(--surface-muted-color); border-radius: var(--radius-md); }
+.locationFields  { display: grid; gap: .75rem; padding: 1rem; background: var(--surface-muted-color); border-radius: var(--radius-md); }
 .addressRow { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: .5rem; }
 .coordinates { margin: 0; color: var(--muted-text-color); font-size: .8rem; }
 button { padding: .7rem 1rem; color: var(--on-accent-color); background: var(--accent-color); border: 0; border-radius: var(--radius-sm); cursor: pointer; }

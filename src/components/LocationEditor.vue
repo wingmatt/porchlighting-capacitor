@@ -53,9 +53,6 @@
       draggable
       :on-coordinates-change="handleCoordinatesChange"
     />
-    <p v-if="location" :class="$style.coordinates">
-      Coordinates: {{ location.coordinates[1].toFixed(5) }}, {{ location.coordinates[0].toFixed(5) }}
-    </p>
   </div>
 </template>
 <script setup lang="ts">
