@@ -57,9 +57,15 @@ import PorchlightListItem from './PorchlightListItem.vue';
 import styles from './PorchlightList.module.css';
 const props = withDefaults(defineProps<{ porchlights: Beacon[]; emptyMessage?: string }>(), { emptyMessage: 'No porchlights yet.' });
 const emit = defineEmits<{ update: [beacon: Beacon] }>();
-const activeTab = ref<'all' | 'map'>('all');
+type PorchlightTab = 'all' | 'map';
+const activeTabStorageKey = 'porchlight-list-active-tab';
+const storedTab = typeof window !== 'undefined' ? window.localStorage.getItem(activeTabStorageKey) : null;
+const activeTab = ref<PorchlightTab>(storedTab === 'map' ? 'map' : 'all');
 const displayPorchlights = ref(props.porchlights);
 const { reducedMotion } = useAccessibilityPreferences();
+watch(activeTab, (value) => {
+  window.localStorage.setItem(activeTabStorageKey, value);
+});
 watch(() => props.porchlights, (value) => {
   displayPorchlights.value = value;
 });
