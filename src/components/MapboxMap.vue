@@ -12,6 +12,7 @@ import styles from './MapboxMap.module.css';
 import { useTheme } from '../contexts/Theme';
 import { useAccessibilityPreferences } from '../contexts/AccessibilityPreferences';
 import BeaconIcon from './BeaconIcon.vue';
+import Rsvp from './Rsvp.vue';
 
 const props = withDefaults(defineProps<{
   location?: GeoJSONPoint | [number, number] | null;
@@ -80,7 +81,24 @@ const initializeMap = async () => {
       const beaconApp = createApp({ render: () => h(BeaconIcon, { beacon, editable: false, reducedMotion: reducedMotion.value }) });
       beaconApp.mount(element);
       markerApps.value.push(beaconApp);
-      const popupContent = document.createElement('div'); popupContent.style.fontFamily = 'sans-serif'; popupContent.innerHTML = `<strong>${item.name || 'Porchlight'}</strong>${item.statusMessage ? `<p>${item.statusMessage}</p>` : ''}${item.description ? `<p>${item.description}</p>` : ''}`;
+      const popupContent = document.createElement('div');
+      popupContent.style.fontFamily = 'ThornAndThistleRustic, sans-serif';
+      const popupApp = createApp({
+        setup() {
+          const beacon = ref(item.rsvpBeacon);
+          const updateBeacon = (updated: Partial<NonNullable<typeof item.rsvpBeacon>>) => {
+            if (beacon.value) beacon.value = { ...beacon.value, ...updated };
+          };
+          return () => h('div', [
+            h('strong', item.name || 'Porchlight'),
+            item.statusMessage ? h('p', item.statusMessage) : null,
+            item.description ? h('p', item.description) : null,
+            beacon.value ? h(Rsvp, { beacon: beacon.value, onUpdate: updateBeacon }) : null,
+          ]);
+        },
+      });
+      popupApp.mount(popupContent);
+      markerApps.value.push(popupApp);
       const marker = new mapboxgl.Marker({ element, draggable: Boolean(props.draggable && !props.markers?.length) }).setLngLat(item.coordinates).setPopup(new mapboxgl.Popup({ offset: 25 }).setDOMContent(popupContent)).addTo(map);
       if (props.draggable && !props.markers?.length) marker.on('dragend', () => { const position = marker.getLngLat(); props.onCoordinatesChange?.({ type: 'Point', coordinates: [position.lng, position.lat] }); });
       return marker;
