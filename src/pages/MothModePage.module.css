@@ -1,0 +1,13 @@
+.page { max-width: 42rem; margin: 0 auto; padding: 1.25rem; }
+.intro { margin-bottom: 1rem; }
+.moth { width: 4rem; height: 4rem; margin-bottom: .5rem; }
+.eyebrow { margin: 0 0 .35rem; color: var(--active-color); font-weight: 700; }
+h1 { margin: 0 0 .75rem; }
+h2 { margin: 0 0 .5rem; font-size: 1.2rem; }
+p { color: var(--muted-text-color); line-height: 1.55; }
+.card { margin-top: 1rem; padding: 1.25rem; background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--radius-lg); }
+.card p:last-child { margin-bottom: 0; }
+.statusRow { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+.statusRow p { margin-bottom: 0; }
+.message { margin: .75rem 0 0; }
+.notice { border-color: var(--warning-color); }

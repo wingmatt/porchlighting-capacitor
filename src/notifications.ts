@@ -7,10 +7,26 @@ const VAPID_PUBLIC_KEY = import.meta.env.VITE_WEB_PUSH_VAPID_PUBLIC_KEY || '';
 const NATIVE_TOKEN_KEY = 'notifications_native_token';
 const WEB_ENDPOINT_KEY = 'notifications_web_endpoint';
 
+export type NotificationPermissionStatus = 'granted' | 'prompt' | 'denied' | 'unsupported';
+
 function urlBase64ToArrayBuffer(value: string): ArrayBuffer {
   const padding = '='.repeat((4 - (value.length % 4)) % 4);
   const base64 = (value + padding).replace(/-/g, '+').replace(/_/g, '/');
   return Uint8Array.from(atob(base64), (character) => character.charCodeAt(0)).buffer as ArrayBuffer;
+}
+
+export async function getNotificationPermissionStatus(): Promise<NotificationPermissionStatus> {
+  if (Capacitor.isNativePlatform()) {
+    const permission = await PushNotifications.checkPermissions();
+    if (permission.receive === 'granted') return 'granted';
+    if (permission.receive === 'prompt') return 'prompt';
+    return 'denied';
+  }
+
+  if (!('Notification' in window) || !('serviceWorker' in navigator) || !('PushManager' in window)) return 'unsupported';
+  if (Notification.permission === 'granted') return 'granted';
+  if (Notification.permission === 'denied') return 'denied';
+  return 'prompt';
 }
 
 export async function requestNotificationPermission(): Promise<boolean> {

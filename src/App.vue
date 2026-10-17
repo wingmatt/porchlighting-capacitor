@@ -12,7 +12,7 @@
             <router-link to="/neighborhood">Neighborhood</router-link>
           </ion-item>
           <ion-item>
-            <router-link to="/policies">Moth Alert Setup</router-link>
+            <router-link to="/moth-mode">Moth Mode</router-link>
           </ion-item>
           <ion-item-divider>
             <ion-label>Account</ion-label>
