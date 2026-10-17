@@ -1,6 +1,10 @@
 <template>
-  <div v-if="supported" class="notification-settings">
-    <ion-button fill="clear" :disabled="busy" :aria-pressed="enabled" @click="toggleNotifications">
+  <div class="notification-settings">
+    <ion-button v-if="permissionStatus !== 'granted'" fill="clear" router-link="/moth-alert">
+      <AssetSvg asset="moth.svg" :style="{marginRight: '.33em', width: '1.33em'}" />
+      Setup Moth Alert
+    </ion-button>
+    <ion-button v-else fill="clear" :disabled="busy" :aria-pressed="enabled" @click="toggleNotifications">
       <AssetSvg asset="moth.svg"  :style="{marginRight: '.33em', width: '1.33em'}" />
       {{ enabled ? 'Moth Alert: On' : 'Moth Alert: Off' }}
     </ion-button>
@@ -12,17 +16,24 @@ import { onMounted, ref } from 'vue';
 import { IonButton } from '@ionic/vue';
 import { Capacitor } from '@capacitor/core';
 import { Preferences } from '@capacitor/preferences';
-import { configureNativeNotifications, disableNotifications, requestNotificationPermission } from '../notifications';
+import {
+  configureNativeNotifications,
+  disableNotifications,
+  getNotificationPermissionStatus,
+  requestNotificationPermission,
+  type NotificationPermissionStatus,
+} from '../notifications';
 import AssetSvg from "./AssetSvg.vue";
 
 const enabled = ref(false);
 const message = ref('');
 const showInfo = ref(false);
 const busy = ref(false);
-const supported = Capacitor.isNativePlatform() || ('Notification' in window);
+const permissionStatus = ref<NotificationPermissionStatus>('prompt');
 
 onMounted(async () => {
   try {
+    permissionStatus.value = await getNotificationPermissionStatus();
     const preference = await Preferences.get({ key: 'notifications_enabled' });
     let subscriptionExists = true;
     if (!Capacitor.isNativePlatform() && 'serviceWorker' in navigator && 'PushManager' in window) {
@@ -46,6 +57,7 @@ const toggleNotifications = async () => {
       message.value = 'Notifications disabled.';
     } else {
       const granted = await requestNotificationPermission();
+      permissionStatus.value = await getNotificationPermissionStatus();
       enabled.value = granted;
       message.value = granted ? 'Notifications enabled.' : 'Notification permission was not granted.';
     }

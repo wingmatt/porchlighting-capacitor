@@ -5,9 +5,9 @@
         <header :class="$style.intro">
           <AssetSvg asset="moth.svg" :className="$style.moth" label="Moth" />
           <p :class="$style.eyebrow">A friendly little heads-up</p>
-          <h1>Moth Mode</h1>
+          <h1>Moth Alert</h1>
           <p>
-            Moth Mode lets you know when a Porchlight you can access lights up. It is a handy nudge
+            Moth Alert lets you know when a Porchlight you can access lights up. It is a handy nudge
             when you are nearby and might want to stop by.
           </p>
         </header>
@@ -15,14 +15,14 @@
         <section :class="$style.card" aria-labelledby="moth-status-title">
           <div :class="$style.statusRow">
             <div>
-              <h2 id="moth-status-title">Moth Mode is {{ enabled ? 'on' : 'off' }}</h2>
+              <h2 id="moth-status-title">Moth Alert is {{ enabled ? 'on' : 'off' }}</h2>
               <p v-if="enabled">We will let you know when an accessible Porchlight lights up.</p>
               <p v-else>Turn it on if you would like to hear about new porchlight activity.</p>
             </div>
             <ion-badge :color="enabled ? 'success' : 'medium'">{{ enabled ? 'On' : 'Off' }}</ion-badge>
           </div>
-          <ion-button expand="block" :disabled="busy || permissionStatus === 'denied' || permissionStatus === 'unsupported'" @click="toggleMothMode">
-            {{ busy ? 'One moment…' : enabled ? 'Turn Moth Mode off' : 'Turn Moth Mode on' }}
+          <ion-button expand="block" :disabled="busy || permissionStatus === 'denied' || permissionStatus === 'unsupported'" @click="toggleMothAlert">
+            {{ busy ? 'One moment…' : enabled ? 'Turn Moth Alert off' : 'Turn Moth Alert on' }}
           </ion-button>
           <p v-if="message" :class="$style.message" role="status">{{ message }}</p>
         </section>
@@ -30,7 +30,7 @@
         <section v-if="permissionStatus === 'denied'" :class="[$style.card, $style.notice]" aria-labelledby="blocked-title">
           <h2 id="blocked-title">Notifications are blocked</h2>
           <p>
-            Your {{ isNative ? 'app' : 'browser' }} is currently not allowed to send notifications, so Moth Mode
+            Your {{ isNative ? 'app' : 'browser' }} is currently not allowed to send notifications, so Moth Alert
             cannot reach you yet.
           </p>
           <p v-if="isNative">
@@ -45,7 +45,7 @@
 
         <section :class="$style.card">
           <h2>Good to know</h2>
-          <p>Notifications are just friendly reminders, not emergency alerts. You can switch Moth Mode off here whenever you like.</p>
+          <p>Notifications are just friendly reminders, not emergency alerts. You can switch Moth Alert off here whenever you like.</p>
         </section>
       </article>
     </ion-content>
@@ -90,14 +90,14 @@ onMounted(async () => {
   }
 });
 
-const toggleMothMode = async () => {
+const toggleMothAlert = async () => {
   busy.value = true;
   message.value = '';
   try {
     if (enabled.value) {
       await disableNotifications();
       enabled.value = false;
-      message.value = 'Moth Mode is off.';
+      message.value = 'Moth Alert is off.';
       return;
     }
     permissionStatus.value = await getNotificationPermissionStatus();
@@ -106,16 +106,16 @@ const toggleMothMode = async () => {
     permissionStatus.value = await getNotificationPermissionStatus();
     enabled.value = granted;
     message.value = granted
-      ? 'Moth Mode is on. We will let you know when a Porchlight lights up.'
+      ? 'Moth Alert is on. We will let you know when a Porchlight lights up.'
       : permissionStatus.value === 'denied'
         ? 'Notifications are blocked. Follow the steps below to unblock them.'
         : 'Notifications were not turned on.';
   } catch {
-    message.value = 'We could not turn Moth Mode on right now. Please try again.';
+    message.value = 'We could not turn Moth Alert on right now. Please try again.';
   } finally {
     busy.value = false;
   }
 };
 </script>
 
-<style module src="./MothModePage.module.css"></style>
+<style module src="./MothAlertPage.module.css"></style>

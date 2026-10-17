@@ -34,14 +34,14 @@
         </section>
 
         <section :class="$style.card">
-          <h2>Turn on Moth Mode</h2>
+          <h2>Turn on Moth Alert</h2>
           <p>
-            Want a little nudge when a Porchlight comes on? Tap the Moth Mode switch in the bottom
-            bar and allow notifications when your device asks. Moth Mode will then let you know when
+            Want a little nudge when a Porchlight comes on? Tap the Moth Alert switch in the bottom
+            bar and allow notifications when your device asks. Moth Alert will then let you know when
             an accessible Porchlight lights up.
           </p>
           <p>
-            You can turn Moth Mode off from the same switch whenever you like. Notifications depend
+            You can turn Moth Alert off from the same switch whenever you like. Notifications depend
             on your device and browser settings, so they are helpful reminders—not an emergency
             service.
           </p>
