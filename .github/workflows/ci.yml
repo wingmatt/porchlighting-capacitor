@@ -1,0 +1,65 @@
+name: Frontend CI and deploy
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  frontend:
+    if: github.event_name != 'push' || github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      AWS_REGION: ${{ vars.AWS_REGION }}
+      AWS_ARTIFACT_BUCKET: ${{ vars.AWS_ARTIFACT_BUCKET }}
+      CODEDEPLOY_APPLICATION: porchlight-frontend
+      CODEDEPLOY_DEPLOYMENT_GROUP: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build frontend
+        run: npm run build
+
+      - name: Package frontend deployment
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          mkdir frontend-deploy
+          cp -R dist frontend-deploy/dist
+          cp .github/deploy/appspec.yml frontend-deploy/appspec.yml
+          cp -R .github/deploy/frontend-hooks frontend-deploy/frontend-hooks
+          (cd frontend-deploy && zip -qr ../frontend-deploy.zip .)
+
+      - name: Configure AWS credentials
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Upload deployment artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: aws s3 cp frontend-deploy.zip "s3://${AWS_ARTIFACT_BUCKET}/releases/frontend/${GITHUB_SHA}/frontend.zip"
+
+      - name: Deploy with CodeDeploy
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          deployment_id=$(aws deploy create-deployment \
+            --application-name "$CODEDEPLOY_APPLICATION" \
+            --deployment-group-name "$CODEDEPLOY_DEPLOYMENT_GROUP" \
+            --s3-location bucket="$AWS_ARTIFACT_BUCKET",key="releases/frontend/${GITHUB_SHA}/frontend.zip",bundleType=zip \
+            --description "Frontend ${GITHUB_SHA}" \
+            --query deploymentId --output text)
+          aws deploy wait deployment-successful --deployment-id "$deployment_id"
