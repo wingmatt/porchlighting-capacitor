@@ -3,8 +3,6 @@
     <ion-content>
       <article :class="$style.page">
         <header :class="$style.intro">
-          <AssetSvg asset="moth.svg" :className="$style.moth" label="Moth" />
-          <p :class="$style.eyebrow">A friendly little heads-up</p>
           <h1>Moth Alert</h1>
           <p>
             Moth Alert lets you know when a Porchlight you can access lights up. It is a handy nudge
@@ -22,7 +20,8 @@
             <ion-badge :color="enabled ? 'success' : 'medium'">{{ enabled ? 'On' : 'Off' }}</ion-badge>
           </div>
           <ion-button expand="block" :disabled="busy || permissionStatus === 'denied' || permissionStatus === 'unsupported'" @click="toggleMothAlert">
-            {{ busy ? 'One moment…' : enabled ? 'Turn Moth Alert off' : 'Turn Moth Alert on' }}
+                      <AssetSvg asset="moth.svg" :className="$style.moth" label="Moth" />
+ {{ busy ? 'One moment…' : enabled ? 'Turn Moth Alert off' : 'Turn Moth Alert on' }}
           </ion-button>
           <p v-if="message" :class="$style.message" role="status">{{ message }}</p>
         </section>
@@ -43,10 +42,6 @@
           </p>
         </section>
 
-        <section :class="$style.card">
-          <h2>Good to know</h2>
-          <p>Notifications are just friendly reminders, not emergency alerts. You can switch Moth Alert off here whenever you like.</p>
-        </section>
       </article>
     </ion-content>
   </ion-page>
