@@ -7,6 +7,14 @@
     <title>Porchlighting</title>
     <script>
       (() => {
+        const isIos = /iPad|iPhone|iPod/.test(navigator.platform)
+          || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        if (isIos) {
+          document.querySelector('meta[name="viewport"]')?.setAttribute(
+            'content',
+            'width=device-width, initial-scale=1.0, maximum-scale=1',
+          );
+        }
         const preference = localStorage.getItem('theme_preference');
         const dark = preference === 'dark' || (preference === null && window.matchMedia('(prefers-color-scheme: dark)').matches);
         document.documentElement.dataset.theme = dark ? 'dark' : 'light';
