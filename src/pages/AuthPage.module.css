@@ -1,12 +1,24 @@
-.page { max-width: 28rem; margin: 2rem auto; }
+.page { width: min(100% - 2rem, 28rem); margin: 2rem auto; }
 .card { padding: 1.5rem; color: var(--text-color); background: var(--surface-color); border: 1px solid var(--border-color); border-radius: var(--radius-lg); box-shadow: 0 1px 2px var(--shadow-subtle-color); }
 h1 { margin: 0 0 1.25rem; color: var(--text-color); font-size: 1.5rem; }
 form { display: grid; gap: 1rem; }
 label { display: grid; gap: .35rem; color: var(--muted-text-color); font-size: .875rem; font-weight: 600; }
 input { width: 100%; padding: .65rem .75rem; border: 1px solid var(--input-border-color); border-radius: var(--radius-sm); color: var(--text-color); background: var(--surface-color); }
-ion-input { --color: var(--text-color); --placeholder-color: var(--muted-text-color); --background: var(--surface-color); --border-color: var(--input-border-color); --border-style: solid; --border-width: 1px; --border-radius: var(--radius-sm); --padding-start: .75rem; --padding-end: .75rem; }
+ion-input { --color: var(--text-color) !important; --placeholder-color: var(--muted-text-color) !important; --placeholder-opacity: 1; --background: var(--surface-color); --border-color: var(--input-border-color); --border-style: solid; --border-width: 1px; --border-radius: var(--radius-sm); --padding-start: .75rem; --padding-end: .75rem; --highlight-color-focused: var(--accent-focus-color); }
+ion-input::part(native) { color: var(--text-color); background: var(--surface-color); caret-color: var(--accent-focus-color); }
+ion-input::part(native)::placeholder { color: var(--muted-text-color); opacity: 1; }
+ion-button { --color: var(--on-accent-color) !important; --background: var(--accent-color); --background-hover: var(--accent-hover-color); --background-focused: var(--accent-focus-color); --border-radius: var(--radius-sm); font-weight: 700; }
 button { padding: .7rem 1rem; color: var(--on-accent-color); background: var(--accent-color); border: 0; border-radius: var(--radius-sm); cursor: pointer; }
-.links { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.25rem; font-size: .875rem; }
-.links a { color: var(--text-color); }
+.links { display: grid; gap: .65rem; margin-top: 1.5rem; font-size: .875rem; }
+.action-link { display: grid; gap: .2rem; padding: .8rem .9rem; color: var(--text-color) !important; background: var(--surface-muted-color); border: 1px solid var(--border-color); border-radius: var(--radius-md); transition: border-color .2s, background-color .2s; }
+.action-link:hover, .action-link:focus-visible { background: var(--accent-hover-color); border-color: var(--accent-focus-color); }
+.action-link strong { color: var(--text-color); font-size: .95rem; }
+.action-link span { color: var(--muted-text-color); font-size: .8rem; font-weight: 400; }
+.back-link { justify-self: center; padding: .35rem .5rem; color: var(--text-color) !important; text-align: center; }
 .success { padding: .75rem; color: var(--success-color); background: var(--success-surface-color); border-radius: var(--radius-sm); }
 .error { padding: .75rem; color: var(--danger-color); background: var(--danger-surface-color); border-radius: var(--radius-sm); }
+
+@media (max-width: 480px) {
+  .page { width: min(100% - 1rem, 28rem); margin: 1rem auto; }
+  .card { padding: 1.25rem; }
+}

@@ -22,12 +22,21 @@
             <label v-if="isRegister || isReset">Confirm password<ion-input v-model="passwordConfirm" type="password" required minlength="6" /></label>
             <ion-button type="submit" expand="block">{{ submitLabel }}</ion-button>
           </form>
-          <nav class="links">
-            <router-link v-if="isLogin" to="/register">Create an account</router-link>
-            <router-link v-if="isLogin" to="/forgot-password">Forgot password?</router-link>
-            <router-link v-if="isLogin" to="/magic-login">Use a magic link</router-link>
-            <router-link v-if="isRegister" to="/login">Already have an account?</router-link>
-            <router-link v-if="!isLogin && !isRegister" to="/login">Back to log in</router-link>
+          <nav class="links" aria-label="Account options">
+            <router-link v-if="isLogin" class="action-link" to="/register">
+              <strong>Create an account</strong>
+              <span>Join Porchlighting with a new account.</span>
+            </router-link>
+            <router-link v-if="isLogin" class="action-link" to="/forgot-password">
+              <strong>Forgot password?</strong>
+              <span>Reset your password by email.</span>
+            </router-link>
+            <router-link v-if="isLogin" class="action-link" to="/magic-login">
+              <strong>Use a magic link</strong>
+              <span>Sign in without entering a password.</span>
+            </router-link>
+            <router-link v-if="isRegister" class="back-link" to="/login">Already have an account? Log in</router-link>
+            <router-link v-if="!isLogin && !isRegister" class="back-link" to="/login">Back to log in</router-link>
           </nav>
         </div>
       </div>
