@@ -127,4 +127,4 @@ const submit = async () => {
 };
 </script>
 
-<style src="./AuthPage.module.css"></style>
+<style src="./AuthPage.css"></style>
