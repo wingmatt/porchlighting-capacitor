@@ -52,6 +52,7 @@ jobs:
           grep -R -q --include='*.css' 'action-link' dist/assets
           grep -R -q --include='*.css' 'surface-muted-color' dist/assets
           grep -R -q --include='*.css' 'font:400 16px' dist/assets
+          grep -R -q --include='*.css' 'font-size:16px' dist/assets
 
       - name: Package frontend deployment
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
