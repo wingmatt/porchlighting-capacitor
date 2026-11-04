@@ -48,6 +48,7 @@ jobs:
       - name: Verify generated auth styles
         run: |
           test -f dist/index.html
+          grep -q 'maximum-scale=1' dist/index.html
           grep -R -q --include='*.css' 'action-link' dist/assets
           grep -R -q --include='*.css' 'surface-muted-color' dist/assets
           grep -R -q --include='*.css' 'font:400 16px' dist/assets

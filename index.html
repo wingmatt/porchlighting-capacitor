@@ -7,13 +7,30 @@
     <title>Porchlighting</title>
     <script>
       (() => {
-        const isIos = /iPad|iPhone|iPod/.test(navigator.platform)
+        const viewport = document.querySelector('meta[name="viewport"]');
+        const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent)
+          || /iPad|iPhone|iPod/.test(navigator.platform)
           || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-        if (isIos) {
-          document.querySelector('meta[name="viewport"]')?.setAttribute(
-            'content',
-            'width=device-width, initial-scale=1.0, maximum-scale=1',
-          );
+        if (isIos && viewport) {
+          const baseViewport = viewport.getAttribute('content') || '';
+          const setInputScale = (enabled) => {
+            viewport.setAttribute(
+              'content',
+              enabled && !/maximum-scale=/i.test(baseViewport)
+                ? `${baseViewport}, maximum-scale=1`
+                : baseViewport,
+            );
+          };
+
+          const isTextField = (target) => target instanceof HTMLElement
+            && target.matches('input, textarea, select, ion-input');
+          setInputScale(true);
+          document.addEventListener('focusin', (event) => {
+            if (isTextField(event.target)) setInputScale(true);
+          });
+          document.addEventListener('focusout', (event) => {
+            if (isTextField(event.target) && !event.relatedTarget) setInputScale(false);
+          });
         }
         const preference = localStorage.getItem('theme_preference');
         const dark = preference === 'dark' || (preference === null && window.matchMedia('(prefers-color-scheme: dark)').matches);
