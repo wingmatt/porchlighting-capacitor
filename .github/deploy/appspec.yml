@@ -2,9 +2,13 @@ version: 0.0
 os: linux
 files:
   - source: dist
-    destination: /srv/porchlight/frontend-releases/current
+    destination: /srv/porchlight/frontend-releases/incoming
     overwrite: true
 hooks:
+  BeforeInstall:
+    - location: frontend-hooks/before-install.sh
+      timeout: 120
+      runas: root
   AfterInstall:
     - location: frontend-hooks/after-install.sh
       timeout: 120
