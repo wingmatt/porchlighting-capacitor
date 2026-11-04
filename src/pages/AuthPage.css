@@ -3,9 +3,9 @@
 h1 { margin: 0 0 1.25rem; color: var(--text-color); font-size: 1.5rem; }
 form { display: grid; gap: 1rem; }
 label { display: grid; gap: .35rem; color: var(--muted-text-color); font-size: .875rem; font-weight: 600; }
-input { width: 100%; padding: .65rem .75rem; border: 1px solid var(--input-border-color); border-radius: var(--radius-sm); color: var(--text-color); background: var(--surface-color); }
-ion-input { --color: var(--text-color) !important; --placeholder-color: var(--muted-text-color) !important; --placeholder-opacity: 1; --background: var(--surface-color); --border-color: var(--input-border-color); --border-style: solid; --border-width: 1px; --border-radius: var(--radius-sm); --padding-start: .75rem; --padding-end: .75rem; --highlight-color-focused: var(--accent-focus-color); }
-ion-input::part(native) { color: var(--text-color); background: var(--surface-color); caret-color: var(--accent-focus-color); }
+input { width: 100%; padding: .65rem .75rem; border: 1px solid var(--input-border-color); border-radius: var(--radius-sm); color: var(--text-color); background: var(--surface-color); font-size: 1rem; }
+ion-input { --color: var(--text-color) !important; --placeholder-color: var(--muted-text-color) !important; --placeholder-opacity: 1; --background: var(--surface-color); --border-color: var(--input-border-color); --border-style: solid; --border-width: 1px; --border-radius: var(--radius-sm); --padding-start: .75rem; --padding-end: .75rem; --highlight-color-focused: var(--accent-focus-color); font-size: 1rem; }
+ion-input::part(native) { color: var(--text-color); background: var(--surface-color); caret-color: var(--accent-focus-color); font-size: 1rem; }
 ion-input::part(native)::placeholder { color: var(--muted-text-color); opacity: 1; }
 ion-button { --color: var(--on-accent-color) !important; --background: var(--accent-color); --background-hover: var(--accent-hover-color); --background-focused: var(--accent-focus-color); --border-radius: var(--radius-sm); font-weight: 700; }
 button { padding: .7rem 1rem; color: var(--on-accent-color); background: var(--accent-color); border: 0; border-radius: var(--radius-sm); cursor: pointer; }
