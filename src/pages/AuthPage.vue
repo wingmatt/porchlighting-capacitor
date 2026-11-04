@@ -16,10 +16,10 @@
           <p v-if="message" class="success">{{ message }}</p>
           <p v-if="error" class="error">{{ error }}</p>
           <form v-if="!message || isLogin" @submit.prevent="submit">
-            <label v-if="!isReset">Email<ion-input v-model="email" type="email" required /></label>
-            <label v-if="isRegister">Name<ion-input v-model="name" /></label>
-            <label v-if="isLogin || isRegister || isReset">Password<ion-input v-model="password" type="password" required minlength="6" /></label>
-            <label v-if="isRegister || isReset">Confirm password<ion-input v-model="passwordConfirm" type="password" required minlength="6" /></label>
+            <label v-if="!isReset">Email<ion-input class="auth-input" v-model="email" type="email" required /></label>
+            <label v-if="isRegister">Name<ion-input class="auth-input" v-model="name" /></label>
+            <label v-if="isLogin || isRegister || isReset">Password<ion-input class="auth-input" v-model="password" type="password" required minlength="6" /></label>
+            <label v-if="isRegister || isReset">Confirm password<ion-input class="auth-input" v-model="passwordConfirm" type="password" required minlength="6" /></label>
             <ion-button type="submit" expand="block">{{ submitLabel }}</ion-button>
           </form>
           <nav class="links" aria-label="Account options">

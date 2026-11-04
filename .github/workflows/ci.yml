@@ -50,6 +50,7 @@ jobs:
           test -f dist/index.html
           grep -R -q 'action-link' dist/assets/*.css
           grep -R -q 'surface-muted-color' dist/assets/*.css
+          grep -R -q 'font-size:16px' dist/assets/*.css
 
       - name: Package frontend deployment
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
