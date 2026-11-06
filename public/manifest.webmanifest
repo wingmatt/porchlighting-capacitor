@@ -1,0 +1,10 @@
+{
+  "name": "Porchlighting",
+  "short_name": "Porchlighting",
+  "description": "Connect with your neighborhood through Porchlighting.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#14281f",
+  "theme_color": "#14281f"
+}
